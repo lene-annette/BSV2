@@ -46,6 +46,13 @@ public class HeatMapBasic {
         
     }
     
+    public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
+        int[] sea = this.generateSeaFromPositions(previousShots);
+        int[] heatmap = this.simpleHeatMap(sea, fleet);
+        Position pos = this.getPositionFromHeatMap(heatmap, fleet);
+        return pos;
+    }
+    
     /**
      * 
      * @param sea
