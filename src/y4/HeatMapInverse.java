@@ -10,5 +10,10 @@ package y4;
  * @author Christian
  */
 public class HeatMapInverse {
+
+    void run() {
+        System.out.println("HeatMapInverse -- run");
+    
+    }
     
 }

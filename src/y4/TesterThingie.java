@@ -15,8 +15,11 @@ import java.util.ArrayList;
 public class TesterThingie {
     public static void main(String[] args) {
         
-        HeatMapBasic hm = new HeatMapBasic();
-        hm.run();
+        //HeatMapBasic hm = new HeatMapBasic();
+        //hm.run();
+        
+        HeatMapInverse hmi = new HeatMapInverse();
+        hmi.run();
         
     }
             
