@@ -49,7 +49,7 @@ public class HeatMapBasic {
     public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
         int[] sea = this.generateSeaFromPositions(previousShots);
         int[] heatmap = this.simpleHeatMap(sea, fleet);
-        Position pos = this.getPositionFromHeatMap(heatmap, fleet);
+        Position pos = this.getPositionFromHeatMap(heatmap);
         return pos;
     }
     
@@ -76,7 +76,7 @@ public class HeatMapBasic {
      * @param fleet
      * @return Position of "hottest" point in the sea.
      */
-    public Position getPositionFromHeatMap(int[] heatmap, ArrayList<Integer> fleet){
+    private Position getPositionFromHeatMap(int[] heatmap){
         int maxHeatIndex = 0;   
         for (int i = 0; i < heatmap.length; i++) {
             if (heatmap[i] > heatmap[maxHeatIndex]) {

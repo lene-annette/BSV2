@@ -39,7 +39,7 @@ public class AlgShooter implements BattleshipsPlayer {
     private ArrayList<Position> shotsFired;
     private ArrayList<Integer> fleetBeforeShot;
     private ArrayList<Integer> fleetAfterShot;
-
+    private HeatMapBasic heatMap;
 
     public AlgShooter() {
     }
@@ -49,6 +49,7 @@ public class AlgShooter implements BattleshipsPlayer {
         AlgShooterAverage = 0;
         EnemyAverage = 0;
         this.rounds = (double) rounds;
+        heatMap = new HeatMapBasic();
     }
 
     @Override
@@ -142,8 +143,12 @@ public class AlgShooter implements BattleshipsPlayer {
 
         int index;
         if (hunt) {
-            index = rnd.nextInt(avblShots.size());
-            lastShot = getFromGrid(index);
+            
+            lastShot = heatMap.getPosFromShotArrList(shotsFired, fleetAfterShot);
+            
+//            index = rnd.nextInt(avblShots.size());
+//            lastShot = getFromGrid(index);
+            
             avblShots.remove(lastShot);
             shotsFired.add(lastShot);
         } else if (target && lastShotHit) {
@@ -212,8 +217,8 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println("");
         System.out.println("AlgShooter : " + AlgShooterAverage);
         System.out.println("Enemy : " + EnemyAverage);
+        System.out.println("Win% : "+(100.0*won/rounds)+"%");
         System.out.println("");
-        
 
     }
 
