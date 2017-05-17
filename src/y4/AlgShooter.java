@@ -24,6 +24,7 @@ public class AlgShooter implements BattleshipsPlayer {
     private int sizeX;
     private int sizeY;
     private int sunkenShipSize;
+    private int hitCount;
     private Board myBoard;
     private boolean hunt;
     private boolean target;
@@ -50,6 +51,7 @@ public class AlgShooter implements BattleshipsPlayer {
         hunt = true;
         target = false;
         isSunk = false;
+        hitCount = 0;
         stack = new ArrayList<Position>();
         shotsFired = new ArrayList<Position>();
         lastShot = new Position(0, 0);
@@ -156,6 +158,7 @@ public class AlgShooter implements BattleshipsPlayer {
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
         
+        
         fleetAfterShot = fleetConverter(enemyShips);
         isSunk = !(fleetAfterShot.size()==fleetBeforeShot.size());
         if (isSunk) {
@@ -164,6 +167,7 @@ public class AlgShooter implements BattleshipsPlayer {
         
         lastShotHit = hit;
         if (hit) {
+            hitCount++;
             target = true;
             hunt = false;
         } else if (!hit && !stack.isEmpty()) {
