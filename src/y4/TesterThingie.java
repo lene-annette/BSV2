@@ -14,6 +14,18 @@ import java.util.ArrayList;
  */
 public class TesterThingie {
     public static void main(String[] args) {
+        
+        HeatMapBasic hm = new HeatMapBasic();
+        hm.run();
+        
+    }
+            
+    
+}
+
+
+        /*
+            // Lenes kode: 2017-05-17 kl. 12.57 - Chr
 //        PositionFiller pf = new PositionFiller();
 //        
 //        ArrayList<Position> p = pf.fillPositionArray();
@@ -38,7 +50,4 @@ public class TesterThingie {
           
           int test = as.findSunkenShipSize(before, after);
           System.out.println("Sunken Ship Size : " + test);
-    }
-            
-    
-}
+*/
