@@ -35,6 +35,7 @@ public class AlgShooter implements BattleshipsPlayer {
     private boolean isSunk;
     private Position lastShot;
     private int[] heatMap;
+    private int[] stat;
     private ArrayList<Position> stack;
     private ArrayList<Position> avblShots;
     private ArrayList<Position> shotsFired;
@@ -50,6 +51,7 @@ public class AlgShooter implements BattleshipsPlayer {
         AlgShooterAverage = 0;
         EnemyAverage = 0;
         this.rounds = (double) rounds;
+        stat = new int[100];
         heatMapper = new HeatMapBasic();
     }
 
@@ -206,6 +208,7 @@ public class AlgShooter implements BattleshipsPlayer {
     public void endRound(int round, int points, int enemyPoints) {
         AlgShooterAverage += 100.0-points;
         EnemyAverage += 100.0-enemyPoints;
+        stat[100-points]++;
         
     }
 
@@ -220,7 +223,9 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println("Enemy : " + EnemyAverage);
         System.out.println("Win% : "+(100.0*won/rounds)+"%");
         System.out.println("");
-
+        for (int i = 0; i < 100; i++) { System.out.println(i+" : "+stat[i]); }
+        
+        
     }
 
     public void addToStack(Position pos) {
@@ -229,17 +234,29 @@ public class AlgShooter implements BattleshipsPlayer {
         s = new Position(pos.x, (pos.y - 1));
         e = new Position((pos.x + 1), pos.y);
         w = new Position((pos.x - 1), pos.y);
-        if (n.x >= 0 && n.y >= 0 && n.x < 10 && n.y < 10 && !stack.contains(n) && avblShots.contains(n)) {
-            stack.add(n);
-        }
-        if (s.x >= 0 && s.y >= 0 && s.x < 10 && s.y < 10 && !stack.contains(s) && avblShots.contains(s)) {
-            stack.add(s);
-        }
-        if (e.x >= 0 && e.y >= 0 && e.x < 10 && e.y < 10 && !stack.contains(e) && avblShots.contains(e)) {
-            stack.add(e);
-        }
-        if (w.x >= 0 && w.y >= 0 && w.x < 10 && w.y < 10 && !stack.contains(w) && avblShots.contains(w)) {
-            stack.add(w);
+        
+        addPositionIfValid(n);
+        addPositionIfValid(s);
+        addPositionIfValid(e);
+        addPositionIfValid(w);
+        
+//        if (n.x >= 0 && n.y >= 0 && n.x < 10 && n.y < 10 && !stack.contains(n) && avblShots.contains(n)) {
+//            stack.add(n);
+//        }
+//        if (s.x >= 0 && s.y >= 0 && s.x < 10 && s.y < 10 && !stack.contains(s) && avblShots.contains(s)) {
+//            stack.add(s);
+//        }
+//        if (e.x >= 0 && e.y >= 0 && e.x < 10 && e.y < 10 && !stack.contains(e) && avblShots.contains(e)) {
+//            stack.add(e);
+//        }
+//        if (w.x >= 0 && w.y >= 0 && w.x < 10 && w.y < 10 && !stack.contains(w) && avblShots.contains(w)) {
+//            stack.add(w);
+//        }
+    }
+    
+    public void addPositionIfValid(Position pos) {
+        if (pos.x >= 0 && pos.y >= 0 && pos.x < 10 && pos.y < 10 && !stack.contains(pos) && avblShots.contains(pos)) {
+            stack.add(pos);
         }
     }
 

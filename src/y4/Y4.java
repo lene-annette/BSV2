@@ -27,7 +27,7 @@ public class Y4 implements PlayerFactory<BattleshipsPlayer> {
 
     @Override
     public String getName() {
-        return "Lene BS";
+        return "Group 4 Battleship AI";
     }
 
     @Override
