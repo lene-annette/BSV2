@@ -269,7 +269,7 @@ public class HeatMapBasic {
         return newsea;
     }       
 
-    private void printHeatmap(int divisor, int[] sea) {
+    public void printHeatmap(int divisor, int[] sea) {
         String RESET = "\u001B[0m";
         String RED = "\u001B[31m";
         int largestNumber = 0;
@@ -302,7 +302,7 @@ public class HeatMapBasic {
         }
     }
 
-    private void printSea(int[] sea) {
+    public void printSea(int[] sea) {
         String RESET = "\u001B[0m";
         String RED = "\u001B[31m";
         int largestNumber = 0;
@@ -362,7 +362,7 @@ public class HeatMapBasic {
         return stack;
     }
     
-    private int[] generateVirginHeatmap(){
+    public int[] generateVirginHeatmap(){
         int[] sea = new int[100];//this.fixedSeaWithSips();
         for (int i = 0; i < sea.length; i++) {
             sea[i] = 1;
@@ -378,6 +378,15 @@ public class HeatMapBasic {
         return heat;
     }
     
+    public int[] generateVirginPlacement(){
+        int[] sea = new int[100];//this.fixedSeaWithSips();
+        for (int i = 0; i < sea.length; i++) {
+            sea[i] = 1;
+        }
+        int[] fleet = {5,4,3,3,2};
+        int[] newsea = this.distributeShips(sea, fleet);
+        return newsea;
+    }
     
     public int[] getHeatmap() {
         return heatmap;
@@ -385,7 +394,7 @@ public class HeatMapBasic {
     
     
     
-    private int[] fixedSeaWithSips() {
+    public int[] fixedSeaWithSips() {
         int[] fixedSea
                 = {1, 1, 1, 1, 3, 3, 1, 1, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

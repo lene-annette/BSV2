@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  * @author lene_
  */
-public class TesterThingie {
+public class TesterThingie { 
     public static void main(String[] args) {
         
         //HeatMapBasic hm = new HeatMapBasic();
@@ -22,6 +22,8 @@ public class TesterThingie {
         hmi.run();
         
     }
+    
+    
             
     
 }
