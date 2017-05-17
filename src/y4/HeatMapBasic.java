@@ -16,7 +16,7 @@ import java.util.Random;
 public class HeatMapBasic {
     
     private final static Random rnd = new Random();
-        /*
+    private int[] heatmap;    /*
     
         int[] sea = new int[100];//this.fixedSeaWithSips();
         for (int i = 0; i < sea.length; i++) {
@@ -45,10 +45,16 @@ public class HeatMapBasic {
         System.out.println("HeatMapBasic -- run");
         
     }
+
+    public int[] getHeatmap() {
+        return heatmap;
+    }
+    
+    
     
     public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
         int[] sea = this.generateSeaFromPositions(previousShots);
-        int[] heatmap = this.simpleHeatMap(sea, fleet);
+        heatmap = this.simpleHeatMap(sea, fleet);
         Position pos = this.getPositionFromHeatMap(heatmap);
         return pos;
     }

@@ -34,12 +34,13 @@ public class AlgShooter implements BattleshipsPlayer {
     private boolean lastShotHit;
     private boolean isSunk;
     private Position lastShot;
+    private int[] heatMap;
     private ArrayList<Position> stack;
     private ArrayList<Position> avblShots;
     private ArrayList<Position> shotsFired;
     private ArrayList<Integer> fleetBeforeShot;
     private ArrayList<Integer> fleetAfterShot;
-    private HeatMapBasic heatMap;
+    private HeatMapBasic heatMapper;
 
     public AlgShooter() {
     }
@@ -49,7 +50,7 @@ public class AlgShooter implements BattleshipsPlayer {
         AlgShooterAverage = 0;
         EnemyAverage = 0;
         this.rounds = (double) rounds;
-        heatMap = new HeatMapBasic();
+        heatMapper = new HeatMapBasic();
     }
 
     @Override
@@ -144,8 +145,8 @@ public class AlgShooter implements BattleshipsPlayer {
         int index;
         if (hunt) {
             
-            lastShot = heatMap.getPosFromShotArrList(shotsFired, fleetAfterShot);
-            
+            lastShot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
+            heatMap = heatMapper.getHeatmap();
 //            index = rnd.nextInt(avblShots.size());
 //            lastShot = getFromGrid(index);
             
