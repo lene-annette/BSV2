@@ -25,6 +25,9 @@ public class AlgShooter implements BattleshipsPlayer {
     private int sizeY;
     private int sunkenShipSize;
     private int hitCount;
+    private double AlgShooterAverage;
+    private double EnemyAverage;
+    private double rounds;
     private Board myBoard;
     private boolean hunt;
     private boolean target;
@@ -36,14 +39,16 @@ public class AlgShooter implements BattleshipsPlayer {
     private ArrayList<Position> shotsFired;
     private ArrayList<Integer> fleetBeforeShot;
     private ArrayList<Integer> fleetAfterShot;
-    
+
 
     public AlgShooter() {
     }
 
     @Override
     public void startMatch(int rounds, Fleet ships, int sizeX, int sizeY) {
-
+        AlgShooterAverage = 0;
+        EnemyAverage = 0;
+        this.rounds = (double) rounds;
     }
 
     @Override
@@ -134,7 +139,7 @@ public class AlgShooter implements BattleshipsPlayer {
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
         fleetBeforeShot = fleetConverter(enemyShips);
-        
+
         int index;
         if (hunt) {
             index = rnd.nextInt(avblShots.size());
@@ -157,19 +162,30 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        
-        
+
         fleetAfterShot = fleetConverter(enemyShips);
-        isSunk = !(fleetAfterShot.size()==fleetBeforeShot.size());
-        if (isSunk) {
-            sunkenShipSize = findSunkenShipSize(fleetBeforeShot, fleetAfterShot);
-        }
-        
+        isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
         lastShotHit = hit;
+
         if (hit) {
             hitCount++;
-            target = true;
-            hunt = false;
+            if (!isSunk) {
+                target = true;
+                hunt = false;
+            } else {
+                sunkenShipSize = findSunkenShipSize(fleetBeforeShot, fleetAfterShot);
+                hitCount = hitCount-sunkenShipSize;
+                if (hitCount > 0) {
+                    target = true;
+                    hunt = false;
+                }
+                else {
+                    target = false;
+                    hunt = true;
+                    stack.clear();
+                }
+            }
+
         } else if (!hit && !stack.isEmpty()) {
             target = true;
             hunt = false;
@@ -182,11 +198,22 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endRound(int round, int points, int enemyPoints) {
-
+        AlgShooterAverage += 100.0-points;
+        EnemyAverage += 100.0-enemyPoints;
+        
     }
 
     @Override
     public void endMatch(int won, int lost, int draw) {
+        
+        AlgShooterAverage = AlgShooterAverage/rounds;
+        EnemyAverage = EnemyAverage/rounds;
+        
+        System.out.println("");
+        System.out.println("AlgShooter : " + AlgShooterAverage);
+        System.out.println("Enemy : " + EnemyAverage);
+        System.out.println("");
+        
 
     }
 
@@ -196,16 +223,16 @@ public class AlgShooter implements BattleshipsPlayer {
         s = new Position(pos.x, (pos.y - 1));
         e = new Position((pos.x + 1), pos.y);
         w = new Position((pos.x - 1), pos.y);
-        if (n.x >= 0 && n.y >= 0 && n.x < 10 && n.y < 10 && !stack.contains(n)) {
+        if (n.x >= 0 && n.y >= 0 && n.x < 10 && n.y < 10 && !stack.contains(n) && avblShots.contains(n)) {
             stack.add(n);
         }
-        if (s.x >= 0 && s.y >= 0 && s.x < 10 && s.y < 10 && !stack.contains(s)) {
+        if (s.x >= 0 && s.y >= 0 && s.x < 10 && s.y < 10 && !stack.contains(s) && avblShots.contains(s)) {
             stack.add(s);
         }
-        if (e.x >= 0 && e.y >= 0 && e.x < 10 && e.y < 10 && !stack.contains(e)) {
+        if (e.x >= 0 && e.y >= 0 && e.x < 10 && e.y < 10 && !stack.contains(e) && avblShots.contains(e)) {
             stack.add(e);
         }
-        if (w.x >= 0 && w.y >= 0 && w.x < 10 && w.y < 10 && !stack.contains(w)) {
+        if (w.x >= 0 && w.y >= 0 && w.x < 10 && w.y < 10 && !stack.contains(w) && avblShots.contains(w)) {
             stack.add(w);
         }
     }
@@ -241,13 +268,13 @@ public class AlgShooter implements BattleshipsPlayer {
         }
         return fleetArray;
     }
-    
+
     public int findSunkenShipSize(ArrayList<Integer> beforeShot, ArrayList<Integer> afterShot) {
         for (Integer sizeShip : afterShot) {
             beforeShot.remove(sizeShip);
         }
         return (int) (beforeShot.get(0));
-        
-   }
+
+    }
 
 }
