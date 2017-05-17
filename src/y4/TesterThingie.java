@@ -14,12 +14,30 @@ import java.util.ArrayList;
  */
 public class TesterThingie {
     public static void main(String[] args) {
-        PositionFiller pf = new PositionFiller();
+//        PositionFiller pf = new PositionFiller();
+//        
+//        ArrayList<Position> p = pf.fillPositionArray();
+//        
+//        System.out.println(p.get(87));
+
+          AlgShooter as = new AlgShooter();
+          
+          ArrayList<Integer> before = new ArrayList<Integer>();
+          ArrayList<Integer> after = new ArrayList<Integer>();
         
-        ArrayList<Position> p = pf.fillPositionArray();
-        
-        System.out.println(p.get(87));
-        
+          before.add(2);
+          before.add(3);
+          before.add(3);
+          before.add(4);
+          before.add(5);
+          
+          after.add(2);
+          after.add(3);
+          after.add(3);
+          after.add(5);
+          
+          int test = as.findSunkenShipSize(before, after);
+          System.out.println("Sunken Ship Size : " + test);
     }
             
     

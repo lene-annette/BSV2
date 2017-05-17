@@ -23,14 +23,19 @@ public class AlgShooter implements BattleshipsPlayer {
     private final static PositionFiller pf = new PositionFiller();
     private int sizeX;
     private int sizeY;
+    private int sunkenShipSize;
     private Board myBoard;
     private boolean hunt;
     private boolean target;
     private boolean lastShotHit;
+    private boolean isSunk;
     private Position lastShot;
     private ArrayList<Position> stack;
     private ArrayList<Position> avblShots;
     private ArrayList<Position> shotsFired;
+    private ArrayList<Integer> fleetBeforeShot;
+    private ArrayList<Integer> fleetAfterShot;
+    
 
     public AlgShooter() {
     }
@@ -44,11 +49,14 @@ public class AlgShooter implements BattleshipsPlayer {
     public void startRound(int round) {
         hunt = true;
         target = false;
+        isSunk = false;
         stack = new ArrayList<Position>();
         shotsFired = new ArrayList<Position>();
         lastShot = new Position(0, 0);
         lastShotHit = false;
         avblShots = pf.fillPositionArray();
+        fleetBeforeShot = new ArrayList<Integer>();
+        fleetAfterShot = new ArrayList<Integer>();
     }
 
     @Override
@@ -123,6 +131,8 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
+        fleetBeforeShot = fleetConverter(enemyShips);
+        
         int index;
         if (hunt) {
             index = rnd.nextInt(avblShots.size());
@@ -145,6 +155,13 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
+        
+        fleetAfterShot = fleetConverter(enemyShips);
+        isSunk = !(fleetAfterShot.size()==fleetBeforeShot.size());
+        if (isSunk) {
+            sunkenShipSize = findSunkenShipSize(fleetBeforeShot, fleetAfterShot);
+        }
+        
         lastShotHit = hit;
         if (hit) {
             target = true;
@@ -212,13 +229,21 @@ public class AlgShooter implements BattleshipsPlayer {
         return result;
     }
 
-    public int[] fleetCoverter(Fleet fleet) {
+    public ArrayList<Integer> fleetConverter(Fleet fleet) {
         int shipCount = fleet.getNumberOfShips();
-        int[] fleetArray = new int[shipCount];
+        ArrayList<Integer> fleetArray = new ArrayList<Integer>();
         for (int i = 0; i < shipCount; i++) {
-            fleetArray[i] = fleet.getShip((shipCount - 1) - i).size();
+            fleetArray.add(fleet.getShip((shipCount - 1) - i).size());
         }
         return fleetArray;
     }
+    
+    public int findSunkenShipSize(ArrayList<Integer> beforeShot, ArrayList<Integer> afterShot) {
+        for (Integer sizeShip : afterShot) {
+            beforeShot.remove(sizeShip);
+        }
+        return (int) (beforeShot.get(0));
+        
+   }
 
 }
