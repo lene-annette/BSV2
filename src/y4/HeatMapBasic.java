@@ -41,16 +41,56 @@ public class HeatMapBasic {
         this.printHeatmap(10, heat);
         System.out.println(this.getIntFromHeatMap(heat, fleet));
         */
+    
+        /*
+        //2017-05-17 kl. 14.30 - chr - Succe test af: getPosFromStack.
+        ArrayList<Position> stack = this.getPosArrListTEST();
+        int[] heat = this.generateVirginHeatmap();
+        Position pos = this.getPosFromStack(heat, stack);
+        this.printHeatmap(10, heat);
+        System.out.println(this.getArrListCorrFromArrListPos(stack));
+        System.out.println(this.getCoordinateFromPos(pos));
+    */
     public void run(){
         System.out.println("HeatMapBasic -- run");
         
-    }
-
-    public int[] getHeatmap() {
-        return heatmap;
+        
     }
     
     
+    public Position getPosFromStack(int[] heatmap, ArrayList<Position> stack){
+        
+        ArrayList<Integer> CoordinateStack = new ArrayList<Integer>();
+        
+        CoordinateStack = this.getArrListCorrFromArrListPos(stack);
+        
+        int largestCorr = 0;
+        for (int i = 0; i < CoordinateStack.size(); i++) {
+            if (heatmap[CoordinateStack.get(i)] > heatmap[CoordinateStack.get(largestCorr)]) {
+                largestCorr = i;
+            }
+        }
+        
+        Position pos = this.getPosFromIndex(CoordinateStack.get(largestCorr));
+        return pos;
+        /*
+        ArrayList<Integer> CoordinateStack = new ArrayList<Integer>();
+        int coordinate = 0;
+        int largestHeatIndex = 0;
+        for (int i = 0; i < stack.size(); i++) {
+            coordinate = this.getCoordinateFromPos(stack.get(i));
+            CoordinateStack.add(coordinate);
+        }
+        
+        for (int i = 0; i < CoordinateStack.size(); i++) {
+            if (heatmap[CoordinateStack.get(i)] > heatmap[CoordinateStack.get(largestHeatIndex)]) {
+                largestHeatIndex = i;
+            }
+        }
+        
+        return this.getPosFromIndex(largestHeatIndex);
+        */
+    }
     
     public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
         int[] sea = this.generateSeaFromPositions(previousShots);
@@ -122,6 +162,16 @@ public class HeatMapBasic {
             sea[arrayCoordinate] = -1;
         }
         return sea;
+    }
+    
+    //2017-05-17 kl. 12.35 - Chr.
+    // nedestående funktion burde sættes ind i generateSeaFromPositions;
+    private int getCoordinateFromPos(Position pos){
+        int output = 0;
+        int Xcoordinate = pos.x;
+        int Ycoordinate = pos.y;
+        output = (9-Ycoordinate)*10 + Xcoordinate;
+        return output;
     }
     
     
@@ -217,29 +267,7 @@ public class HeatMapBasic {
             newsea[usedSpaces.get(i)] = 2;
         }
         return newsea;
-    }
-    
-    /*
-    public int[] simpleHeatMap(int[] sea, int[] fleet) {
-
-        int iterations = 100000;
-        int[] newsea = new int[10 * 10];
-
-        int[] tempsea = null;
-        for (int i = 0; i < iterations; i++) {
-            tempsea = distributeShips(sea, fleet);
-            for (int j = 0; j < tempsea.length; j++) {
-                if (tempsea[j] > 1) {
-                    newsea[j] += 1;
-                }
-            }
-        }
-
-        return newsea;
-
-    }
-    */
-         
+    }       
 
     private void printHeatmap(int divisor, int[] sea) {
         String RESET = "\u001B[0m";
@@ -312,6 +340,50 @@ public class HeatMapBasic {
             }
         }
     }
+    
+    private ArrayList<Integer> getArrListCorrFromArrListPos(ArrayList<Position> stack){
+        ArrayList<Integer> CoordinateStack = new ArrayList<Integer>();
+        for (Position p: stack) {
+            CoordinateStack.add(this.getCoordinateFromPos(p));
+        }
+        return CoordinateStack;
+    }
+    
+    private ArrayList<Position> getPosArrListTEST(){
+        ArrayList<Position> stack = new ArrayList<Position>();
+        Position p1 = new Position(4,3);
+        Position p2 = new Position(4,4);
+        Position p3 = new Position(4,5);
+        Position p4 = new Position(4,6);
+        stack.add(p1);
+        stack.add(p2);
+        stack.add(p3);
+        stack.add(p4);
+        return stack;
+    }
+    
+    private int[] generateVirginHeatmap(){
+        int[] sea = new int[100];//this.fixedSeaWithSips();
+        for (int i = 0; i < sea.length; i++) {
+            sea[i] = 1;
+        }
+        
+        ArrayList<Integer> fleet = new ArrayList<Integer>();
+        fleet.add(5);
+        fleet.add(4);
+        fleet.add(3);
+        fleet.add(3);
+        fleet.add(2);
+        int[] heat = simpleHeatMap(sea, fleet);   
+        return heat;
+    }
+    
+    
+    public int[] getHeatmap() {
+        return heatmap;
+    }
+    
+    
     
     private int[] fixedSeaWithSips() {
         int[] fixedSea
