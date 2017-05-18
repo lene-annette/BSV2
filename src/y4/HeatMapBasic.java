@@ -205,89 +205,67 @@ public class HeatMapBasic {
         System.arraycopy(sea, 0, newsea, 0, sea.length);
         //newsea er nu en kopi af sea.
 
-        int index = 0;
-//        ArrayList<Integer> potentialSpace = new ArrayList<Integer>();
-//        ArrayList<Integer> usedSpaces = new ArrayList<Integer>();
-        
-        for(int i = 0; i < fleet.length; ++i)
-        {
-            int s = fleet[i];
-            boolean vertical = rnd.nextBoolean();
-            Position pos;
-            if(vertical)
-            {
-                int x = rnd.nextInt(10);
-                int y = rnd.nextInt(10-(s-1));
-                index = 10*x + y ;
-            }
-            else
-            {
-                int x = rnd.nextInt(10-(s-1));
-                int y = rnd.nextInt(10);
-                index = 10*x + y ;
-            }
-           newsea[index] = 2;
-        }
-         
+        ArrayList<Integer> potentialSpace = new ArrayList<Integer>();
+        ArrayList<Integer> usedSpaces = new ArrayList<Integer>();
 
-//        for (int i = 0; i < fleet.length; ++i) {
-//            int s = fleet[i];
-//            boolean vertical;
-//
-//            boolean goodSpace = false;
-//
-//            while (goodSpace == false) {
-//                vertical = rnd.nextBoolean();
-//                
-//                if (vertical) {
-//                    
-//                    int x = rnd.nextInt(10);
-//                    int y = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeY-(s-1));
-//
-//                    for (int j = 0; j < s; j++) {
-//                        int indexLtoRBtoT = x + (y * 10) + (j * 10);
-//                        potentialSpace.add(indexLtoRBtoT);
-//                    }
-//                    boolean fieldIsOk = true;
-//                    for (int j = 0; j < potentialSpace.size(); j++) {
-//                        if (usedSpaces.contains(potentialSpace.get(j)) || newsea[potentialSpace.get(j)] < 1) {
-//                            fieldIsOk = false;
-//                        }
-//                    }
-//                    if (fieldIsOk == true && potentialSpace.size() == s) {
-//                        usedSpaces.addAll(potentialSpace);
-//                        goodSpace = true;
-//                    }
-//                    potentialSpace.clear();
-//
-//                } else {
-//                    int x = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeX-(s-1));
-//                    int y = rnd.nextInt(10);
-//
-//                    for (int j = 0; j < s; j++) {
-//                        int indexLtoRBtoT = x + (y * 10) + j;
-//                        potentialSpace.add(indexLtoRBtoT);
-//                    }
-//                    boolean fieldIsOk = true;
-//                    for (int j = 0; j < potentialSpace.size(); j++) {
-//                        if (usedSpaces.contains(potentialSpace.get(j)) || newsea[potentialSpace.get(j)] < 1) {
-//                            fieldIsOk = false;
-//                            
-//                        }
-//                    }
-//                    if (fieldIsOk == true && potentialSpace.size() == s) {
-//                        usedSpaces.addAll(potentialSpace);
-//                        goodSpace = true;
-//                    }
-//                    potentialSpace.clear();
-//                }
-//            }
-//
-//            //board.placeShip(pos, s, vertical);
-//        }
-//        for (int i = 0; i < usedSpaces.size(); i++) {
-//            newsea[usedSpaces.get(i)] = 2;
-//        }
+        for (int i = 0; i < fleet.length; ++i) {
+            int s = fleet[i];
+            boolean vertical;
+
+            boolean goodSpace = false;
+
+            while (goodSpace == false) {
+                vertical = rnd.nextBoolean();
+                
+                if (vertical) {
+                    
+                    int x = rnd.nextInt(10);
+                    int y = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeY-(s-1));
+
+                    for (int j = 0; j < s; j++) {
+                        int indexLtoRBtoT = x + (y * 10) + (j * 10);
+                        potentialSpace.add(indexLtoRBtoT);
+                    }
+                    boolean fieldIsOk = true;
+                    for (int j = 0; j < potentialSpace.size(); j++) {
+                        if (usedSpaces.contains(potentialSpace.get(j)) || newsea[potentialSpace.get(j)] < 1) {
+                            fieldIsOk = false;
+                        }
+                    }
+                    if (fieldIsOk == true && potentialSpace.size() == s) {
+                        usedSpaces.addAll(potentialSpace);
+                        goodSpace = true;
+                    }
+                    potentialSpace.clear();
+
+                } else {
+                    int x = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeX-(s-1));
+                    int y = rnd.nextInt(10);
+
+                    for (int j = 0; j < s; j++) {
+                        int indexLtoRBtoT = x + (y * 10) + j;
+                        potentialSpace.add(indexLtoRBtoT);
+                    }
+                    boolean fieldIsOk = true;
+                    for (int j = 0; j < potentialSpace.size(); j++) {
+                        if (usedSpaces.contains(potentialSpace.get(j)) || newsea[potentialSpace.get(j)] < 1) {
+                            fieldIsOk = false;
+                            
+                        }
+                    }
+                    if (fieldIsOk == true && potentialSpace.size() == s) {
+                        usedSpaces.addAll(potentialSpace);
+                        goodSpace = true;
+                    }
+                    potentialSpace.clear();
+                }
+            }
+
+            //board.placeShip(pos, s, vertical);
+        }
+        for (int i = 0; i < usedSpaces.size(); i++) {
+            newsea[usedSpaces.get(i)] = 2;
+        }
         return newsea;
     }       
 
