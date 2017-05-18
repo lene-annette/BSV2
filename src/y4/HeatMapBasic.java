@@ -105,7 +105,7 @@ public class HeatMapBasic {
      * @param fleet
      * @return single int coordinate
      */
-    private int getIntFromHeatMap(int[] heatmap, ArrayList<Integer> fleet){
+    public int getIntFromHeatMap(int[] heatmap){
         
         int maxHeatIndex = 0;   
         for (int i = 0; i < heatmap.length; i++) {
@@ -175,7 +175,7 @@ public class HeatMapBasic {
     }
     
     
-    private int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet) {
+    public int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet) {
         
         int[] arrFleet = new int[fleet.size()];
         for (int i = 0; i < fleet.size(); i++) {
@@ -392,7 +392,24 @@ public class HeatMapBasic {
         return heatmap;
     }
     
+    public ArrayList<Integer> getVirginFleet(){
+        ArrayList<Integer> fleet = new ArrayList<Integer>();
+        fleet.add(5);
+        fleet.add(4);
+        fleet.add(3);
+        fleet.add(3);
+        fleet.add(2);
+        
+        return fleet;
+    }
     
+    public int[] getEmptySea(){
+        int[] output = new int[100];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = 1;
+        }
+        return output;
+    }
     
     public int[] fixedSeaWithSips() {
         int[] fixedSea
