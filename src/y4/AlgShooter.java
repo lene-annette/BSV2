@@ -144,7 +144,7 @@ public class AlgShooter implements BattleshipsPlayer {
     public Position getFireCoordinates(Fleet enemyShips) {
         fleetBeforeShot = fleetConverter(enemyShips);
 
-        int index;
+        //int index;
         if (hunt) {
             
             lastShot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
