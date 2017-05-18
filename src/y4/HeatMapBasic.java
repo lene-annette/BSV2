@@ -99,9 +99,10 @@ public class HeatMapBasic {
     }
 
     public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
-        int size = previousShots.size();
+        
+        //int size = previousShots.size();
         int[] sea = generateSeaFromPositions(previousShots);
-        heatmap = simpleHeatMap(sea, fleet, size);
+        heatmap = simpleHeatMap(sea, fleet);
         Position pos = getPositionFromHeatMap(heatmap);
         return pos;
     }
@@ -181,29 +182,6 @@ public class HeatMapBasic {
         return output;
     }
 
-    public int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet, int size) {
-
-        int[] arrFleet = new int[fleet.size()];
-        for (int i = 0; i < fleet.size(); i++) {
-            arrFleet[i] = fleet.get(i);
-        }
-
-        int iterations = 1000;
-        int[] newsea = new int[10 * 10];
-
-        int[] tempsea = null;
-        for (int i = 0; i < iterations; i++) {
-            tempsea = distributeShips(sea, arrFleet, size);
-            for (int j = 0; j < tempsea.length; j++) {
-                if (tempsea[j] > 1) {
-                    newsea[j] += 1;
-                }
-            }
-        }
-
-        return newsea;
-
-    }
     public int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet) {
 
         int[] arrFleet = new int[fleet.size()];
@@ -216,7 +194,7 @@ public class HeatMapBasic {
 
         int[] tempsea = null;
         for (int i = 0; i < iterations; i++) {
-            tempsea = distributeShips(sea, arrFleet,0);
+            tempsea = distributeShips(sea, arrFleet);
             for (int j = 0; j < tempsea.length; j++) {
                 if (tempsea[j] > 1) {
                     newsea[j] += 1;
@@ -228,22 +206,49 @@ public class HeatMapBasic {
 
     }
 
-    private int[] distributeShips(int[] sea, int[] fleet, int size) {
-
+    private int[] distributeShips(int[] sea, int[] fleet) {
+        
         int[] newsea = new int[10 * 10];
         System.arraycopy(sea, 0, newsea, 0, sea.length);
         //newsea er nu en kopi af sea.
 
         ArrayList<Integer> potentialSpace = new ArrayList<Integer>();
         ArrayList<Integer> usedSpaces = new ArrayList<Integer>();
+        
 
         for (int i = 0; i < fleet.length; ++i) {
             int s = fleet[i];
-            boolean vertical;
+            
+            int count = countShipSpace(sea, s); //added by Lene
+            
+            /*
+            if count < 10 then 
+                make arrayList of possible ship locations = spaceForShip()
+                then choose random index from returned arrayList
+                if + horisontal, if - vertical
+            
+            else.... 
+            
+            */
+            
+            if(count <= 10){
+                ArrayList<Integer> pos = spaceForShip(sea, s);  //added by Lene
+                int index = rnd.nextInt(pos.size());  //added by Lene
+                int position = pos.get(index);  //added by Lene
+                
+                /*
+                    if position > 0 ship position is vertical, else ship position is horisontal
+                    x = position / 10 
+                    y = position - (10*x)
+                    
+                */
+            }else{
 
+            boolean vertical;
+            
             boolean goodSpace = false;
 
-            while (goodSpace == false) {
+            while (!goodSpace) {
                 vertical = rnd.nextBoolean();
 
                 if (vertical) {
@@ -292,11 +297,13 @@ public class HeatMapBasic {
 
             //board.placeShip(pos, s, vertical);
         }
+        }
         for (int i = 0; i < usedSpaces.size(); i++) {
             newsea[usedSpaces.get(i)] = 2;
         }
         return newsea;
     }
+        
 
     public void printHeatmap(int divisor, int[] sea) {
         String RESET = "\u001B[0m";
@@ -413,7 +420,7 @@ public class HeatMapBasic {
             sea[i] = 1;
         }
         int[] fleet = {5, 4, 3, 3, 2};
-        int[] newsea = this.distributeShips(sea, fleet,0);
+        int[] newsea = this.distributeShips(sea, fleet);
         return newsea;
     }
 
