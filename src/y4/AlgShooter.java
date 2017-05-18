@@ -222,8 +222,8 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println("AlgShooter : " + AlgShooterAverage);
         System.out.println("Enemy : " + EnemyAverage);
         System.out.println("Win% : "+(100.0*won/rounds)+"%");
-        System.out.println("");
-        for (int i = 0; i < 100; i++) { System.out.println(i+" : "+stat[i]); }
+//        System.out.println("");
+//        for (int i = 0; i < 100; i++) { System.out.println(i+" : "+stat[i]); }
         
         
     }
