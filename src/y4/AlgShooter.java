@@ -261,8 +261,9 @@ public class AlgShooter implements BattleshipsPlayer {
     }
 
     public Position shootTopOfStack() {
-        Position pos = stack.get(stack.size() - 1);
-        stack.remove(stack.size() - 1);
+        Position pos = heatMapper.getPosFromStack(heatMap, stack);
+        int index = stack.indexOf(pos);
+        stack.remove(index);
         return pos;
     }
 
