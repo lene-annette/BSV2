@@ -93,9 +93,9 @@ public class HeatMapBasic {
     }
     
     public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
-        int[] sea = this.generateSeaFromPositions(previousShots);
-        heatmap = this.simpleHeatMap(sea, fleet);
-        Position pos = this.getPositionFromHeatMap(heatmap);
+        int[] sea = generateSeaFromPositions(previousShots);
+        heatmap = simpleHeatMap(sea, fleet);
+        Position pos = getPositionFromHeatMap(heatmap);
         return pos;
     }
     
@@ -130,15 +130,15 @@ public class HeatMapBasic {
             }
         }
         
-        Position pos = this.getPosFromIndex(maxHeatIndex);
+        Position pos = getPosFromIndex(maxHeatIndex);
         return pos;
     }
     
     private Position getPosFromIndex(int index){
-        int Xcoordinate = 0;
-        Xcoordinate = index % 10; 
-        int Ycoordinate = 0;
-        Ycoordinate = 9-(index / 10);
+        //int Xcoordinate = 0;
+        int Xcoordinate = index % 10; 
+        //int Ycoordinate = 0;
+        int Ycoordinate = 9-(index / 10);
             
         Position pos = new Position(Xcoordinate, Ycoordinate);
         
