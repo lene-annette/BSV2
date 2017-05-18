@@ -543,6 +543,12 @@ public class HeatMapBasic {
         return numOfTimesThereIsSpace;
     }
     
+    public int getCorrFromPos(Position pos){
+            int output = 0;
+            output = ((9-pos.y) * 10)+pos.x; 
+            return output;
+    }
+    
     public int[] fixedSeaWithSips() {
         int[] fixedSea
                 = {1, 1, 1, 1, 3, 3, 1, 1, 1, 1,

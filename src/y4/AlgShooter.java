@@ -18,7 +18,15 @@ import java.util.Random;
  * @author lene_
  */
 public class AlgShooter implements BattleshipsPlayer {
-
+    
+    int globalEnemyShotCounter = 0;
+    int[] ourShipPlacementRound = null;//bliver strengt taget ikke brugt til noget, men
+                                         //måske kan vi få brug for den.
+    int[] enemyShipMatch = null;
+    int[] enemyShipRound = null;
+    int[] enemyShotMatch = null;
+    int[] enemyShotRound = null;
+    
     private final static Random rnd = new Random();
     private final static PositionFiller pf = new PositionFiller();
     private int sizeX;
@@ -54,8 +62,12 @@ public class AlgShooter implements BattleshipsPlayer {
         this.rounds = (double) rounds;
         stat = new int[100];
         heatMapper = new HeatMapBasic();
+        
+        enemyShipMatch = heatMapper.getEmptySea();
+        enemyShotMatch = heatMapper.getEmptySea();
     }
-
+    
+    
     @Override
     public void startRound(int round) {
         hunt = true;
@@ -70,6 +82,11 @@ public class AlgShooter implements BattleshipsPlayer {
         avblShots = pf.fillPositionArray();
         fleetBeforeShot = new ArrayList<Integer>();
         fleetAfterShot = new ArrayList<Integer>();
+        
+        globalEnemyShotCounter = 0;
+        ourShipPlacementRound  = heatMapper.getEmptySea();
+        enemyShipRound = heatMapper.getEmptySea();
+        enemyShotRound = heatMapper.getEmptySea();
     }
 
     @Override
@@ -132,14 +149,43 @@ public class AlgShooter implements BattleshipsPlayer {
                     potentialSpace.clear();
                 }
             }
+            
+            //2017-05-18 -- chr -- kodeforslag:
+            ArrayList<Integer> ourShipCoor = shipCoorFromPos(pos, s.size(), vertical);
+            for (int j = 0; j < ourShipCoor.size(); j++) {
+                this.ourShipPlacementRound[ourShipCoor.get(j)] = 2;
+            }
             board.placeShip(pos, s, vertical);
         }
 
     }
-
+    
+    public ArrayList<Integer> shipCoorFromPos(Position pos, int shiplength, boolean vertical){
+        ArrayList<Integer> shipCoor = new ArrayList<Integer>();
+        int startCorr = heatMapper.getCorrFromPos(pos);
+        int nextCoor = 0;
+        shipCoor.add(startCorr);
+        for (int i = 1; i < shiplength; i++) {
+            if (vertical) {
+                nextCoor = startCorr - (i*10);
+                shipCoor.add(nextCoor);
+            }else{
+                nextCoor = startCorr + i;
+                shipCoor.add(nextCoor);
+            }
+        }
+                
+        return shipCoor;
+    }
+    
     @Override
     public void incoming(Position pos) {
-
+        globalEnemyShotCounter++;
+        int enemyShot = heatMapper.getCorrFromPos(pos);
+        for (int i = 0; i < this.enemyShotRound.length; i++) {
+            enemyShotRound[enemyShot] = 101- globalEnemyShotCounter;//dette er for at se skudrækkefølgen
+        }
+        
     }
 
     @Override
@@ -170,7 +216,13 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-
+        
+        //2017-05-18 -kl. 17.02- -chr- kodeforslag:
+        //hvis det er et hit, skal feltet tilføjes enemyShipRound:
+        // det er forudsat (i endRound) at det der tilføjes til enemyShipRound er en
+        // negativ integer (eg -2).
+        //this.enemyShipRound[heatMapper.getCorrFromPos(pos)] = -this.enemyShipRound[heatMapper.getCorrFromPos(pos)];
+        
         fleetAfterShot = fleetConverter(enemyShips);
         isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
         shotHit = hit;
@@ -206,6 +258,17 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endRound(int round, int points, int enemyPoints) {
+        
+        //2017-05-18 -kl.17.02 -chr- kodeforslag:
+        for (int i = 0; i < this.enemyShipRound.length; i++) {
+           if (enemyShipRound[i] < 1) {
+               this.enemyShipMatch[i]++;
+           }
+        }
+        for (int i = 0; i < this.enemyShotRound.length; i++) {
+            this.enemyShotMatch[i] +=  enemyShotRound[i];
+        }
+       
         AlgShooterAverage += 100.0-points;
         EnemyAverage += 100.0-enemyPoints;
         stat[100-points]++;
