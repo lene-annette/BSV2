@@ -266,22 +266,22 @@ public class AlgShooter implements BattleshipsPlayer {
         return pos;
     }
 
-    public Position getFromGrid(int index) {
-        Position result;
-        Position p = avblShots.get(index);
-
-        if (p.x % 2 == 0 && p.y % 2 != 0) {
-            result = p;
-        } else if (p.x % 2 != 0 && p.y % 2 == 0) {
-            result = p;
-        } else if (index != avblShots.size() - 1) {
-            result = avblShots.get(index + 1);
-        } else {
-            result = avblShots.get(index - 1);
-        }
-
-        return result;
-    }
+//    public Position getFromGrid(int index) {
+//        Position result;
+//        Position p = avblShots.get(index);
+//
+//        if (p.x % 2 == 0 && p.y % 2 != 0) {
+//            result = p;
+//        } else if (p.x % 2 != 0 && p.y % 2 == 0) {
+//            result = p;
+//        } else if (index != avblShots.size() - 1) {
+//            result = avblShots.get(index + 1);
+//        } else {
+//            result = avblShots.get(index - 1);
+//        }
+//
+//        return result;
+//    }
 
     public ArrayList<Integer> fleetConverter(Fleet fleet) {
         int shipCount = fleet.getNumberOfShips();

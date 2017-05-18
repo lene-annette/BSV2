@@ -32,7 +32,7 @@ public class Y4 implements PlayerFactory<BattleshipsPlayer> {
 
     @Override
     public String[] getAuthors() {
-        return new String[] {"Lene"};
+        return new String[] {"Lene","Christian","Gert"};
     }
     
 }
