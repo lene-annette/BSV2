@@ -17,7 +17,8 @@ public class HeatMapBasic {
 
     private final static Random rnd = new Random();
     private int[] heatmap;
-    private HeatMapInverse hmi = new HeatMapInverse();/*
+    //private HeatMapInverse hmi = new HeatMapInverse();
+    /*
     
         int[] sea = new int[100];//this.fixedSeaWithSips();
         for (int i = 0; i < sea.length; i++) {
