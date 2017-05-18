@@ -31,9 +31,9 @@ public class AlgShooter implements BattleshipsPlayer {
     private Board myBoard;
     private boolean hunt;
     private boolean target;
-    private boolean lastShotHit;
+    private boolean shotHit;
     private boolean isSunk;
-    private Position lastShot;
+    private Position shot;
     private int[] heatMap;
     private int[] stat;
     private ArrayList<Position> stack;
@@ -63,8 +63,8 @@ public class AlgShooter implements BattleshipsPlayer {
         hitCount = 0;
         stack = new ArrayList<Position>();
         shotsFired = new ArrayList<Position>();
-        lastShot = new Position(0, 0);
-        lastShotHit = false;
+        shot = new Position(0, 0);
+        shotHit = false;
         avblShots = pf.fillPositionArray();
         fleetBeforeShot = new ArrayList<Integer>();
         fleetAfterShot = new ArrayList<Integer>();
@@ -147,25 +147,25 @@ public class AlgShooter implements BattleshipsPlayer {
         //int index;
         if (hunt) {
             
-            lastShot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
+            shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
             heatMap = heatMapper.getHeatmap();
 //            index = rnd.nextInt(avblShots.size());
 //            lastShot = getFromGrid(index);
             
-            avblShots.remove(lastShot);
-            shotsFired.add(lastShot);
-        } else if (target && lastShotHit) {
-            addToStack(lastShot);
-            lastShot = shootTopOfStack();
-            avblShots.remove(lastShot);
-            shotsFired.add(lastShot);
+            avblShots.remove(shot);
+            shotsFired.add(shot);
+        } else if (target && shotHit) {
+            addToStack(shot);
+            shot = shootTopOfStack();
+            avblShots.remove(shot);
+            shotsFired.add(shot);
         } else {
-            lastShot = shootTopOfStack();
-            avblShots.remove(lastShot);
-            shotsFired.add(lastShot);
+            shot = shootTopOfStack();
+            avblShots.remove(shot);
+            shotsFired.add(shot);
         }
 
-        return lastShot;
+        return shot;
     }
 
     @Override
@@ -173,7 +173,7 @@ public class AlgShooter implements BattleshipsPlayer {
 
         fleetAfterShot = fleetConverter(enemyShips);
         isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
-        lastShotHit = hit;
+        shotHit = hit;
 
         if (hit) {
             hitCount++;
