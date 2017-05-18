@@ -54,8 +54,15 @@ public class HeatMapBasic {
      */
     public void run() {
         System.out.println("HeatMapBasic -- run");
-
+        
+        ArrayList<Integer> arrList = new ArrayList<Integer>();
+        arrList = this.spaceForShip(this.antiHeatTemplatePS(), 4);
+        System.out.println(arrList);
+        this.printSea(this.antiHeatTemplatePS());
+    
     }
+    //public Position getPosFromStack(int[] heatmap, ArrayList<Position> stack){
+        
 
     public Position getPosFromStack(int[] heatmap, ArrayList<Position> stack) {
 
@@ -432,7 +439,58 @@ public class HeatMapBasic {
         }
         return output;
     }
+    
+    public ArrayList<Integer> spaceForShip(int[] sea, int shiplength) {
+        ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
+        boolean output = false;
+        int horizontal = 1;
+        boolean hor = false;
+        for (int i = 1; i < sea.length; i++) {
+            if (sea[i] == 1 && sea[i - 1] == 1) {
+                horizontal++;
+            } else if (sea[i] != 1) {
+                horizontal = 1;
+            }
 
+            if (horizontal >= shiplength) {
+                numOfTimesThereIsSpace.add(i - (shiplength - 1));
+                hor = true;
+            }
+            if (i % 10 == 9) {
+                i++;
+                horizontal = 1;
+            }
+        }
+
+        int vertical = 1;
+        boolean ver = false;
+        for (int i = 10; i < sea.length; i += 10) {
+            if (sea[i] == 1 && sea[i - 10] == 1) {
+                vertical++;
+                //System.out.println(i);
+            } else if (sea[i] != 1) {
+                vertical = 1;
+            }
+
+            if (vertical >= shiplength) {
+                numOfTimesThereIsSpace.add(-(i - (10*(shiplength - 1))));               
+                ver = true;
+            }
+            if (i >= 90 && i != 99) {
+                //System.out.println("90's: "+i);
+                int temp = i - 90;
+                i = 1 + temp;
+            }
+            //extra test
+            if (i/10 == 0 ) {
+                vertical = 1;
+            }
+            //System.out.println(i);
+        }
+
+        return numOfTimesThereIsSpace;
+    }
+    
     public int[] fixedSeaWithSips() {
         int[] fixedSea
                 = {1, 1, 1, 1, 3, 3, 1, 1, 1, 1,
@@ -448,5 +506,20 @@ public class HeatMapBasic {
 
         return fixedSea;
     }
+    private int[] antiHeatTemplatePS() {
+        int[] fixedSea
+                =  { -1,  1,  1,  1, -1, -1,  1,  1,  1, -1,
+                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                     -1, -1,  1,  1, -1, -1,  1,  1, -1, -1,
+                     -1, -1,  1,  1, -1, -1,  1,  1, -1, -1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
+                     -1,  1,  1,  1, -1, -1,  1,  1,  1, -1};
 
+        return fixedSea;
+    }
+    
 }
