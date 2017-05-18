@@ -194,7 +194,6 @@ public class AlgShooter implements BattleshipsPlayer {
 
         //int index;
         if (hunt) {
-            lastShot=shot;
             shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
             heatMap = heatMapper.getHeatmap();
            
