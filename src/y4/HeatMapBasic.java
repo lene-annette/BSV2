@@ -464,6 +464,57 @@ public class HeatMapBasic {
         return numOfTimesThereIsSpace;
     }
     
+    public int countShipSpace(int[] sea, int shiplength) {
+        int numOfTimesThereIsSpace = 0;
+        boolean output = false;
+        int horizontal = 1;
+        boolean hor = false;
+        for (int i = 1; i < sea.length; i++) {
+            if (sea[i] == 1 && sea[i - 1] == 1) {
+                horizontal++;
+            } else if (sea[i] != 1) {
+                horizontal = 1;
+            }
+
+            if (horizontal >= shiplength) {
+                numOfTimesThereIsSpace++;                
+                hor = true;
+            }
+            if (i % 10 == 9) {
+                i++;
+                horizontal = 1;
+            }
+        }
+
+        int vertical = 1;
+        boolean ver = false;
+        for (int i = 10; i < sea.length; i += 10) {
+            if (sea[i] == 1 && sea[i - 10] == 1) {
+                vertical++;
+                //System.out.println(i);
+            } else if (sea[i] != 1) {
+                vertical = 1;
+            }
+
+            if (vertical >= shiplength) {
+                numOfTimesThereIsSpace++;                
+                ver = true;
+            }
+            if (i >= 90 && i != 99) {
+                //System.out.println("90's: "+i);
+                int temp = i - 90;
+                i = 1 + temp;
+            }
+            //extra test
+            if (i/10 == 0 ) {
+                vertical = 1;
+            }
+            //System.out.println(i);
+        }
+
+        return numOfTimesThereIsSpace;
+    }
+    
     public int[] fixedSeaWithSips() {
         int[] fixedSea
                 = {1, 1, 1, 1, 3, 3, 1, 1, 1, 1,
