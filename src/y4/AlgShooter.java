@@ -34,6 +34,7 @@ public class AlgShooter implements BattleshipsPlayer {
     private boolean shotHit;
     private boolean isSunk;
     private Position shot;
+    private Position lastShot;
     private int[] heatMap;
     private int[] stat;
     private ArrayList<Position> stack;
@@ -64,6 +65,7 @@ public class AlgShooter implements BattleshipsPlayer {
         stack = new ArrayList<Position>();
         shotsFired = new ArrayList<Position>();
         shot = new Position(0, 0);
+        lastShot = new Position(9, 9);
         shotHit = false;
         avblShots = pf.fillPositionArray();
         fleetBeforeShot = new ArrayList<Integer>();
@@ -146,12 +148,10 @@ public class AlgShooter implements BattleshipsPlayer {
 
         //int index;
         if (hunt) {
-            
+            lastShot=shot;
             shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
             heatMap = heatMapper.getHeatmap();
-//            index = rnd.nextInt(avblShots.size());
-//            lastShot = getFromGrid(index);
-            
+           
             avblShots.remove(shot);
             shotsFired.add(shot);
         } else if (target && shotHit) {
@@ -240,18 +240,6 @@ public class AlgShooter implements BattleshipsPlayer {
         addPositionIfValid(e);
         addPositionIfValid(w);
         
-//        if (n.x >= 0 && n.y >= 0 && n.x < 10 && n.y < 10 && !stack.contains(n) && avblShots.contains(n)) {
-//            stack.add(n);
-//        }
-//        if (s.x >= 0 && s.y >= 0 && s.x < 10 && s.y < 10 && !stack.contains(s) && avblShots.contains(s)) {
-//            stack.add(s);
-//        }
-//        if (e.x >= 0 && e.y >= 0 && e.x < 10 && e.y < 10 && !stack.contains(e) && avblShots.contains(e)) {
-//            stack.add(e);
-//        }
-//        if (w.x >= 0 && w.y >= 0 && w.x < 10 && w.y < 10 && !stack.contains(w) && avblShots.contains(w)) {
-//            stack.add(w);
-//        }
     }
     
     public void addPositionIfValid(Position pos) {
