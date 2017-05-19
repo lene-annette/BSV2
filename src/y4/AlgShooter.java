@@ -18,15 +18,15 @@ import java.util.Random;
  * @author lene_
  */
 public class AlgShooter implements BattleshipsPlayer {
-    
+
     int globalEnemyShotCounter = 0;
     int[] ourShipPlacementRound = null;//bliver strengt taget ikke brugt til noget, men
-                                         //måske kan vi få brug for den.
+    //måske kan vi få brug for den.
     int[] enemyShipMatch = null;
     int[] enemyShipRound = null;
     int[] enemyShotMatch = null;
     int[] enemyShotRound = null;
-    
+
     private final static Random rnd = new Random();
     private final static PositionFiller pf = new PositionFiller();
     private int sizeX;
@@ -42,15 +42,22 @@ public class AlgShooter implements BattleshipsPlayer {
     private boolean shotHit;
     private boolean isSunk;
     private Position shot;
-    private Position lastShot;
     private int[] heatMap;
     private int[] stat;
     private ArrayList<Position> stack;
+    private ArrayList<Position> hitList;
     private ArrayList<Position> avblShots;
     private ArrayList<Position> shotsFired;
     private ArrayList<Integer> fleetBeforeShot;
     private ArrayList<Integer> fleetAfterShot;
     private HeatMapBasic heatMapper;
+
+    //attributes used for target methods
+    private ArrayList<Position> neighbors;
+    private Position neighbor;
+    private boolean vertHit;
+    private boolean neighborMatch;
+    private int backTrack;
 
     public AlgShooter() {
     }
@@ -62,12 +69,11 @@ public class AlgShooter implements BattleshipsPlayer {
         this.rounds = (double) rounds;
         stat = new int[100];
         heatMapper = new HeatMapBasic();
-        
+
         enemyShipMatch = heatMapper.getEmptySea();
         enemyShotMatch = heatMapper.getEmptySea();
     }
-    
-    
+
     @Override
     public void startRound(int round) {
         hunt = true;
@@ -75,18 +81,22 @@ public class AlgShooter implements BattleshipsPlayer {
         isSunk = false;
         hitCount = 0;
         stack = new ArrayList<Position>();
+        neighbors = new ArrayList<Position>();
+        hitList = new ArrayList<Position>();
         shotsFired = new ArrayList<Position>();
         shot = new Position(0, 0);
-        lastShot = new Position(9, 9);
+        neighbor = new Position(0, 0);
         shotHit = false;
         avblShots = pf.fillPositionArray();
         fleetBeforeShot = new ArrayList<Integer>();
         fleetAfterShot = new ArrayList<Integer>();
-        
+
         globalEnemyShotCounter = 0;
-        ourShipPlacementRound  = heatMapper.getEmptySea();
+        ourShipPlacementRound = heatMapper.getEmptySea();
         enemyShipRound = heatMapper.getEmptySea();
         enemyShotRound = heatMapper.getEmptySea();
+
+        backTrack = 0;
     }
 
     @Override
@@ -149,7 +159,7 @@ public class AlgShooter implements BattleshipsPlayer {
                     potentialSpace.clear();
                 }
             }
-            
+
             //2017-05-18 -- chr -- kodeforslag:
             ArrayList<Integer> ourShipCoor = shipCoorFromPos(pos, s.size(), vertical);
             for (int j = 0; j < ourShipCoor.size(); j++) {
@@ -159,53 +169,97 @@ public class AlgShooter implements BattleshipsPlayer {
         }
 
     }
-    
-    public ArrayList<Integer> shipCoorFromPos(Position pos, int shiplength, boolean vertical){
+
+    public ArrayList<Integer> shipCoorFromPos(Position pos, int shiplength, boolean vertical) {
         ArrayList<Integer> shipCoor = new ArrayList<Integer>();
         int startCorr = heatMapper.getCorrFromPos(pos);
         int nextCoor = 0;
         shipCoor.add(startCorr);
         for (int i = 1; i < shiplength; i++) {
             if (vertical) {
-                nextCoor = startCorr - (i*10);
+                nextCoor = startCorr - (i * 10);
                 shipCoor.add(nextCoor);
-            }else{
+            } else {
                 nextCoor = startCorr + i;
                 shipCoor.add(nextCoor);
             }
         }
-                
+
         return shipCoor;
     }
-    
+
     @Override
     public void incoming(Position pos) {
         globalEnemyShotCounter++;
         int enemyShot = heatMapper.getCorrFromPos(pos);
         for (int i = 0; i < this.enemyShotRound.length; i++) {
-            enemyShotRound[enemyShot] = 101- globalEnemyShotCounter;//dette er for at se skudrækkefølgen
+            enemyShotRound[enemyShot] = 101 - globalEnemyShotCounter;//dette er for at se skudrækkefølgen
         }
-        
+
     }
 
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
         fleetBeforeShot = fleetConverter(enemyShips);
+        
+        if (!stack.isEmpty()) {
+            System.out.print("Stack : ");
+            for (int i = 0; i < stack.size(); i++) {
+                System.out.print(stack.get(i) + " , ");
+            }
+            System.out.println("");
+        }
 
-        //int index;
+        if (!neighbors.isEmpty()) {
+            System.out.print("EndFields : ");
+            for (int i = 0; i < neighbors.size(); i++) {
+                System.out.print(neighbors.get(i) + " , ");
+            }
+            System.out.println("");
+        }
+        
+        
         if (hunt) {
             shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
             heatMap = heatMapper.getHeatmap();
-           
+            System.out.println("SHOOTING FROM HEATMAP");
             avblShots.remove(shot);
             shotsFired.add(shot);
         } else if (target && shotHit) {
+
             addToStack(shot);
-            shot = shootTopOfStack();
+
+            if (hitCount == 1) {
+                shot = shootFromStack();
+            } else {
+                checkForMatch();
+                if (neighborMatch) {
+
+                    System.out.print("\nShot : " + shot.toString());
+                    System.out.print(" - Neighbor Shot : " + neighbor.toString());
+                    System.out.println(" - Vertical neighbor : " + vertHit);
+                }
+                if (neighbors.isEmpty()) {
+                    shot = shootFromStack();
+                    System.out.println("SHOOTING FROM STACK");
+                } else {
+                    shot = targetShooter();
+                    System.out.println("SHOOTING WITH TARGETSHOOTER");
+                }
+            }
+
             avblShots.remove(shot);
             shotsFired.add(shot);
         } else {
-            shot = shootTopOfStack();
+
+            if (neighbors.isEmpty()) {
+                shot = shootFromStack();
+                System.out.println("SHOOTING FROM STACK");
+            } else {
+                shot = targetShooter();
+                System.out.println("SHOOTING WITH TARGETSHOOTER");
+            }
+
             avblShots.remove(shot);
             shotsFired.add(shot);
         }
@@ -213,35 +267,104 @@ public class AlgShooter implements BattleshipsPlayer {
         return shot;
     }
 
+    public Position targetShooter() {
+        Position pos = heatMapper.getPosFromStack(heatMap, neighbors);
+        int index = neighbors.indexOf(pos);
+        neighbors.remove(index);
+        return pos;
+    }
+
+    public boolean checkForMatch() {
+
+        neighborMatch = false;
+        vertHit = false;
+        int ticker = 2;
+        int hits = hitList.size();
+
+        while (!neighborMatch && ticker <= backTrack) {
+            if (hitList.get(hits - ticker).x == shot.x) {
+                neighborMatch = true;
+                vertHit = true;
+            } else if (hitList.get(hits - ticker).y == shot.y) {
+                neighborMatch = true;
+            } else {
+                ticker++;
+            }
+        }
+        if (neighborMatch) {
+            neighbor = hitList.get(hits - ticker);
+            findEndFields();
+        }
+        return neighborMatch;
+    }
+
+    public void findEndFields() {
+        Position right, left, up, down;
+
+        if (vertHit) {
+            if (shot.y < neighbor.y) {
+                down = new Position(shot.x, shot.y - 1);
+                up = new Position(neighbor.x, neighbor.y + 1);
+            } else {
+                down = new Position(neighbor.x, neighbor.y - 1);
+                up = new Position(shot.x, shot.y + 1);
+            }
+            addNeighborIfValid(down);
+            addNeighborIfValid(up);
+        } else {
+            if (shot.x < neighbor.x) {
+                right = new Position(shot.x - 1, shot.y);
+                left = new Position(neighbor.x + 1, neighbor.y);
+            } else {
+                right = new Position(neighbor.x - 1, neighbor.y);
+                left = new Position(shot.x + 1, shot.y);
+            }
+            addNeighborIfValid(right);
+            addNeighborIfValid(left);
+
+        }
+
+    }
+
+    public void addNeighborIfValid(Position pos) {
+        if (stack.contains(pos)) {
+            neighbors.add(pos);
+            stack.remove(pos);
+        }
+    }
+
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-        
+
+
         //2017-05-18 -kl. 17.02- -chr- kodeforslag:
         //hvis det er et hit, skal feltet tilføjes enemyShipRound:
         // det er forudsat (i endRound) at det der tilføjes til enemyShipRound er en
         // negativ integer (eg -2).
         //this.enemyShipRound[heatMapper.getCorrFromPos(pos)] = -this.enemyShipRound[heatMapper.getCorrFromPos(pos)];
-        
         fleetAfterShot = fleetConverter(enemyShips);
         isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
         shotHit = hit;
 
         if (hit) {
             hitCount++;
+            backTrack++;
+            hitList.add(shot);
             if (!isSunk) {
                 target = true;
                 hunt = false;
             } else {
                 sunkenShipSize = findSunkenShipSize(fleetBeforeShot, fleetAfterShot);
-                hitCount = hitCount-sunkenShipSize;
+                hitCount = hitCount - sunkenShipSize;
                 if (hitCount > 0) {
                     target = true;
                     hunt = false;
-                }
-                else {
+                } else {
                     target = false;
                     hunt = true;
                     stack.clear();
+                    neighbors.clear();
+                    backTrack = 0;
                 }
             }
 
@@ -257,37 +380,36 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endRound(int round, int points, int enemyPoints) {
-        
+
         //2017-05-18 -kl.17.02 -chr- kodeforslag:
         for (int i = 0; i < this.enemyShipRound.length; i++) {
-           if (enemyShipRound[i] < 1) {
-               this.enemyShipMatch[i]++;
-           }
+            if (enemyShipRound[i] < 1) {
+                this.enemyShipMatch[i]++;
+            }
         }
         for (int i = 0; i < this.enemyShotRound.length; i++) {
-            this.enemyShotMatch[i] +=  enemyShotRound[i];
+            this.enemyShotMatch[i] += enemyShotRound[i];
         }
-       
-        AlgShooterAverage += 100.0-points;
-        EnemyAverage += 100.0-enemyPoints;
-        stat[100-points]++;
-        
+
+        AlgShooterAverage += 100.0 - points;
+        EnemyAverage += 100.0 - enemyPoints;
+        stat[100 - points]++;
+
     }
 
     @Override
     public void endMatch(int won, int lost, int draw) {
-        
-        AlgShooterAverage = AlgShooterAverage/rounds;
-        EnemyAverage = EnemyAverage/rounds;
-        
+
+        AlgShooterAverage = AlgShooterAverage / rounds;
+        EnemyAverage = EnemyAverage / rounds;
+
         System.out.println("");
         System.out.println("AlgShooter : " + AlgShooterAverage);
         System.out.println("Enemy : " + EnemyAverage);
-        System.out.println("Win% : "+(100.0*won/rounds)+"%");
+        System.out.println("Win% : " + (100.0 * won / rounds) + "%");
 //        System.out.println("");
 //        for (int i = 0; i < 100; i++) { System.out.println(i+" : "+stat[i]); }
-        
-        
+
     }
 
     public void addToStack(Position pos) {
@@ -296,21 +418,21 @@ public class AlgShooter implements BattleshipsPlayer {
         s = new Position(pos.x, (pos.y - 1));
         e = new Position((pos.x + 1), pos.y);
         w = new Position((pos.x - 1), pos.y);
-        
+
         addPositionIfValid(n);
         addPositionIfValid(s);
         addPositionIfValid(e);
         addPositionIfValid(w);
-        
+
     }
-    
+
     public void addPositionIfValid(Position pos) {
         if (pos.x >= 0 && pos.y >= 0 && pos.x < 10 && pos.y < 10 && !stack.contains(pos) && avblShots.contains(pos)) {
             stack.add(pos);
         }
     }
 
-    public Position shootTopOfStack() {
+    public Position shootFromStack() {
         Position pos = heatMapper.getPosFromStack(heatMap, stack);
         int index = stack.indexOf(pos);
         stack.remove(index);
@@ -333,7 +455,6 @@ public class AlgShooter implements BattleshipsPlayer {
 //
 //        return result;
 //    }
-
     public ArrayList<Integer> fleetConverter(Fleet fleet) {
         int shipCount = fleet.getNumberOfShips();
         ArrayList<Integer> fleetArray = new ArrayList<Integer>();
