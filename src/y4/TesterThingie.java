@@ -15,6 +15,17 @@ import java.util.ArrayList;
 public class TesterThingie { 
     public static void main(String[] args) {
         
+        
+        EnemyReact er = new EnemyReact();
+        er.run();
+    }
+               
+    
+}
+
+   
+    /*
+    
         PositionFiller pf = new PositionFiller();
         
         ArrayList<Position> grid = pf.makeGrid();
@@ -24,28 +35,21 @@ public class TesterThingie {
         
         for(int i = 0; i < grid.size(); i++){
             System.out.println("index: " + i + " Position: " + grid.get(i));
-        }
-        
-//        ArrayList<Position> fullmap = pf.fillPositionArray();
-//        Position p = fullmap.get(1);
-//        
-//        System.out.println(p);
-//        
-//        EnemyReact er = new EnemyReact();
-//        er.run();
-        
-        //HeatMapBasic hm = new HeatMapBasic();
-        //hm.run();
-        
-        //HeatMapInverse hmi = new HeatMapInverse();
-        //hmi.run();
-        
-    }
+    */
     
     
-            
+        
+        /*
+        HeatMapBasic hm = new HeatMapBasic();
+        hm.run();
+        */
+        
+        /*
+        HeatMapInverse hmi = new HeatMapInverse();
+        hmi.run();
+        */
+        
     
-}
 
 
         /*

@@ -58,7 +58,7 @@ public class HeatMapBasic {
         System.out.println("HeatMapBasic -- run");
 
         ArrayList<Integer> arrList = new ArrayList<Integer>();
-        arrList = this.spaceForShip(this.antiHeatTemplatePS(), 4);
+        arrList = this.spaceForShipIndexPlusOne(this.antiHeatTemplatePS(), 4);
         System.out.println(arrList);
         this.printSea(this.antiHeatTemplatePS());
 
@@ -190,7 +190,7 @@ public class HeatMapBasic {
             arrFleet[i] = fleet.get(i);
         }
 
-        int iterations = 100;
+        int iterations = 10000;
         int[] newsea = new int[10 * 10];
 
         int[] tempsea = null;
@@ -221,19 +221,23 @@ public class HeatMapBasic {
 
             int count = countShipSpace(sea, s);
             if (count <= 15) {
-                ArrayList<Integer> possibleLocations = spaceForShip(newsea, s);
+                ArrayList<Integer> possibleLocations = spaceForShipIndexPlusOne(newsea, s);// 2017-05-19 kl. 21.52 --Chr.
+                                                                                // her bruges space for ship
                 int index = rnd.nextInt(possibleLocations.size());
-                int position = possibleLocations.get(index);
-
+                
+                int position = possibleLocations.get(index);// 2017-05-19 kl. 21.52 --Chr.
+                                                             //th position i 1 higher than it should be 
+                                                             // (to sepparate "positive" 0 and "negative" 0,
+                                                             //  they are written as +1 and -1 and so on..)
                 if (position < 0) {
-                    position = position * (-1);
+                    position = position * (-1); 
                     for (int j = 0; j < s; j++) {
-                        int indexLtoRBtoT = position + (j * 10);
+                        int indexLtoRBtoT = position + (j * 10) -1;// 2017-05-19-chr... therefore 1 is subtracted...
                         usedSpaces.add(indexLtoRBtoT);
                     }
                 } else {
                     for (int j = 0; j < s; j++) {
-                        int indexLtoRBtoT = position + j;
+                        int indexLtoRBtoT = position + j -1;  // 2017-05-19-chr... therefore 1 is subtracted...
                         usedSpaces.add(indexLtoRBtoT);
                     }
                 }
@@ -439,7 +443,7 @@ public class HeatMapBasic {
         return output;
     }
 
-    public ArrayList<Integer> spaceForShip(int[] sea, int shiplength) {
+    public ArrayList<Integer> spaceForShipIndexPlusOne(int[] sea, int shiplength) {
         ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
         boolean output = false;
         int horizontal = 1;

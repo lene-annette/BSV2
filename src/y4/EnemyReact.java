@@ -32,8 +32,16 @@ public class EnemyReact {
     
     public void run(){      
         
-        int[] ship = shipindexesFromCorr(4);
-        System.out.println(Arrays.toString(ship));
+        ArrayList<Integer> ship2 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 3);
+        System.out.println("ship2: "+ship2.size());
+        
+        System.out.println("combinations: " + combinations(3).length);
+        
+        
+    
+        //int[] ship = combinations(3);
+        //int[] ship = shipindexesFromCorr(4);
+        //System.out.println(Arrays.toString(ship));
         
         /*
         ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
@@ -66,13 +74,14 @@ public class EnemyReact {
         //myspace: return the indexes, positive (+) and negative (-), with spaces for ships on an empty sea. 
         //eg.: spaceForShip(this.getEmptySea(), 3);
         //[0, 1, 2, 3, 4, 5, 6, 7, 10, 11,.....95, 96, 97, 0, -10, -20, -30,....-59, -69, -79];
-        ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
-        
+        //[1, 2, 3, 4, 5, 6, 7, 8, 11, 12, ....96, 97, 98, -1, -11, -21, -31,....-60, -70, -80]
+        ArrayList<Integer> myspace = spaceForShipIndexPlusOneER(this.getEmptySea(), 3);
         
         return numberOfCombinations;
     }
     
-    public int[] shipindexesFromCorr(int shipsize){
+    //
+    public int[] shipindexesFromCorr(int topLeftCoor, int shipsize){
         int[] output = null;
         if (shipsize < 0) {
         
@@ -93,7 +102,7 @@ public class EnemyReact {
 //        }
 //    }
     
-    public ArrayList<Integer> spaceForShip(int[] sea, int shiplength) {
+    public ArrayList<Integer> spaceForShipIndexPlusOneER(int[] sea, int shiplength) {
         ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
         boolean output = false;
         int horizontal = 1;
@@ -106,7 +115,7 @@ public class EnemyReact {
             }
 
             if (horizontal >= shiplength) {
-                numOfTimesThereIsSpace.add(i - (shiplength - 1));
+                numOfTimesThereIsSpace.add(i - (shiplength - 1)       +1 ); // +1 to avoid "+0" and "-0"
                 hor = true;
             }
             if (i % 10 == 9) {
@@ -126,7 +135,7 @@ public class EnemyReact {
             }
 
             if (vertical >= shiplength) {
-                numOfTimesThereIsSpace.add(-(i - (10*(shiplength - 1))));               
+                numOfTimesThereIsSpace.add(-(i - (10*(shiplength - 1)))      -1); //  // +1 to avoid "+0" and "-0"             
                 ver = true;
             }
             if (i >= 90 && i != 99) {
