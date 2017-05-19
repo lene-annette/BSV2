@@ -202,21 +202,21 @@ public class AlgShooter implements BattleshipsPlayer {
     public Position getFireCoordinates(Fleet enemyShips) {
         fleetBeforeShot = fleetConverter(enemyShips);
         
-        if (!stack.isEmpty()) {
-            System.out.print("Stack : ");
-            for (int i = 0; i < stack.size(); i++) {
-                System.out.print(stack.get(i) + " , ");
-            }
-            System.out.println("");
-        }
-
-        if (!neighbors.isEmpty()) {
-            System.out.print("EndFields : ");
-            for (int i = 0; i < neighbors.size(); i++) {
-                System.out.print(neighbors.get(i) + " , ");
-            }
-            System.out.println("");
-        }
+//        if (!stack.isEmpty()) {
+//            System.out.print("Stack : ");
+//            for (int i = 0; i < stack.size(); i++) {
+//                System.out.print(stack.get(i) + " , ");
+//            }
+//            System.out.println("");
+//        }
+//
+//        if (!neighbors.isEmpty()) {
+//            System.out.print("EndFields : ");
+//            for (int i = 0; i < neighbors.size(); i++) {
+//                System.out.print(neighbors.get(i) + " , ");
+//            }
+//            System.out.println("");
+//        }
         
         
         if (hunt) {
