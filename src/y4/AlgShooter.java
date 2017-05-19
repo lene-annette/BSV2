@@ -222,7 +222,7 @@ public class AlgShooter implements BattleshipsPlayer {
         if (hunt) {
             shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
             heatMap = heatMapper.getHeatmap();
-            System.out.println("SHOOTING FROM HEATMAP");
+//            System.out.println("SHOOTING FROM HEATMAP");
             avblShots.remove(shot);
             shotsFired.add(shot);
         } else if (target && shotHit) {
@@ -231,21 +231,21 @@ public class AlgShooter implements BattleshipsPlayer {
 
             if (hitCount == 1) {
                 shot = shootFromStack();
-                System.out.println("SHOOTING FROM STACK");
+//                System.out.println("SHOOTING FROM STACK");
             } else {
                 checkForMatch();
                 if (neighborMatch) {
 
-                    System.out.print("\nShot : " + shot.toString());
-                    System.out.print(" - Neighbor Shot : " + neighbor.toString());
-                    System.out.println(" - Vertical neighbor : " + vertHit);
+//                    System.out.print("\nShot : " + shot.toString());
+//                    System.out.print(" - Neighbor Shot : " + neighbor.toString());
+//                    System.out.println(" - Vertical neighbor : " + vertHit);
                 }
                 if (neighbors.isEmpty()) {
                     shot = shootFromStack();
-                    System.out.println("SHOOTING FROM STACK");
+//                    System.out.println("SHOOTING FROM STACK");
                 } else {
                     shot = targetShooter();
-                    System.out.println("SHOOTING WITH TARGETSHOOTER");
+//                    System.out.println("SHOOTING WITH TARGETSHOOTER");
                 }
             }
 
@@ -255,7 +255,7 @@ public class AlgShooter implements BattleshipsPlayer {
 
             if (neighbors.isEmpty()) {
                 shot = shootFromStack();
-                System.out.println("SHOOTING FROM STACK");
+//                System.out.println("SHOOTING FROM STACK");
             } else {
                 shot = targetShooter();
                 System.out.println("SHOOTING WITH TARGETSHOOTER");
