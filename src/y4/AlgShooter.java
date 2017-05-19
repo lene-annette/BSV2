@@ -231,6 +231,7 @@ public class AlgShooter implements BattleshipsPlayer {
 
             if (hitCount == 1) {
                 shot = shootFromStack();
+                System.out.println("SHOOTING FROM STACK");
             } else {
                 checkForMatch();
                 if (neighborMatch) {
