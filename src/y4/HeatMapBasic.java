@@ -105,15 +105,11 @@ public class HeatMapBasic {
         int[] sea = generateSeaFromPositions(previousShots);
         heatmap = simpleHeatMap(sea, fleet);
         Position pos = getPositionFromHeatMap(heatmap);
+        
         return pos;
     }
 
-    /**
-     *
-     * @param sea
-     * @param fleet
-     * @return single int coordinate
-     */
+
     public int getIntFromHeatMap(int[] heatmap) {
 
         int maxHeatIndex = 0;
@@ -125,12 +121,7 @@ public class HeatMapBasic {
         return maxHeatIndex;
     }
 
-    /**
-     *
-     * @param sea
-     * @param fleet
-     * @return Position of "hottest" point in the sea.
-     */
+
     private Position getPositionFromHeatMap(int[] heatmap) {
         int maxHeatIndex = 0;
         for (int i = 0; i < heatmap.length; i++) {

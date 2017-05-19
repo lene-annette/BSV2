@@ -53,7 +53,7 @@ public class AlgShooter implements BattleshipsPlayer {
     private HeatMapBasic heatMapper;
 
     //attributes used for target methods
-    private ArrayList<Position> neighbors;
+    private ArrayList<Position> endFields;
     private Position neighbor;
     private boolean vertHit;
     private boolean neighborMatch;
@@ -67,7 +67,7 @@ public class AlgShooter implements BattleshipsPlayer {
         AlgShooterAverage = 0;
         EnemyAverage = 0;
         this.rounds = (double) rounds;
-        stat = new int[100];
+        stat = new int[101];
         heatMapper = new HeatMapBasic();
 
         enemyShipMatch = heatMapper.getEmptySea();
@@ -81,7 +81,7 @@ public class AlgShooter implements BattleshipsPlayer {
         isSunk = false;
         hitCount = 0;
         stack = new ArrayList<Position>();
-        neighbors = new ArrayList<Position>();
+        endFields = new ArrayList<Position>();
         hitList = new ArrayList<Position>();
         shotsFired = new ArrayList<Position>();
         shot = new Position(0, 0);
@@ -200,88 +200,91 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
+ 
         fleetBeforeShot = fleetConverter(enemyShips);
-        
-//        if (!stack.isEmpty()) {
-//            System.out.print("Stack : ");
-//            for (int i = 0; i < stack.size(); i++) {
-//                System.out.print(stack.get(i) + " , ");
-//            }
-//            System.out.println("");
-//        }
-//
-//        if (!neighbors.isEmpty()) {
-//            System.out.print("EndFields : ");
-//            for (int i = 0; i < neighbors.size(); i++) {
-//                System.out.print(neighbors.get(i) + " , ");
-//            }
-//            System.out.println("");
-//        }
-        
-        
+ 
         if (hunt) {
+            //This is hunting mode.
+            //Shots are chosen from making a heatmap and
+            //choosing the most probable place for a ship to be located.
             shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
+            
+            //The heatmap is stored for later use in target mode.
+            //Since no new heat map is generated when in target mode.
             heatMap = heatMapper.getHeatmap();
-//            System.out.println("SHOOTING FROM HEATMAP");
+            
+            //The shot is transferred from available shots array
+            //to the shots fired array.
             avblShots.remove(shot);
             shotsFired.add(shot);
+
         } else if (target && shotHit) {
-
+            //This is target mode when last shot was a hit.
+            
+            //All positions around the hit is added to the stack
             addToStack(shot);
-
+            
             if (hitCount == 1) {
+                //If this is the first hit shot will be made from stack
                 shot = shootFromStack();
-//                System.out.println("SHOOTING FROM STACK");
             } else {
+                //With more than one hit occuring it is determined 
+                //if last hit has any neighbor hits
                 checkForMatch();
-                if (neighborMatch) {
-
-//                    System.out.print("\nShot : " + shot.toString());
-//                    System.out.print(" - Neighbor Shot : " + neighbor.toString());
-//                    System.out.println(" - Vertical neighbor : " + vertHit);
-                }
-                if (neighbors.isEmpty()) {
+                if (endFields.isEmpty()) {
+                    //With no end fields present shot will be made from stack
                     shot = shootFromStack();
-//                    System.out.println("SHOOTING FROM STACK");
                 } else {
+                    //With end fields present those will be shot first
                     shot = targetShooter();
-//                    System.out.println("SHOOTING WITH TARGETSHOOTER");
                 }
             }
-
+            //The shot is transferred from available shots array
+            //to the shots fired array.
             avblShots.remove(shot);
             shotsFired.add(shot);
+
         } else {
-
-            if (neighbors.isEmpty()) {
+            //Still in target mode - but last shot was not a hit
+            if (endFields.isEmpty()) {
+                //If no end points present shot will be made from stack
                 shot = shootFromStack();
-//                System.out.println("SHOOTING FROM STACK");
             } else {
+                //The first end point was an empty sea spot
+                //and the other end point will be shot
                 shot = targetShooter();
-                System.out.println("SHOOTING WITH TARGETSHOOTER");
             }
-
+            //The shot is transferred from available shots array
+            //to the shots fired array.
             avblShots.remove(shot);
             shotsFired.add(shot);
         }
 
         return shot;
     }
-
+    
+    //Uses the heatmap to determine which of the end fields should be
+    //the one shot at firat and the removes the end field for the array
+    //of possible endfields.
     public Position targetShooter() {
-        Position pos = heatMapper.getPosFromStack(heatMap, neighbors);
-        int index = neighbors.indexOf(pos);
-        neighbors.remove(index);
+        Position pos = heatMapper.getPosFromStack(heatMap, endFields);
+        int index = endFields.indexOf(pos);
+        endFields.remove(index);
         return pos;
     }
 
+    // This method is use when 2 or more hits has been found.
+    // It checks if a new hit is neighbor to a previous hit.
+    // If so it also determines if it as a vertical or horizontal neighbor.
     public boolean checkForMatch() {
 
         neighborMatch = false;
         vertHit = false;
         int ticker = 2;
         int hits = hitList.size();
-
+        
+        //Backtracks all previous hits in hitList and
+        //checks if the latest hit is neighbor to one of them.
         while (!neighborMatch && ticker <= backTrack) {
             if (hitList.get(hits - ticker).x == shot.x) {
                 neighborMatch = true;
@@ -292,6 +295,7 @@ public class AlgShooter implements BattleshipsPlayer {
                 ticker++;
             }
         }
+        //if a neighbor is found the end points will be determined
         if (neighborMatch) {
             neighbor = hitList.get(hits - ticker);
             findEndFields();
@@ -299,6 +303,8 @@ public class AlgShooter implements BattleshipsPlayer {
         return neighborMatch;
     }
 
+    
+    // This methods calculates the positions next to neighbor hits.
     public void findEndFields() {
         Position right, left, up, down;
 
@@ -310,8 +316,8 @@ public class AlgShooter implements BattleshipsPlayer {
                 down = new Position(neighbor.x, neighbor.y - 1);
                 up = new Position(shot.x, shot.y + 1);
             }
-            addNeighborIfValid(down);
-            addNeighborIfValid(up);
+            addEndFieldsIfValid(down);
+            addEndFieldsIfValid(up);
         } else {
             if (shot.x < neighbor.x) {
                 right = new Position(shot.x - 1, shot.y);
@@ -320,16 +326,21 @@ public class AlgShooter implements BattleshipsPlayer {
                 right = new Position(neighbor.x - 1, neighbor.y);
                 left = new Position(shot.x + 1, shot.y);
             }
-            addNeighborIfValid(right);
-            addNeighborIfValid(left);
+            addEndFieldsIfValid(right);
+            addEndFieldsIfValid(left);
 
         }
 
     }
 
-    public void addNeighborIfValid(Position pos) {
+    
+    // Add end positions next to neighbor hits if they are valid.
+    // If valid they must already exits in stack
+    // Valid end positions will be removed from stack array
+    // and transferred to endFields array
+    public void addEndFieldsIfValid(Position pos) {
         if (stack.contains(pos)) {
-            neighbors.add(pos);
+            endFields.add(pos);
             stack.remove(pos);
         }
     }
@@ -364,7 +375,7 @@ public class AlgShooter implements BattleshipsPlayer {
                     target = false;
                     hunt = true;
                     stack.clear();
-                    neighbors.clear();
+                    endFields.clear();
                     backTrack = 0;
                 }
             }
@@ -396,6 +407,7 @@ public class AlgShooter implements BattleshipsPlayer {
         EnemyAverage += 100.0 - enemyPoints;
         stat[100 - points]++;
 
+
     }
 
     @Override
@@ -408,9 +420,9 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println("AlgShooter : " + AlgShooterAverage);
         System.out.println("Enemy : " + EnemyAverage);
         System.out.println("Win% : " + (100.0 * won / rounds) + "%");
-//        System.out.println("");
-//        for (int i = 0; i < 100; i++) { System.out.println(i+" : "+stat[i]); }
-
+        System.out.println("");
+        for (int i = 1; i < 101; i++) { System.out.println(i+" : "+stat[i]); }
+        System.out.println("Fail rounds in % : " + (100.0 * stat[100] / rounds) + "%");
     }
 
     public void addToStack(Position pos) {
