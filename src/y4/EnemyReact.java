@@ -5,6 +5,7 @@
  */
 package y4;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /*
@@ -18,29 +19,177 @@ denne klasse er til funktioner der reagere på den information vi får fra spill
  */
 public class EnemyReact {
     
+    /*
+    2017-05-19 kl. 10.15 - Chr.
+    1. opgave: lav en double array over alle mulige skibsplaceringer.
+            (brug space for ship).
+    2. opgave: lave en søster array hvor hver værdi ikke er et index, men dette index's værdi!!!
+    3 opgave: lav en array: hver værdi er summen af værdierne i opgave 2.
+    
+    */
+    
     HeatMapBasic hm = new HeatMapBasic();
     
-    public void run(){
+    public void run(){      
         
-        hm.printSea(reactTestSea());
-        System.out.println("");
+        int[] ship = shipindexesFromCorr(4);
+        System.out.println(Arrays.toString(ship));
         
-        int[][] result = this.combinations(reactTestSea(), 5);
-        for (int i = 0; i < result.length; i++) {
-            System.out.println(Arrays.toString(result[i]));
-        }
+        /*
+        ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
+        System.out.println(myspace);
+        System.out.println("myspace.size(): " + myspace.size());
+        System.out.println();
+        */
+        
+        /*
+        int[] mycom = combinations(3);
+        System.out.println("mycom.length: " + mycom.length);
+        System.out.println(Arrays.toString(mycom));
+        */
+        
+        
         
     }
     
+    // 
+    //ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
     
     /**
-     * return a double array where each array.length == shiplength and contains the indexes of a possible
-     * ship location. The intention is that the double array gets passed to a function that fills each nested array
-     * with the index values.
+     * 
      * 
      * @param enemyMoveMap
      * @param shiplength 
      */
+    private int[]combinations(int shiplength){  //int[] enemyMoveMap,
+        int[] numberOfCombinations = new int[((10-shiplength+1)*10)*2];//vertical + horizontal on empty sea
+        //myspace: return the indexes, positive (+) and negative (-), with spaces for ships on an empty sea. 
+        //eg.: spaceForShip(this.getEmptySea(), 3);
+        //[0, 1, 2, 3, 4, 5, 6, 7, 10, 11,.....95, 96, 97, 0, -10, -20, -30,....-59, -69, -79];
+        ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
+        
+        
+        return numberOfCombinations;
+    }
+    
+    public int[] shipindexesFromCorr(int shipsize){
+        int[] output = null;
+        if (shipsize < 0) {
+        
+        }else{
+    
+        }
+        
+        return output;
+    } 
+    
+    //tager et index ( + eller -) samt skibslængde. 
+    // returnere: summen af værdierne fra "skibet".
+//    private int sumOfShipIndexValues(int sea, int indexFromSea, int shiplength){
+//        if (indexFromSea > -1) {
+//            
+//        }else{
+//        
+//        }
+//    }
+    
+    public ArrayList<Integer> spaceForShip(int[] sea, int shiplength) {
+        ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
+        boolean output = false;
+        int horizontal = 1;
+        boolean hor = false;
+        for (int i = 1; i < sea.length; i++) {
+            if (sea[i] == 1 && sea[i - 1] == 1) {
+                horizontal++;
+            } else if (sea[i] != 1) {
+                horizontal = 1;
+            }
+
+            if (horizontal >= shiplength) {
+                numOfTimesThereIsSpace.add(i - (shiplength - 1));
+                hor = true;
+            }
+            if (i % 10 == 9) {
+                i++;
+                horizontal = 1;
+            }
+        }
+
+        int vertical = 1;
+        boolean ver = false;
+        for (int i = 10; i < sea.length; i += 10) {
+            if (sea[i] == 1 && sea[i - 10] == 1) {
+                vertical++;
+                //System.out.println(i);
+            } else if (sea[i] != 1) {
+                vertical = 1;
+            }
+
+            if (vertical >= shiplength) {
+                numOfTimesThereIsSpace.add(-(i - (10*(shiplength - 1))));               
+                ver = true;
+            }
+            if (i >= 90 && i != 99) {
+                //System.out.println("90's: "+i);
+                int temp = i - 90;
+                i = 1 + temp;
+            }
+            //extra test
+            if (i/10 == 0 ) {
+                vertical = 1;
+            }
+            //System.out.println(i);
+        }
+
+        return numOfTimesThereIsSpace;
+    }
+    
+    public int[] getEmptySea() {
+        int[] output = new int[100];
+        for (int i = 0; i < output.length; i++) {
+            output[i] = 1;
+        }
+        return output;
+    }
+    
+    private int[] reactTestSea1() {
+        int[] fixedSea
+                =  { -1,  1,  1,  1,  1,  1,  1,  1,  1, -1,
+                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
+                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
+                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
+                     -1,  1,  1,  1,  1,  1,  1,  1,  1, -1};
+
+        return fixedSea;
+    }
+    
+    private int[] reactTestSea2() {
+        int[] fixedSea
+                =  {   100,  200,  300,  400,  500,  600,  700,  800,  900, 1000,
+                      1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000,
+                      2100, 2200, 2300, 2400, 2500, 2600, 2700, 2800, 2900, 3000,
+                      3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000,
+                      4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000,
+                      5100, 5200, 5300, 5400, 5500, 5600, 5700, 5800, 5900, 6000,
+                      6100, 6200, 6300, 6400, 6500, 6600, 6700, 6800, 6900, 7000,
+                      7100, 7200, 7300, 7400, 7500, 7600, 7700, 7800, 7900, 8000,
+                      8100, 8200, 8300, 8400, 8500, 8600, 8700, 8800, 8900, 9000,
+                      9100, 9200, 9300, 9400, 9500, 9600, 9700, 9800, 9900,10000};
+
+        return fixedSea;
+    }
+    
+}
+
+
+/*
+    // 2017 - 05-17 - kl. 10.36 - daarlig kode.
+
     private int[][] combinations(int[] enemyMoveMap, int shiplength){ //int[] enemyMoveMap, 
         int numberOfCombinations = ((10-shiplength+1)*10) + ((10-shiplength+1)*10);
         int[][] output = new int[numberOfCombinations][];
@@ -67,20 +216,4 @@ public class EnemyReact {
         //System.out.println(numberOfCombinations);
     }
     
-    private int[] reactTestSea() {
-        int[] fixedSea
-                =  { -1,  1,  1,  1,  1,  1,  1,  1,  1, -1,
-                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
-                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
-                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
-                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
-                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
-                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
-                      1,  1, -1, -1,  1,  1, -1, -1,  1,  1,
-                      1, -1,  1,  1, -1, -1,  1,  1, -1,  1,
-                     -1,  1,  1,  1,  1,  1,  1,  1,  1, -1};
-
-        return fixedSea;
-    }
-    
-}
+*/
