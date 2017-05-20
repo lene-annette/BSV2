@@ -412,10 +412,10 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println("Enemy : " + EnemyAverage);
         System.out.println("Win% : " + (100.0 * won / rounds) + "%");
         System.out.println("");
-        for (int i = 1; i < 101; i++) {
-            System.out.println(i + " : " + stat[i]);
-        }
-        System.out.println("Fail rounds in % : " + (100.0 * stat[100] / rounds) + "%");
+//        for (int i = 1; i < 101; i++) {
+//            System.out.println(i + " : " + stat[i]);
+//        }
+
     }
 
     public void addToStack(Position pos) {
