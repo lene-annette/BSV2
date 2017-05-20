@@ -104,7 +104,7 @@ public class HeatMapBasic {
         //int size = previousShots.size();
         int[] sea = generateSeaFromPositions(previousShots);
         heatmap = simpleHeatMap(sea, fleet);
-//        this.printHeatmap(10, heatmap);
+        this.printHeatmap(10, heatmap);
         Position pos = getPositionFromHeatMap(heatmap);
         
         return pos;
