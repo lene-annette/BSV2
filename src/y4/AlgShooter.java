@@ -298,7 +298,7 @@ public class AlgShooter implements BattleshipsPlayer {
                 }
             }
 
-        } else if (!hit && !stack.isEmpty()) {
+        } else if (!stack.isEmpty() || !endFields.isEmpty()) {
             target = true;
             hunt = false;
         } else {
