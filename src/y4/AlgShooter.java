@@ -253,6 +253,8 @@ public class AlgShooter implements BattleshipsPlayer {
         avblShots.remove(shot);
         shotsFired.add(shot);
 
+        shooterDebugOutput();
+        
         return shot;
     }
 
@@ -473,6 +475,39 @@ public class AlgShooter implements BattleshipsPlayer {
             beforeShot.remove(sizeShip);
         }
         return (int) (beforeShot.get(0));
+
+    }
+    
+    
+    public void shooterDebugOutput() {
+
+        System.out.println("Shot fired at : " + shot.toString());
+        System.out.print("Hunting : " + hunt + " - Target : " + target);
+        System.out.println(" - Hitcounter : " + hitCount + " - Backtracking : " + backTrack);
+        System.out.println("Last shot a hit : " + shotHit + " - Ship sunk last round : " + isSunk);
+
+        if (!stack.isEmpty()) {
+            System.out.print("Stack remaining: ");
+            for (int i = 0; i < stack.size(); i++) {
+                System.out.print(stack.get(i).toString() + " ");
+            }
+            System.out.println("");
+        }
+
+        if (!endFields.isEmpty()) {
+            System.out.print("End points remaining : ");
+            for (int i = 0; i < endFields.size(); i++) {
+                System.out.print(endFields.get(i).toString() + " ");
+            }
+            System.out.println("");
+        }
+
+        int numberOfShotsAvbl = avblShots.size();
+        int numberOfShotsFired = shotsFired.size();
+        System.out.println("avblShots (size) : " + numberOfShotsAvbl + " - shotsFired (size) : " + numberOfShotsFired);
+        System.out.println("Is " + shot.toString() + " in avblShots : " + avblShots.contains(shot));
+        System.out.println("Last position in shotsFired : " + shotsFired.get(numberOfShotsFired - 1));
+        System.out.println();
 
     }
 
