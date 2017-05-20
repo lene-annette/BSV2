@@ -57,7 +57,8 @@ public class AlgShooter implements BattleshipsPlayer {
     private Position neighbor;
     private boolean vertHit;
     private boolean neighborMatch;
-    private int backTrack;
+//    private int backTrack;    // blev brugt af tidligere find nabo algoritme
+    private ArrayList<Position> hitListTemp;
 
     public AlgShooter() {
     }
@@ -96,7 +97,9 @@ public class AlgShooter implements BattleshipsPlayer {
         enemyShipRound = heatMapper.getEmptySea();
         enemyShotRound = heatMapper.getEmptySea();
 
-        backTrack = 0;
+//        backTrack = 0;    // blev brugt af tidligere find nabo algoritme
+        hitListTemp = new ArrayList<Position>();
+
     }
 
     @Override
@@ -254,8 +257,55 @@ public class AlgShooter implements BattleshipsPlayer {
         shotsFired.add(shot);
 
         shooterDebugOutput();
-        
+
         return shot;
+    }
+
+    @Override
+    public void hitFeedBack(boolean hit, Fleet enemyShips) {
+
+        //2017-05-18 -kl. 17.02- -chr- kodeforslag:
+        //hvis det er et hit, skal feltet tilføjes enemyShipRound:
+        // det er forudsat (i endRound) at det der tilføjes til enemyShipRound er en
+        // negativ integer (eg -2).
+        //this.enemyShipRound[heatMapper.getCorrFromPos(pos)] = -this.enemyShipRound[heatMapper.getCorrFromPos(pos)];
+        fleetAfterShot = fleetConverter(enemyShips);
+        isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
+        shotHit = hit;
+
+        if (hit) {
+            hitCount++;
+//            backTrack++;   // blev brugt af tidligere find nabo algoritme
+            hitList.add(shot);
+            hitListTemp.add(shot);
+
+            if (!isSunk) {
+                target = true;
+                hunt = false;
+            } else {
+                sunkenShipSize = findSunkenShipSize(fleetBeforeShot, fleetAfterShot);
+                hitCount = hitCount - sunkenShipSize;
+                if (hitCount > 0) {
+                    target = true;
+                    hunt = false;
+                } else {
+                    target = false;
+                    hunt = true;
+                    stack.clear();
+                    endFields.clear();
+                    hitListTemp.clear();
+//                    backTrack = 0;
+                }
+            }
+
+        } else if (!hit && !stack.isEmpty()) {
+            target = true;
+            hunt = false;
+        } else {
+            target = false;
+            hunt = true;
+        }
+
     }
 
     //Uses the heatmap to determine which of the end fields should be
@@ -275,26 +325,49 @@ public class AlgShooter implements BattleshipsPlayer {
 
         neighborMatch = false;
         vertHit = false;
-        int ticker = 2;
-        int hits = hitList.size();
 
-        //Backtracks all previous hits in hitList and
-        //checks if the latest hit is neighbor to one of them.
-        while (!neighborMatch && ticker <= backTrack) {
-            if (hitList.get(hits - ticker).x == shot.x) {
+        int tempSize = hitListTemp.size();
+
+        for (int i = 0; i < tempSize - 1; i++) {
+
+            if (hitListTemp.get(i).x == shot.x) {
                 neighborMatch = true;
                 vertHit = true;
-            } else if (hitList.get(hits - ticker).y == shot.y) {
-                neighborMatch = true;
-            } else {
-                ticker++;
+                neighbor = hitListTemp.get(i);
+                findEndFields();
             }
+            if (hitListTemp.get(i).y == shot.y) {
+                neighborMatch = true;
+                vertHit = false;
+                neighbor = hitListTemp.get(i);
+                findEndFields();
+            }
+
         }
-        //if a neighbor is found the end points will be determined
-        if (neighborMatch) {
-            neighbor = hitList.get(hits - ticker);
-            findEndFields();
-        }
+
+//                      // Tidligere find nabo algoritme      
+//
+//        int ticker = 2;
+//        int hits = hitList.size();
+//
+//        //Backtracks all previous hits in hitList and
+//        //checks if the latest hit is neighbor to one of them.
+//        while (!neighborMatch && ticker <= backTrack) {
+//            if (hitList.get(hits - ticker).x == shot.x) {
+//                neighborMatch = true;
+//                vertHit = true;
+//            } else if (hitList.get(hits - ticker).y == shot.y) {
+//                neighborMatch = true;
+//            } else {
+//                ticker++;
+//            }
+//        }
+//        //if a neighbor is found the end points will be determined
+//        if (neighborMatch) {
+//            neighbor = hitList.get(hits - ticker);
+//            findEndFields();
+//        }
+//        
         return neighborMatch;
     }
 
@@ -336,50 +409,6 @@ public class AlgShooter implements BattleshipsPlayer {
             endFields.add(pos);
             stack.remove(pos);
         }
-    }
-
-    @Override
-    public void hitFeedBack(boolean hit, Fleet enemyShips) {
-
-        //2017-05-18 -kl. 17.02- -chr- kodeforslag:
-        //hvis det er et hit, skal feltet tilføjes enemyShipRound:
-        // det er forudsat (i endRound) at det der tilføjes til enemyShipRound er en
-        // negativ integer (eg -2).
-        //this.enemyShipRound[heatMapper.getCorrFromPos(pos)] = -this.enemyShipRound[heatMapper.getCorrFromPos(pos)];
-        fleetAfterShot = fleetConverter(enemyShips);
-        isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
-        shotHit = hit;
-
-        if (hit) {
-            hitCount++;
-            backTrack++;
-            hitList.add(shot);
-            if (!isSunk) {
-                target = true;
-                hunt = false;
-            } else {
-                sunkenShipSize = findSunkenShipSize(fleetBeforeShot, fleetAfterShot);
-                hitCount = hitCount - sunkenShipSize;
-                if (hitCount > 0) {
-                    target = true;
-                    hunt = false;
-                } else {
-                    target = false;
-                    hunt = true;
-                    stack.clear();
-                    endFields.clear();
-                    backTrack = 0;
-                }
-            }
-
-        } else if (!hit && !stack.isEmpty()) {
-            target = true;
-            hunt = false;
-        } else {
-            target = false;
-            hunt = true;
-        }
-
     }
 
     @Override
@@ -477,13 +506,12 @@ public class AlgShooter implements BattleshipsPlayer {
         return (int) (beforeShot.get(0));
 
     }
-    
-    
+
     public void shooterDebugOutput() {
 
         System.out.println("Shot fired at : " + shot.toString());
         System.out.print("Hunting : " + hunt + " - Target : " + target);
-        System.out.println(" - Hitcounter : " + hitCount + " - Backtracking : " + backTrack);
+        System.out.println(" - Hitcounter : " + hitCount + " - HitListTemp (size) : " + hitListTemp.size());
         System.out.println("Last shot a hit : " + shotHit + " - Ship sunk last round : " + isSunk);
 
         if (!stack.isEmpty()) {
