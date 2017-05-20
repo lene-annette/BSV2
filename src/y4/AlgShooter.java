@@ -200,30 +200,25 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
- 
+
         fleetBeforeShot = fleetConverter(enemyShips);
- 
+
         if (hunt) {
             //This is hunting mode.
             //Shots are chosen from making a heatmap and
             //choosing the most probable place for a ship to be located.
             shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
-            
+
             //The heatmap is stored for later use in target mode.
             //Since no new heat map is generated when in target mode.
             heatMap = heatMapper.getHeatmap();
-            
-            //The shot is transferred from available shots array
-            //to the shots fired array.
-            avblShots.remove(shot);
-            shotsFired.add(shot);
 
         } else if (target && shotHit) {
             //This is target mode when last shot was a hit.
-            
+
             //All positions around the hit is added to the stack
             addToStack(shot);
-            
+
             if (hitCount == 1) {
                 //If this is the first hit shot will be made from stack
                 shot = shootFromStack();
@@ -239,10 +234,6 @@ public class AlgShooter implements BattleshipsPlayer {
                     shot = targetShooter();
                 }
             }
-            //The shot is transferred from available shots array
-            //to the shots fired array.
-            avblShots.remove(shot);
-            shotsFired.add(shot);
 
         } else {
             //Still in target mode - but last shot was not a hit
@@ -254,15 +245,17 @@ public class AlgShooter implements BattleshipsPlayer {
                 //and the other end point will be shot
                 shot = targetShooter();
             }
-            //The shot is transferred from available shots array
-            //to the shots fired array.
-            avblShots.remove(shot);
-            shotsFired.add(shot);
+
         }
+
+        //The shot is transferred from available shots array
+        //to the shots fired array.
+        avblShots.remove(shot);
+        shotsFired.add(shot);
 
         return shot;
     }
-    
+
     //Uses the heatmap to determine which of the end fields should be
     //the one shot at firat and the removes the end field for the array
     //of possible endfields.
@@ -282,7 +275,7 @@ public class AlgShooter implements BattleshipsPlayer {
         vertHit = false;
         int ticker = 2;
         int hits = hitList.size();
-        
+
         //Backtracks all previous hits in hitList and
         //checks if the latest hit is neighbor to one of them.
         while (!neighborMatch && ticker <= backTrack) {
@@ -303,7 +296,6 @@ public class AlgShooter implements BattleshipsPlayer {
         return neighborMatch;
     }
 
-    
     // This methods calculates the positions next to neighbor hits.
     public void findEndFields() {
         Position right, left, up, down;
@@ -333,7 +325,6 @@ public class AlgShooter implements BattleshipsPlayer {
 
     }
 
-    
     // Add end positions next to neighbor hits if they are valid.
     // If valid they must already exits in stack
     // Valid end positions will be removed from stack array
@@ -347,7 +338,6 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void hitFeedBack(boolean hit, Fleet enemyShips) {
-
 
         //2017-05-18 -kl. 17.02- -chr- kodeforslag:
         //hvis det er et hit, skal feltet tilføjes enemyShipRound:
@@ -407,7 +397,6 @@ public class AlgShooter implements BattleshipsPlayer {
         EnemyAverage += 100.0 - enemyPoints;
         stat[100 - points]++;
 
-
     }
 
     @Override
@@ -421,7 +410,9 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println("Enemy : " + EnemyAverage);
         System.out.println("Win% : " + (100.0 * won / rounds) + "%");
         System.out.println("");
-        for (int i = 1; i < 101; i++) { System.out.println(i+" : "+stat[i]); }
+        for (int i = 1; i < 101; i++) {
+            System.out.println(i + " : " + stat[i]);
+        }
         System.out.println("Fail rounds in % : " + (100.0 * stat[100] / rounds) + "%");
     }
 
