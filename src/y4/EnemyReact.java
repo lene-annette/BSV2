@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package y4;
 
 import java.util.ArrayList;
@@ -21,8 +17,7 @@ public class EnemyReact {
     
     /*
     2017-05-19 kl. 10.15 - Chr.
-    1. opgave: lav en double array over alle mulige skibsplaceringer.
-            (brug space for ship).
+    1. opgave: lav en array over alle mulige skibsplaceringer. (med plusOne, + for positiv, - for negativ)
     2. opgave: lave en søster array hvor hver værdi ikke er et index, men dette index's værdi!!!
     3 opgave: lav en array: hver værdi er summen af værdierne i opgave 2.
     
@@ -33,51 +28,26 @@ public class EnemyReact {
     public void run(){      
         
         ArrayList<Integer> ship2 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 3);
+        System.out.println(ship2);
         System.out.println("ship2: "+ship2.size());
         
-        System.out.println("combinations: " + combinations(3).length);
-        
-        
-    
-        //int[] ship = combinations(3);
-        //int[] ship = shipindexesFromCorr(4);
-        //System.out.println(Arrays.toString(ship));
-        
-        /*
-        ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
-        System.out.println(myspace);
-        System.out.println("myspace.size(): " + myspace.size());
-        System.out.println();
-        */
-        
-        /*
-        int[] mycom = combinations(3);
-        System.out.println("mycom.length: " + mycom.length);
-        System.out.println(Arrays.toString(mycom));
-        */
-        
+        System.out.println("combinations: " + combinations(this.getEmptySea(), 3));     
         
         
     }
     
-    // 
-    //ArrayList<Integer> myspace = spaceForShip(this.getEmptySea(), 3);
-    
     /**
-     * 
-     * 
+     * 1. opgave: lav en array over alle mulige skibsplaceringer. (med plusOne, + for positiv, - for negativ)
+     * 2. opgave: lave en søster array hvor hver værdi ikke er et index, men dette index's værdi!!!
+     * 3 opgave: lav en array: hver værdi er summen af værdierne i opgave 2.
+     *
      * @param enemyMoveMap
      * @param shiplength 
      */
-    private int[]combinations(int shiplength){  //int[] enemyMoveMap,
-        int[] numberOfCombinations = new int[((10-shiplength+1)*10)*2];//vertical + horizontal on empty sea
-        //myspace: return the indexes, positive (+) and negative (-), with spaces for ships on an empty sea. 
-        //eg.: spaceForShip(this.getEmptySea(), 3);
-        //[0, 1, 2, 3, 4, 5, 6, 7, 10, 11,.....95, 96, 97, 0, -10, -20, -30,....-59, -69, -79];
-        //[1, 2, 3, 4, 5, 6, 7, 8, 11, 12, ....96, 97, 98, -1, -11, -21, -31,....-60, -70, -80]
-        ArrayList<Integer> myspace = spaceForShipIndexPlusOneER(this.getEmptySea(), 3);
+    private ArrayList<Integer> combinations(int[] sea, int shiplength){  //int[] enemyMoveMap,
+        ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(sea, shiplength);
         
-        return numberOfCombinations;
+        return opg1;
     }
     
     //
@@ -92,15 +62,6 @@ public class EnemyReact {
         return output;
     } 
     
-    //tager et index ( + eller -) samt skibslængde. 
-    // returnere: summen af værdierne fra "skibet".
-//    private int sumOfShipIndexValues(int sea, int indexFromSea, int shiplength){
-//        if (indexFromSea > -1) {
-//            
-//        }else{
-//        
-//        }
-//    }
     
     public ArrayList<Integer> spaceForShipIndexPlusOneER(int[] sea, int shiplength) {
         ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
