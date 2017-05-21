@@ -172,11 +172,13 @@ public class HeatMapBasic {
 //        System.out.println("simpleHeatMap: activated");        
 
         int MaxIterations = 10000;
+        final int MIfinal = MaxIterations;
         int maxIterationTime = 50;
         
         long simpleHeatMapStartTime = System.currentTimeMillis();
         long simpleHeatMapFinishTime = 0;
         long simpleHeatMapNetTime = 0;
+        int criticalIterationNumber = 0; 
 
         int[] arrFleet = new int[fleet.size()];
         for (int i = 0; i < fleet.size(); i++) {
@@ -211,8 +213,9 @@ public class HeatMapBasic {
             }
             
             if (simpleHeatMapNetTime > maxIterationTime || MaxIterations < 0) {//simpleHeatMapNetTime > 50 * hasShownTime && hasShownTime < 100
+                criticalIterationNumber = MaxIterations;
                 endLoop = true;
-                //System.out.println("simpleHeatMap: Iteration: " + i + ", timeSpentInIterations: " + simpleHeatMapNetTime);
+                //System.out.println("simpleHeatMap: Iteration: " + criticalIterationNumber+ ", timeSpentInIterations: " + simpleHeatMapNetTime);
             }
             MaxIterations--;
         }
@@ -220,7 +223,8 @@ public class HeatMapBasic {
         simpleHeatMapFinishTime = System.currentTimeMillis();
         simpleHeatMapNetTime = simpleHeatMapFinishTime - simpleHeatMapStartTime;
         if (simpleHeatMapNetTime > maxIterationTime){
-            System.out.println("simpleHeatMapNetTime_byEndOfHeatmap: "+ simpleHeatMapNetTime);
+            System.out.println("simpleHeatMap: IterationNumber(countDownFrom "+MIfinal+"): " + criticalIterationNumber+
+                                " simpleHeatMapNetTime_byEndOfHeatmap: "+ simpleHeatMapNetTime);
         }
         return newsea;
 

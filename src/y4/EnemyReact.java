@@ -17,7 +17,7 @@ public class EnemyReact {
     
     /*
     2017-05-19 kl. 10.15 - Chr.
-    1. opgave: lav en array over alle mulige skibsplaceringer. (med plusOne, + for positiv, - for negativ)
+    1. opgave: (givet et hav og et skib): lav en array over alle mulige skibsplaceringer. (med plusOne, + for positiv, - for negativ)
     2. opgave: lave en søster array hvor hver værdi ikke er et index, men dette index's værdi!!!
     3 opgave: lav en array: hver værdi er summen af værdierne i opgave 2.
     
@@ -31,8 +31,11 @@ public class EnemyReact {
         System.out.println(ship2);
         System.out.println("ship2: "+ship2.size());
         
-        System.out.println("combinations: " + combinations(this.getEmptySea(), 3));     
-        
+        ArrayList<Integer> myComb = combinations(this.getEmptySea(), 3);
+        System.out.println("combinations: " + myComb);     
+        for (int i = 0; i < myComb.size(); i++) {
+            //System.out.println("Index: "+ i +" myComb IndexValue: " + myComb[i]);
+        }
         
     }
     
@@ -46,11 +49,39 @@ public class EnemyReact {
      */
     private ArrayList<Integer> combinations(int[] sea, int shiplength){  //int[] enemyMoveMap,
         ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(sea, shiplength);
+        // opg1 is now a list of the possible indexes ( getEmptySea(), 3 );
+        // opg1: 160 -- [1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 43, 44, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 57, 58, 61, 62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 78, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97, 98, -1, -11, -21, -31, -41, -51, -61, -71, -2, -12, -22, -32, -42, -52, -62, -72, -3, -13, -23, -33, -43, -53, -63, -73, -4, -14, -24, -34, -44, -54, -64, -74, -5, -15, -25, -35, -45, -55, -65, -75, -6, -16, -26, -36, -46, -56, -66, -76, -7, -17, -27, -37, -47, -57, -67, -77, -8, -18, -28, -38, -48, -58, -68, -78, -9, -19, -29, -39, -49, -59, -69, -79, -10, -20, -30, -40, -50, -60, -70, -80]
+        int[] opg2 = new int[opg1.size()];
+        
+        
         
         return opg1;
     }
     
-    //
+    // tag et koordinat og en skibslængde, 
+    // og find de tilsvarende indexpunkter
+    public ArrayList<Integer> CorrListFromCorrAndShiplength(int CorrPlusOne, int shiplength){
+        ArrayList<Integer> output = new ArrayList<Integer>();
+        int firstCoordinate = 0;
+        
+        if (CorrPlusOne > 0){
+            firstCoordinate = CorrPlusOne-1;
+            for (int i = 0; i < shiplength; i++) {
+                output.add(firstCoordinate+i);
+            }
+        }else if(CorrPlusOne < 0){
+            firstCoordinate = Math.abs(CorrPlusOne)-1;
+            for (int i = 0; i < shiplength; i++) {
+                output.add(firstCoordinate+(i*10));
+            }
+        }else{
+            System.out.println("EnemyReact: Fejl i CorrListFromCorrAndShiplength: CorrPlusOne == 0 !!!! (skal være > 0 eller < 0).");
+        }
+        
+        return output;
+    }
+    
+    
     public int[] shipindexesFromCorr(int topLeftCoor, int shipsize){
         int[] output = null;
         if (shipsize < 0) {
