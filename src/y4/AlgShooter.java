@@ -523,8 +523,8 @@ public class AlgShooter implements BattleshipsPlayer {
             this.shotNumberOfFirstMaxShot = this.shotsFired.size()+1;
         }
         
-        System.out.println("Runde nummer: " + this.roundNumber + "  Skudnummer i runden: " + 
-                            this.shotsFired.size()+1);
+        System.out.println("Runde nummer: " + this.roundNumber + "  this.shotsFired.size()+1: " + 
+                            this.shotsFired.size()+1 + " (skudnummer i runden)");
         System.out.println("Skudberegningen tog: "+(finishTime-startTime)+ 
                             " ms. Længste I Matchen: " + MaxShotTimeInMatch + 
                             " I runde: " + roundNumberOfFirstMaxShot + 
