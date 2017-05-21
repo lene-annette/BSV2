@@ -203,9 +203,10 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
-
+        //System.out.println("getFireCoordinates: activated");
         fleetBeforeShot = fleetConverter(enemyShips);
-
+        long startTime = System.currentTimeMillis();
+        
         if (hunt) {
             //This is hunting mode.
             //Shots are chosen from making a heatmap and
@@ -256,7 +257,7 @@ public class AlgShooter implements BattleshipsPlayer {
         avblShots.remove(shot);
         shotsFired.add(shot);
 
-        shooterDebugOutput();
+        shooterDebugOutput(startTime);
 
         return shot;
     }
@@ -507,8 +508,10 @@ public class AlgShooter implements BattleshipsPlayer {
 
     }
 
-    public void shooterDebugOutput() {
-
+    public void shooterDebugOutput(long startTime) {
+        
+        long finishTime = System.currentTimeMillis();
+        System.out.println("Skudberegningen tog: "+(finishTime-startTime)+ " ms");
         System.out.println("Shot fired at : " + shot.toString());
         System.out.print("Hunting : " + hunt + " - Target : " + target);
         System.out.println(" - Hitcounter : " + hitCount + " - HitListTemp (size) : " + hitListTemp.size());
