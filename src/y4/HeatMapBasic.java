@@ -186,18 +186,8 @@ public class HeatMapBasic {
         }
         arrFleet = sortArrIntDescend(arrFleet);//sortere arrFleet i faldende rækkefølge.
 
-//        System.out.println("arrFleet: " + Arrays.toString(arrFleet));
-//        this.printSea(sea);
-
-//        for (int i = 0; i < arrFleet.length; i++) {
-//            int countShipSpace = this.countShipSpace(sea, arrFleet[i]);
-//            System.out.println("simpleHeatMap: ShipSize: " + arrFleet[i] + ", NumOfSpaces: " + countShipSpace);
-//        }
-
         int[] newsea = new int[10 * 10];
-
         int[] tempsea = null;
-
         boolean endLoop = false;
         
         while (endLoop == false){ 
