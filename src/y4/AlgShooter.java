@@ -26,6 +26,11 @@ public class AlgShooter implements BattleshipsPlayer {
     int[] enemyShipRound = null;
     int[] enemyShotMatch = null;
     int[] enemyShotRound = null;
+    long MaxShotTimeInMatch = 0;
+    int roundNumber = 0;
+    int roundNumberOfFirstMaxShot = 0;
+    int shotNumberOfFirstMaxShot = 0;
+    
 
     private final static Random rnd = new Random();
     private final static PositionFiller pf = new PositionFiller();
@@ -91,7 +96,8 @@ public class AlgShooter implements BattleshipsPlayer {
         avblShots = pf.fillPositionArray();
         fleetBeforeShot = new ArrayList<Integer>();
         fleetAfterShot = new ArrayList<Integer>();
-
+        
+        roundNumber++;
         globalEnemyShotCounter = 0;
         ourShipPlacementRound = heatMapper.getEmptySea();
         enemyShipRound = heatMapper.getEmptySea();
@@ -511,7 +517,18 @@ public class AlgShooter implements BattleshipsPlayer {
     public void shooterDebugOutput(long startTime) {
         
         long finishTime = System.currentTimeMillis();
-        System.out.println("Skudberegningen tog: "+(finishTime-startTime)+ " ms");
+        if ((finishTime-startTime) > this.MaxShotTimeInMatch) {
+            MaxShotTimeInMatch = (finishTime-startTime);
+            this.roundNumberOfFirstMaxShot = this.roundNumber;
+            this.shotNumberOfFirstMaxShot = this.shotsFired.size()+1;
+        }
+        
+        System.out.println("Runde nummer: " + this.roundNumber + "  Skudnummer i runden: " + 
+                            this.shotsFired.size()+1);
+        System.out.println("Skudberegningen tog: "+(finishTime-startTime)+ 
+                            " ms. Længste I Matchen: " + MaxShotTimeInMatch + 
+                            " I runde: " + roundNumberOfFirstMaxShot + 
+                            ", skud nummer: " + shotNumberOfFirstMaxShot);
         System.out.println("Shot fired at : " + shot.toString());
         System.out.print("Hunting : " + hunt + " - Target : " + target);
         System.out.println(" - Hitcounter : " + hitCount + " - HitListTemp (size) : " + hitListTemp.size());

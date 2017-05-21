@@ -172,7 +172,7 @@ public class HeatMapBasic {
 //        System.out.println("simpleHeatMap: activated");        
 
         int MaxIterations = 10000;
-        int maxIterationTime = 80;
+        int maxIterationTime = 50;
         
         long simpleHeatMapStartTime = System.currentTimeMillis();
         long simpleHeatMapFinishTime = 0;
@@ -211,10 +211,6 @@ public class HeatMapBasic {
             }
             
             if (simpleHeatMapNetTime > maxIterationTime || MaxIterations < 0) {//simpleHeatMapNetTime > 50 * hasShownTime && hasShownTime < 100
-                if (simpleHeatMapNetTime > maxIterationTime){
-                    System.out.println("simpleHeatMapNetTime: "+ simpleHeatMapNetTime);
-                    
-                }
                 endLoop = true;
                 //System.out.println("simpleHeatMap: Iteration: " + i + ", timeSpentInIterations: " + simpleHeatMapNetTime);
             }
