@@ -130,7 +130,7 @@ public class HeatMapBasic {
         return pos;
     }
 
-    private Position getPosFromIndex(int index) {
+    public Position getPosFromIndex(int index) {
         //int Xcoordinate = 0;
         int Xcoordinate = index % 10;
         //int Ycoordinate = 0;

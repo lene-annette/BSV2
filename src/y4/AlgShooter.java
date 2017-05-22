@@ -56,6 +56,7 @@ public class AlgShooter implements BattleshipsPlayer {
     private ArrayList<Integer> fleetBeforeShot;
     private ArrayList<Integer> fleetAfterShot;
     private HeatMapBasic heatMapper;
+    private EnemyReact enemyReact;
 
     //attributes used for target methods
     private ArrayList<Position> endFields;
@@ -75,6 +76,7 @@ public class AlgShooter implements BattleshipsPlayer {
         this.rounds = (double) rounds;
         stat = new int[101];
         heatMapper = new HeatMapBasic();
+        enemyReact = new EnemyReact();
 
         enemyShipMatch = heatMapper.getEmptySea();
         enemyShotMatch = heatMapper.getEmptySea();
@@ -179,7 +181,26 @@ public class AlgShooter implements BattleshipsPlayer {
     
     @Override
     public void placeShips(Fleet fleet, Board board) {
-        placeShip1(fleet, board);
+        if (roundNumber == 1) {
+            placeShip1(fleet, board);
+        }else{
+            int[] shotMatchCopy = enemyShotMatch;
+            boolean vertical = false;
+           
+            for(int i = 0; i < fleet.getNumberOfShips(); i++){
+                Ship s = fleet.getShip(i);
+                int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, s.size(), true);
+                if(coordinate < 0){
+                   vertical = true; 
+                   coordinate = (-1)*coordinate;
+                }
+                shotMatchCopy[coordinate] = 0;
+                Position shipPosition = heatMapper.getPosFromIndex(coordinate-1);
+                
+                board.placeShip(shipPosition, s, vertical);
+                
+            }
+        }
 
     }
 
