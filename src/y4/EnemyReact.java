@@ -31,7 +31,34 @@ public class EnemyReact {
         
     }
     
-    //krav: ramte fælter skal være > 1.
+    //denne er til den algoritme der skal korrigere skudalgoritmen 
+    // ud fra hvordan modstanderen placere skibe.
+    //if the algoritm doesnt find any interesting place to shoot:
+    // retrun 0.
+    public int coorPlusOneFromEnemyShipMatch(int[] sea, int[] enemyShipMatch, int roundCount){
+        int output = 0;
+        ArrayList<Integer> hardCodedIndexes = new ArrayList<Integer>();
+        for (int i = 0; i < enemyShipMatch.length; i++) {
+            // hvis et punkt i enemyShipMatch har samme værdi som roundCount,
+            // betyder det at modstanderen altid placere skibe der.
+            // i så fald skal vi altid huske at skyde der.
+            if (sea[i] > 0 && enemyShipMatch[i] == roundCount) {
+                hardCodedIndexes.add(i);
+            }
+        }
+        
+        if (hardCodedIndexes.size() > 0) {
+            output = hardCodedIndexes.get(0);
+        }
+        //hvis der ikke er nogen oplagte punkter =
+        // lav en fancy algoritme her. 
+        
+        return output;
+    }
+    
+    
+    
+    //krav: ramte fælter skal være < 1.
     // de andre skal være 1.
     public int[] efficientHeatMap(int[] sea, ArrayList<Integer> fleet){
         int[] outputCounterSea = new int[100];
