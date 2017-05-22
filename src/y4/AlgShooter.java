@@ -215,14 +215,10 @@ public class AlgShooter implements BattleshipsPlayer {
                         shotMatchCopy[index] = -1;
                     }
                 }
-                
                 Position shipPosition = heatMapper.getPosFromIndex(coordinate);
-                
-                board.placeShip(shipPosition, s, vertical);
-                
+                board.placeShip(shipPosition, s, vertical); 
             }
         }
-
     }
 
     public ArrayList<Integer> shipCoorFromPos(Position pos, int shiplength, boolean vertical) {
