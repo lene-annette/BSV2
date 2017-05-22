@@ -184,21 +184,42 @@ public class AlgShooter implements BattleshipsPlayer {
         if (roundNumber == 1) {
             placeShip1(fleet, board);
         }else{
+            //int[] shotMatchCopy = enemyShotRound;
             int[] shotMatchCopy = enemyShotMatch;
             boolean vertical = false;
            
             for(int i = 0; i < fleet.getNumberOfShips(); i++){
+                
                 Ship s = fleet.getShip(i);
                 int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, s.size(), true);
                 if(coordinate < 0){
+                    // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
+                    // Så får et 3'er-skib placeringen (2,2), ligger det på (2,2),(2,3) og (2,4) og index vil være 72, 62 og 52
+                    // Lene 2017-02-22 15:25 
                    vertical = true; 
-                   coordinate = (-1)*coordinate;
+                   coordinate = (-1)*coordinate - 1;
+                   shotMatchCopy[coordinate] = -1;                   
+                   
+                   for(int j = 1; j < s.size(); j++){
+                       int index = coordinate - j*10;
+                       shotMatchCopy[index] = -1;
+                   }
+                }else{
+                    // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
+                    // Så får et 3'er-skib placeringen (7,0), ligger det på (7,0),(8,0) og (9,0) og index vil være 97, 98 og 99
+                    // Lene 2017-02-22 15:25
+                    coordinate = coordinate - 1;
+                    shotMatchCopy[coordinate] = -1;
+                    for(int j = 1; j < s.size(); j++){
+                        int index = coordinate + j;
+                        shotMatchCopy[index] = -1;
+                    }
                 }
-                shotMatchCopy[coordinate-1] = -10;
-                Position shipPosition = heatMapper.getPosFromIndex(coordinate-1);
+                
+                Position shipPosition = heatMapper.getPosFromIndex(coordinate);
                 
                 board.placeShip(shipPosition, s, vertical);
-                // husk at ændre alle koordinater i shitMatchCopy (lav if else alt efter vertical eller ej
+                
             }
         }
 
