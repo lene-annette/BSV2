@@ -194,11 +194,11 @@ public class AlgShooter implements BattleshipsPlayer {
                    vertical = true; 
                    coordinate = (-1)*coordinate;
                 }
-                shotMatchCopy[coordinate] = 0;
+                shotMatchCopy[coordinate-1] = -10;
                 Position shipPosition = heatMapper.getPosFromIndex(coordinate-1);
                 
                 board.placeShip(shipPosition, s, vertical);
-                
+                // husk at ændre alle koordinater i shitMatchCopy (lav if else alt efter vertical eller ej
             }
         }
 
