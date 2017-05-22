@@ -599,5 +599,7 @@ public class AlgShooter implements BattleshipsPlayer {
         System.out.println();
 
     }
+    
+    //unrelated random comment for commit use, to be deleted :P
 
 }
