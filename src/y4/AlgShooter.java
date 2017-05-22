@@ -217,7 +217,7 @@ public class AlgShooter implements BattleshipsPlayer {
             //This is hunting mode.
             //Shots are chosen from making a heatmap and
             //choosing the most probable place for a ship to be located.
-            shot = heatMapper.getPosFromShotArrList(shotsFired, fleetAfterShot);
+            shot = heatMapper.getPosFromShotArrList(shotsFired, fleetBeforeShot);
 
             //The heatmap is stored for later use in target mode.
             //Since no new heat map is generated when in target mode.
@@ -262,8 +262,7 @@ public class AlgShooter implements BattleshipsPlayer {
         //to the shots fired array.
         avblShots.remove(shot);
         shotsFired.add(shot);
-
-        shooterDebugOutput(startTime);
+//        shooterDebugOutput(startTime);
 
         return shot;
     }

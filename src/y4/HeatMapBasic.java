@@ -8,6 +8,7 @@ package y4;
 import battleship.interfaces.Position;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -18,6 +19,7 @@ public class HeatMapBasic {
 
     private final static Random rnd = new Random();
     private int[] heatmap;
+    EnemyReact enemyReactor = new EnemyReact();
 
     //private HeatMapInverse hmi = new HeatMapInverse();
     /*
@@ -88,8 +90,10 @@ public class HeatMapBasic {
 
         //int size = previousShots.size();
         int[] sea = generateSeaFromPositions(previousShots);
-        heatmap = simpleHeatMap(sea, fleet);
+//        heatmap = simpleHeatMap(sea, fleet);
 //        this.printHeatmap(10, heatmap);
+        heatmap = enemyReactor.efficientHeatMap(sea, fleet);
+        
         Position pos = getPositionFromHeatMap(heatmap);
 
         return pos;
@@ -106,15 +110,23 @@ public class HeatMapBasic {
         return maxHeatIndex;
     }
 
-    private Position getPositionFromHeatMap(int[] heatmap) {
+    
+        private Position getPositionFromHeatMap(int[] heatmap) {
+        ArrayList<Integer> maxValueIndex = new ArrayList<Integer>();
         int maxHeatIndex = 0;
         for (int i = 0; i < heatmap.length; i++) {
             if (heatmap[i] > heatmap[maxHeatIndex]) {
                 maxHeatIndex = i;
             }
         }
-
-        Position pos = getPosFromIndex(maxHeatIndex);
+        for (int i = 0; i < heatmap.length; i++) {
+            if (heatmap[i] == heatmap[maxHeatIndex]) {
+                maxValueIndex.add(i);
+            }
+        }
+        Collections.shuffle(maxValueIndex);
+        int maxValue = maxValueIndex.get(0);
+        Position pos = getPosFromIndex(maxValue);
         return pos;
     }
 

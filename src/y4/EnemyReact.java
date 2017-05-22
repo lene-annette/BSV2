@@ -18,22 +18,22 @@ denne klasse er til funktioner der reagere på den information vi får fra spill
 public class EnemyReact {
     
     
-    HeatMapBasic hm = new HeatMapBasic();
+//    HeatMapBasic hm = new HeatMapBasic();
     
     public void run(){      
         
-        System.out.println("EnemyReact");
-        int[] fleet = {5,4,3,3,2};
-        int[] mysea = hm.getEmptySea();//reactTestSea1();
-        hm.printSea(mysea);
-        int[] myHeatMap = efficientHeatMap(mysea, fleet);
-        hm.printHeatmap(1, myHeatMap);
+//        System.out.println("EnemyReact");
+//        int[] fleet = {5,4,3,3,2};
+//        int[] mysea = hm.getEmptySea();//reactTestSea1();
+//        hm.printSea(mysea);
+//        int[] myHeatMap = efficientHeatMap(mysea, fleet);
+//        hm.printHeatmap(1, myHeatMap);
         
     }
     
     //krav: ramte fælter skal være > 1.
     // de andre skal være 1.
-    public int[] efficientHeatMap(int[] sea, int[] fleet){
+    public int[] efficientHeatMap(int[] sea, ArrayList<Integer> fleet){
         int[] outputCounterSea = new int[100];
         int[] emptysea = sea;
         Random r = new Random();
@@ -41,9 +41,9 @@ public class EnemyReact {
         
         ArrayList<int[]> possiblePlaces = new ArrayList<int[]>();
         
-        for (int i = 0; i < fleet.length; i++){
-            int[][] nestedArrayIndexes = combinations(emptysea, fleet[i]);
-            int[][] copyToManipulate = combinations(emptysea, fleet[i]);
+        for (int i = 0; i < fleet.size(); i++){
+            int[][] nestedArrayIndexes = combinations(emptysea, fleet.get(i));
+            int[][] copyToManipulate = combinations(emptysea, fleet.get(i));
             for (int j = 0; j < nestedArrayIndexes.length; j++) {
                 for (int k = 0; k < nestedArrayIndexes[j].length; k++) {
                     if(sea[nestedArrayIndexes[j][k]] < 1 ){
