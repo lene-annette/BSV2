@@ -243,6 +243,54 @@ public class EnemyReact {
     */
     //takes a heatmap and a shipsize and a boolean "lowest"
     // return the coordinatePlusOne for the shipplacement with lowest aveage values
+    // if an index is < 0: then a ship wont be placed on it, and its coordinates wont come out.
+    public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
+        int desiredCoor = 0;
+        int theCoorIndex = 0;
+        int theCoorValue = 0;
+        
+        ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), shipsize);
+        int[][]values = getValuesFromSeaToNestedArray(heatmap, shipsize);
+        int[] sumOfValues = sumOfValues(values);
+        
+        //adon to make sure a ship wont be placed on -1.
+        //*******************************
+        for (int i = 0; i < values.length; i++) {
+            for (int j = 0; j < values[i].length; j++) {
+                if (values[i][j] < 0) {
+                    sumOfValues[i] = -999; //arbitrært tal under 0
+                }
+            }
+        }
+        //*********************************
+          
+        if (lowestValue) {
+            theCoorValue = Integer.MAX_VALUE;
+            for (int i = 0; i < sumOfValues.length; i++) {
+                if (sumOfValues[i] < theCoorValue && sumOfValues[i] > -1) {
+                    
+                    theCoorValue = sumOfValues[i];
+                    theCoorIndex = i;
+                    
+                }
+            }
+        }else{
+            theCoorValue = 0;
+            for (int i = 0; i < sumOfValues.length; i++) {
+                if (sumOfValues[i] > theCoorValue) {
+                    
+                    theCoorValue = sumOfValues[i];
+                    theCoorIndex = i;
+                    
+                }
+            }
+        }
+        desiredCoor = opg1.get(theCoorIndex);
+        return desiredCoor;
+        
+    }
+    
+    /*
     public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
         int desiredCoor = 0;
         int theCoorIndex = 0;
@@ -274,6 +322,7 @@ public class EnemyReact {
         return desiredCoor;
         
     }
+    */
     
     private int[] sumOfValues(int[][] nestedArray){
         ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), nestedArray[0].length);
