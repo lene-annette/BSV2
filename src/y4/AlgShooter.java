@@ -108,8 +108,7 @@ public class AlgShooter implements BattleshipsPlayer {
 
     }
 
-    @Override
-    public void placeShips(Fleet fleet, Board board) {
+    public void placeShip1(Fleet fleet, Board board){
         myBoard = board;
         sizeX = board.sizeX();
         sizeY = board.sizeY();
@@ -176,6 +175,11 @@ public class AlgShooter implements BattleshipsPlayer {
             }
             board.placeShip(pos, s, vertical);
         }
+    }
+    
+    @Override
+    public void placeShips(Fleet fleet, Board board) {
+        placeShip1(fleet, board);
 
     }
 
