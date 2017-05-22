@@ -3,6 +3,7 @@ package y4;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 /*
@@ -16,15 +17,162 @@ denne klasse er til funktioner der reagere på den information vi får fra spill
  */
 public class EnemyReact {
     
-    /*
-    2017-05-19 kl. 10.15 - Chr.
-    1. opgave: (givet et hav og et skib): lav en array over alle mulige skibsplaceringer. (med plusOne, + for positiv, - for negativ)
-    2. opgave: lave en søster array hvor hver værdi ikke er et index, men dette index's værdi!!!
-    3 opgave: lav en array: hver værdi er summen af værdierne i opgave 2.
-    
-    */
     
     HeatMapBasic hm = new HeatMapBasic();
+    
+    public void run(){      
+        
+        System.out.println("EnemyReact");
+        int[] fleet = {5,4,3,3,2};
+        int[] mysea = hm.getEmptySea();//reactTestSea1();
+        hm.printSea(mysea);
+        int[] myHeatMap = efficientHeatMap(mysea, fleet);
+        hm.printHeatmap(1, myHeatMap);
+        
+    }
+    
+    //krav: ramte fælter skal være > 1.
+    // de andre skal være 1.
+    public int[] efficientHeatMap(int[] sea, int[] fleet){
+        int[] outputCounterSea = new int[100];
+        int[] emptysea = sea;
+        Random r = new Random();
+        int myRandom = 0;
+        
+        ArrayList<int[]> possiblePlaces = new ArrayList<int[]>();
+        
+        for (int i = 0; i < fleet.length; i++){
+            int[][] nestedArrayIndexes = combinations(emptysea, fleet[i]);
+            int[][] copyToManipulate = combinations(emptysea, fleet[i]);
+            for (int j = 0; j < nestedArrayIndexes.length; j++) {
+                for (int k = 0; k < nestedArrayIndexes[j].length; k++) {
+                    if(sea[nestedArrayIndexes[j][k]] < 1 ){
+                        copyToManipulate[j] = null;
+                    }
+                }
+                if (copyToManipulate[j] != null) {
+                    possiblePlaces.add(copyToManipulate[j]);
+                }
+            }
+            // nu er possiblePlaces en arrList over alle mulige skibsplaceringer.
+            // nu skal punkterne lægges til outputCounterSea;
+            for (int j = 0; j < possiblePlaces.size(); j++) {
+                for (int k = 0; k < possiblePlaces.get(j).length; k++) {
+                    outputCounterSea[possiblePlaces.get(j)[k]]++;
+                }
+            }
+            possiblePlaces.clear();
+        }
+        return outputCounterSea;
+    }
+    
+            
+    /*
+    int[] fleet = {5,4,3,3,2};
+    int[] mysea = reactTestSea1();
+    mysea = efficientDistributeShips(mysea, fleet);
+    hm.printSea(mysea);        
+    */
+    public int[] efficientDistributeShips(int[] sea, int[] fleet){
+        int[] emptysea = sea;//hm.getEmptySea();
+        //ArrayList<Integer> fleet = hm.getVirginFleet();
+        
+        Random r = new Random();
+        int myRandom = 0;
+        ArrayList<Integer> usedPoints = new ArrayList<Integer>();
+        ArrayList<int[]> possiblePlaces = new ArrayList<int[]>();
+        int[] chosenPlace = null;
+        
+        for (int i = 0; i < fleet.length; i++){
+            int[][] nestedArrayIndexes = combinations(emptysea, fleet[i]);
+            int[][] copyToManipulate = combinations(emptysea, fleet[i]);
+            for (int j = 0; j < nestedArrayIndexes.length; j++) {
+                for (int k = 0; k < nestedArrayIndexes[j].length; k++) {
+                    if(usedPoints.contains(nestedArrayIndexes[j][k]) || 
+                            emptysea[nestedArrayIndexes[j][k]] < 1 ){
+                        copyToManipulate[j] = null;
+                    }
+                }
+                if (copyToManipulate[j] != null) {
+                    possiblePlaces.add(copyToManipulate[j]);
+                }
+            }
+            // nu er possiblePlaces en arrList over alle mulige skibsplaceringer.
+            // nu skal der vælges en tilfældig.
+            myRandom = r.nextInt(possiblePlaces.size());
+            chosenPlace = possiblePlaces.get(myRandom);
+            for (int j = 0; j < chosenPlace.length; j++) {
+                emptysea[chosenPlace[j]] = 2;
+                usedPoints.add(chosenPlace[j]);
+            }
+            possiblePlaces.clear();
+            
+        }
+        return emptysea;
+    }
+    
+    //attemptAtEvenlyDistributedHeatmap
+    
+    //returns a sea with a fleet that hopefully has an even density distribution
+    /*
+    public int[] attemptAtRandomSeaDistribution(){
+        int[] randomSeaNumber;
+        ArrayList<Integer> fleet = hm.getVirginFleet();
+        int[] seaSpaces_ThisShip;
+        ArrayList<Integer> seaSpacesToBeFilled = new ArrayList<Integer>();
+        
+        int myCoor = 0;
+        int myShip = 0;
+        for(int i = 0; i < fleet.size(); i++){
+            randomSeaNumber = ramdomArrayOneToHundred();
+            myShip = fleet.get(i);
+            myCoor = coordinatePlusOneFromHM(randomSeaNumber, myShip, true);
+            seaSpaces_ThisShip = this.CorrListFromCorrAndShiplength(myCoor, myShip);
+            
+            
+        }
+    }
+    */
+    
+    /*
+    int[] randomSeaNumber = ramdomArrayOneToHundred();
+    int myCoor = coordinatePlusOneFromHM(randomSeaNumber, 4, true);
+    hm.printHeatmap(1, randomSeaNumber);
+    System.out.println(myCoor);
+    */
+    
+    public int[] ramdomArrayOneToHundred(){
+        int[] output = new int[100];
+        int temp = 1;
+        int temp2 = 0;
+        int myRand;
+        
+        for (int i = 0; i < output.length; i++) {
+            output[i] = temp;
+            temp++;
+        }
+        
+        Random r = new Random();
+        
+        for (int i = 0; i < output.length; i++) {
+            myRand = r.nextInt(100);
+            temp = output[myRand];
+            temp2 = output[i];
+            output[i] = temp;
+            output[myRand] = temp2; 
+        }
+        
+        return output;
+    }
+    
+    
+    //**********************************************************
+    // 2017-05-22 kl. 6.35 - chr - Nedenfor er metoden til at
+    //                      en skibsplacering fra et heatmap:
+    //  public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
+    //************************************************************
+    
+    /*
     
     public void run(){      
         
@@ -50,9 +198,10 @@ public class EnemyReact {
         //************************
         
         System.out.println();
-        int myIntCoor = coordinatePlusOne(testHM, 2, true);
+        int myIntCoor = coordinatePlusOneFromHM(testHM, 2, true);
         System.out.println("myIntCoor: " + myIntCoor);
     }
+    */
     
     //public int[] sumOfValues(int[][] nestedArray){
     //get sum of values put into a spaceForShipIndexPlusOneER -- array.
@@ -94,7 +243,7 @@ public class EnemyReact {
     */
     //takes a heatmap and a shipsize and a boolean "lowest"
     // return the coordinatePlusOne for the shipplacement with lowest aveage values
-    public int coordinatePlusOne(int[] heatmap, int shipsize, boolean lowestValue){
+    public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
         int desiredCoor = 0;
         int theCoorIndex = 0;
         int theCoorValue = 0;
@@ -126,7 +275,7 @@ public class EnemyReact {
         
     }
     
-    public int[] sumOfValues(int[][] nestedArray){
+    private int[] sumOfValues(int[][] nestedArray){
         ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), nestedArray[0].length);
         int[] output = new int[opg1.size()];
         int sum = 0;
@@ -141,7 +290,7 @@ public class EnemyReact {
         return output;
     }
     
-    public int[][] getValuesFromSeaToNestedArray(int[] sea, int shiplength){
+    private int[][] getValuesFromSeaToNestedArray(int[] sea, int shiplength){
         ArrayList<Integer> IndexPlusOneArray = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 5);
         int[][] nestedArray = combinations(this.getEmptySea(), shiplength);
         int[][] output = combinations(this.getEmptySea(), shiplength);
@@ -184,7 +333,7 @@ public class EnemyReact {
     
     // tag et koordinat og en skibslængde, 
     // og find de tilsvarende indexpunkter
-    public int[] CorrListFromCorrAndShiplength(int CorrPlusOne, int shiplength){
+    private int[] CorrListFromCorrAndShiplength(int CorrPlusOne, int shiplength){
         int[] output = new int[shiplength];
         int firstCoordinate = 0;
         
@@ -206,19 +355,9 @@ public class EnemyReact {
     }
     
     
-    public int[] shipindexesFromCorr(int topLeftCoor, int shipsize){
-        int[] output = null;
-        if (shipsize < 0) {
-        
-        }else{
-    
-        }
-        
-        return output;
-    } 
     
     
-    public ArrayList<Integer> spaceForShipIndexPlusOneER(int[] sea, int shiplength) {
+    private ArrayList<Integer> spaceForShipIndexPlusOneER(int[] sea, int shiplength) {
         ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
         boolean output = false;
         int horizontal = 1;
@@ -269,7 +408,7 @@ public class EnemyReact {
         return numOfTimesThereIsSpace;
     }
     
-    public int[] getEmptySea() {
+    private int[] getEmptySea() {
         int[] output = new int[100];
         for (int i = 0; i < output.length; i++) {
             output[i] = 1;
