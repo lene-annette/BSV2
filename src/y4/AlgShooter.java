@@ -197,12 +197,12 @@ public class AlgShooter implements BattleshipsPlayer {
             System.arraycopy( enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length );
             boolean vertical = false;
             
-            ArrayList<Integer> fleetArryList = new ArrayList<Integer>();
-            fleetArryList.add(2);
-            fleetArryList.add(3);
-            fleetArryList.add(3);
-            fleetArryList.add(4);
-            fleetArryList.add(5);
+            ArrayList<Integer> fleetArryList = fleetConverter(fleet);
+//            fleetArryList.add(2);
+//            fleetArryList.add(3);
+//            fleetArryList.add(3);
+//            fleetArryList.add(4);
+//            fleetArryList.add(5);
             
             for (int i = 0; i < fleetArryList.size(); i++) {
 
@@ -371,7 +371,7 @@ public class AlgShooter implements BattleshipsPlayer {
         //to the shots fired array.
         avblShots.remove(shot);
         shotsFired.add(shot);
-        //shooterDebugOutput(startTime);
+        shooterDebugOutput(startTime);
 
         return shot;
     }
