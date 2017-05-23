@@ -221,6 +221,7 @@ public class AlgShooter implements BattleshipsPlayer {
                     // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
                     // Så får et 3'er-skib placeringen (7,0), ligger det på (7,0),(8,0) og (9,0) og index vil være 97, 98 og 99
                     // Lene 2017-02-22 15:25
+                    vertical = false;
                     coordinate = coordinate - 1;
                     shotMatchCopy[coordinate] = -1;
                     for (int j = 1; j < shipSize; j++) {
