@@ -248,9 +248,14 @@ public class AlgShooter implements BattleshipsPlayer {
         }
 
     }
-
+    
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
+        //2017-05-23 - chr - vi kan bruge nedenstående til at lede efter modstanderens skibe ud fra 
+        // enemyShipMatch eller enemyShipRound. (hunt mode)
+        // lige nu leder den kun efter "hardcodede" skibe. (return coorPlusOne eller 0 hvis intet punkt fundet)
+        //enemyReact -- public int coorPlusOneFromEnemyShipMatch(int[] sea, int[] enemyShipMatch, int roundCount)
+    
         //System.out.println("getFireCoordinates: activated");
         fleetBeforeShot = fleetConverter(enemyShips);
         long startTime = System.currentTimeMillis();

@@ -34,7 +34,7 @@ public class EnemyReact {
     //denne er til den algoritme der skal korrigere skudalgoritmen 
     // ud fra hvordan modstanderen placere skibe.
     //if the algoritm doesnt find any interesting place to shoot:
-    // retrun 0.
+    // return 0.
     public int coorPlusOneFromEnemyShipMatch(int[] sea, int[] enemyShipMatch, int roundCount){
         int output = 0;
         ArrayList<Integer> hardCodedIndexes = new ArrayList<Integer>();
