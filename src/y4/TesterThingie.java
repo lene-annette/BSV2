@@ -5,7 +5,10 @@
  */
 package y4;
 
+import battleship.interfaces.Board;
+import battleship.interfaces.Fleet;
 import battleship.interfaces.Position;
+import battleship.interfaces.Ship;
 import java.util.ArrayList;
 
 /**
@@ -22,7 +25,9 @@ public class TesterThingie {
     
 }
 
-   
+
+
+
     /*
     
         PositionFiller pf = new PositionFiller();

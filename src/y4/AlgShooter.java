@@ -180,12 +180,12 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void placeShips(Fleet fleet, Board board) {
-        placeShip1(fleet, board);
-//        if (roundNumber == 1) {
-//            placeShip1(fleet, board);
-//        } else {
-//            placeShip2(fleet, board);
-//        }
+        //placeShip1(fleet, board);
+        if (roundNumber == 1) {
+            placeShip1(fleet, board);
+        } else {
+            placeShip2(fleet, board);
+        }
     }
     
     public void placeShip2(Fleet fleet, Board board){
@@ -193,7 +193,57 @@ public class AlgShooter implements BattleshipsPlayer {
             int[] shotMatchCopy = new int[enemyShotMatch.length];
             System.arraycopy( enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length );
             boolean vertical = false;
+            
+            ArrayList<Integer> fleetArryList = new ArrayList<Integer>();
+            fleetArryList.add(2);
+            fleetArryList.add(3);
+            fleetArryList.add(3);
+            fleetArryList.add(4);
+            fleetArryList.add(5);
+            
+            for (int i = 0; i < fleetArryList.size(); i++) {
 
+                int shipSize = fleetArryList.get(i);//Ship s = fleet.getShip(i);
+                int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, shipSize, true);
+                if (coordinate < 0) {
+                    // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
+                    // Så får et 3'er-skib placeringen (2,2), ligger det på (2,2),(2,3) og (2,4) og index vil være 72, 62 og 52
+                    // Lene 2017-02-22 15:25 
+                    vertical = true;
+                    coordinate = ((-1) * coordinate) - 1;
+                    shotMatchCopy[coordinate] = -1;
+
+                    for (int j = 1; j < shipSize; j++) {
+                        int index = coordinate - j * 10;
+                        shotMatchCopy[index] = -1;
+                    }
+                } else {
+                    // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
+                    // Så får et 3'er-skib placeringen (7,0), ligger det på (7,0),(8,0) og (9,0) og index vil være 97, 98 og 99
+                    // Lene 2017-02-22 15:25
+                    coordinate = coordinate - 1;
+                    shotMatchCopy[coordinate] = -1;
+                    for (int j = 1; j < shipSize; j++) {
+                        int index = coordinate + j;
+                        shotMatchCopy[index] = -1;
+                    }
+                }
+                System.out.println("index: " + coordinate + " intended shipsice: " + shipSize + " realShipsize: " + fleet.getShip(i).size()); //coordinate er nu et index nummer (0-99)
+                heatMapper.printHeatmap(1, shotMatchCopy);
+                Position shipPosition = heatMapper.getPosFromIndex(coordinate);
+                System.out.println("position: X: " + shipPosition.x + " Y: " + shipPosition.y);
+                board.placeShip(shipPosition, fleet.getShip(i), vertical);
+            }
+    }
+    
+    /*
+    
+    public void placeShip2(Fleet fleet, Board board){
+        //int[] shotMatchCopy = enemyShotRound;
+            int[] shotMatchCopy = new int[enemyShotMatch.length];
+            System.arraycopy( enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length );
+            boolean vertical = false;
+            
             for (int i = 0; i < fleet.getNumberOfShips(); i++) {
 
                 Ship s = fleet.getShip(i);
@@ -221,11 +271,13 @@ public class AlgShooter implements BattleshipsPlayer {
                         shotMatchCopy[index] = -1;
                     }
                 }
+                System.out.println("index: " + coordinate); //coordinate er nu et index nummer (0-99)
                 Position shipPosition = heatMapper.getPosFromIndex(coordinate);
+                System.out.println("position: X: " + shipPosition.x + " Y: " + shipPosition.y);
                 board.placeShip(shipPosition, s, vertical);
             }
     }
-    
+    */
     
     public ArrayList<Integer> shipIndexesFromPos(Position pos, int shiplength, boolean vertical) {
         ArrayList<Integer> shipIndexes = new ArrayList<Integer>();
