@@ -308,43 +308,60 @@ public class EnemyReact {
     //takes a heatmap and a shipsize and a boolean "lowest"
     // return the coordinatePlusOne for the shipplacement with lowest aveage values
     // if an index is < 0: then a ship wont be placed on it, and its coordinates wont come out.
-    public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
+    public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue, boolean[] allowesspaces){
         int desiredCoor = 0;
         int theCoorIndex = 0;
         int theCoorValue = 0;
         
         ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), shipsize);
+        int[][] nestedArray = combinations(this.getEmptySea(), shipsize);
         int[][]values = getValuesFromSeaToNestedArray(heatmap, shipsize);
         int[] sumOfValues = sumOfValues(values);
         
-        //adon to make sure a ship wont be placed on -1.
-        //*******************************
-        for (int i = 0; i < values.length; i++) {
-            for (int j = 0; j < values[i].length; j++) {
-                if (values[i][j] < 0) {
-                    sumOfValues[i] = Integer.MIN_VALUE; //arbitrært tal under 0
-                }
-            }
-        }
-        //*********************************
+//        //adon to make sure a ship wont be placed on -1.
+//        //*******************************
+//        for (int i = 0; i < values.length; i++) {
+//            for (int j = 0; j < values[i].length; j++) {
+//                if (values[i][j] < 0) {
+//                    sumOfValues[i] = Integer.MIN_VALUE; //arbitrært tal under 0
+//                }
+//            }
+//        }
+//        //*********************************
           
         if (lowestValue) {
             theCoorValue = Integer.MAX_VALUE;
             for (int i = 0; i < sumOfValues.length; i++) {
-                if (sumOfValues[i] < theCoorValue && sumOfValues[i] > -1) {
+                if (sumOfValues[i] < theCoorValue) {//&& allowesspaces[i] == true)//&& sumOfValues[i] > -1)
+                    boolean acceptableIndex = true;
+                    for (int j = 0; j < shipsize; j++) {
+                        if (allowesspaces[nestedArray[i][j]] = false) {
+                            acceptableIndex = false;
+                        }
+                    }
+                    if (acceptableIndex) {
+                        theCoorValue = sumOfValues[i];
+                        theCoorIndex = i;
+                    }
                     
-                    theCoorValue = sumOfValues[i];
-                    theCoorIndex = i;
                     
                 }
             }
         }else{
             theCoorValue = 0;
             for (int i = 0; i < sumOfValues.length; i++) {
-                if (sumOfValues[i] > theCoorValue) {
+                if (sumOfValues[i] < theCoorValue) {//&& allowesspaces[i] == true)//&& sumOfValues[i] > -1)
+                    boolean acceptableIndex = true;
+                    for (int j = 0; j < shipsize; j++) {
+                        if (allowesspaces[nestedArray[i][j]] = false) {
+                            acceptableIndex = false;
+                        }
+                    }
+                    if (acceptableIndex) {
+                        theCoorValue = sumOfValues[i];
+                        theCoorIndex = i;
+                    }
                     
-                    theCoorValue = sumOfValues[i];
-                    theCoorIndex = i;
                     
                 }
             }
@@ -398,6 +415,7 @@ public class EnemyReact {
                 sum += nestedArray[i][j];
             }
             output[i] = sum;
+            
         }
         
         return output;

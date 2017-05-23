@@ -193,32 +193,37 @@ public class AlgShooter implements BattleshipsPlayer {
     
     public void placeShip2(Fleet fleet, Board board){
         //int[] shotMatchCopy = enemyShotRound;
+            boolean[] allowedSpaces = new boolean[100];
+            for (int i = 0; i < allowedSpaces.length; i++) {
+                allowedSpaces[i] = true;
+            }
+            
             int[] shotMatchCopy = new int[enemyShotMatch.length];
             System.arraycopy( enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length );
             boolean vertical = false;
             
-            ArrayList<Integer> fleetArryList = fleetConverter(fleet);
-//            fleetArryList.add(2);
-//            fleetArryList.add(3);
-//            fleetArryList.add(3);
-//            fleetArryList.add(4);
-//            fleetArryList.add(5);
+            ArrayList<Integer> fleetArryList = new ArrayList<Integer>();
+            fleetArryList.add(2);
+            fleetArryList.add(3);
+            fleetArryList.add(3);
+            fleetArryList.add(4);
+            fleetArryList.add(5);
             
             for (int i = 0; i < fleetArryList.size(); i++) {
 
                 int shipSize = fleetArryList.get(i);//Ship s = fleet.getShip(i);
-                int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, shipSize, true);
+                int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, shipSize, true, allowedSpaces);
                 if (coordinate < 0) {
                     // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
                     // Så får et 3'er-skib placeringen (2,2), ligger det på (2,2),(2,3) og (2,4) og index vil være 72, 62 og 52
                     // Lene 2017-02-22 15:25 
                     vertical = true;
                     coordinate = ((-1) * coordinate) - 1;
-                    shotMatchCopy[coordinate] = -1;
+                    //shotMatchCopy[coordinate] = -1;
 
                     for (int j = 1; j < shipSize; j++) {
                         int index = coordinate - j * 10;
-                        shotMatchCopy[index] = -1;
+                        //shotMatchCopy[index] = -1;
                     }
                 } else {
                     // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
@@ -226,12 +231,23 @@ public class AlgShooter implements BattleshipsPlayer {
                     // Lene 2017-02-22 15:25
                     vertical = false;
                     coordinate = coordinate - 1;
-                    shotMatchCopy[coordinate] = -1;
+                    //shotMatchCopy[coordinate] = -1;
                     for (int j = 1; j < shipSize; j++) {
                         int index = coordinate + j;
-                        shotMatchCopy[index] = -1;
+                        //shotMatchCopy[index] = -1;
                     }
                 }
+                
+                if (vertical){
+                    for (int j = 0; j < shipSize; j++) {
+                        allowedSpaces[coordinate+(j*10)] = false;
+                    }
+                }else{
+                    for (int j = 0; j < shipSize; j++) {
+                        allowedSpaces[coordinate+j] = false;
+                    }
+                }
+                
                 System.out.println("index: " + coordinate + " intended shipsice: " + shipSize + " realShipsize: " + fleet.getShip(i).size()); //coordinate er nu et index nummer (0-99)
                 heatMapper.printHeatmap(1, shotMatchCopy);
                 Position shipPosition = heatMapper.getPosFromIndex(coordinate);
