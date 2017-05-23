@@ -170,16 +170,15 @@ public class HeatMapBasic {
         return arrFleet;
     }
     
-    //2017-05-17 kl. 12.35 - Chr.
-    // nedestående funktion burde sættes ind i generateSeaFromPositions;
-    private int getCoordinateFromPos(Position pos) {
+    public int getIndexFromPos(Position pos) {
         int output = 0;
         int Xcoordinate = pos.x;
         int Ycoordinate = pos.y;
         output = (9 - Ycoordinate) * 10 + Xcoordinate;
         return output;
     }
-
+    
+    
     public int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet) {
 //        System.out.println("simpleHeatMap: activated");        
 
@@ -451,7 +450,7 @@ public class HeatMapBasic {
     private ArrayList<Integer> getArrListCorrFromArrListPos(ArrayList<Position> stack) {
         ArrayList<Integer> CoordinateStack = new ArrayList<Integer>();
         for (Position p : stack) {
-            CoordinateStack.add(this.getCoordinateFromPos(p));
+            CoordinateStack.add(this.getIndexFromPos(p));
         }
         return CoordinateStack;
     }

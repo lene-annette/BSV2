@@ -36,15 +36,15 @@ public class EnemyReact {
     //denne er til den algoritme der skal korrigere skudalgoritmen 
     // ud fra hvordan modstanderen placere skibe.
     //if the algoritm doesnt find any interesting place to shoot:
-    // return 0.
-    public int coorPlusOneFromEnemyShipMatch(int[] sea, int[] enemyShipMatch, ArrayList<Position> shotsFired){
-        int output = 0;
+    // return -1. 
+    public int indexFromEnemyShipMatch(int[] sea, int[] enemyShipMatch, int roundNumber, ArrayList<Position> shotsFired){
+        int output = -1;
         ArrayList<Integer> hardCodedIndexes = new ArrayList<Integer>();
         for (int i = 0; i < enemyShipMatch.length; i++) {
             // hvis et punkt i enemyShipMatch har samme værdi som roundCount,
             // betyder det at modstanderen altid placere skibe der.
             // i så fald skal vi altid huske at skyde der.
-            if (sea[i] > 2 && enemyShipMatch[i] >= shotsFired.size()) {
+            if (sea[i] > 2 && enemyShipMatch[i] >= roundNumber) {
                         //count them only as hardcoded if the ships have been placed in the same spot more than twice.
                 hardCodedIndexes.add(i);
             }
@@ -53,7 +53,7 @@ public class EnemyReact {
         //hvis der ikke er nogen oplagte punkter =
         // lav en fancy algoritme her. og tilføj punkterne til hardCodedIndexes.
         for (int i = 0; i < enemyShipMatch.length; i++) {
-            if (sea[i] > 2 && enemyShipMatch[i] > shotsFired.size()/1.5){//skibene placeres det samme sted 75 % af tiden
+            if (sea[i] > 2 && enemyShipMatch[i] > roundNumber/1.5){//skibene placeres det samme sted 75 % af tiden
                 hardCodedIndexes.add(i);
             }
         }
@@ -62,7 +62,7 @@ public class EnemyReact {
         List<Integer> copyList = new ArrayList<>(hardCodedIndexes);
         for (int i = 0; i < copyList.size(); i++) {
             int candidateMove = copyList.get(i);
-            Position candPos = this.getPosFromCoor(candidateMove);
+            Position candPos = this.getPosFromIndex(candidateMove);
             if (shotsFired.contains(candPos)) {
                 hardCodedIndexes.remove(candidateMove);
             }
@@ -76,8 +76,24 @@ public class EnemyReact {
         return output;
     }
     
-  
+    public Position getPosFromIndex(int index) {
+        //int Xcoordinate = 0;
+        int Xcoordinate = index % 10;
+        //int Ycoordinate = 0;
+        int Ycoordinate = 9 - (index / 10);
+
+        Position pos = new Position(Xcoordinate, Ycoordinate);
+
+        return pos;
+    }
     
+    public int getIndexFromPos(Position pos) {
+        int output = 0;
+        int Xcoordinate = pos.x;
+        int Ycoordinate = pos.y;
+        output = (9 - Ycoordinate) * 10 + Xcoordinate;
+        return output;
+    }
     
     //krav: ramte fælter skal være < 1.
     // de andre skal være 1.
