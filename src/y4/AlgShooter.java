@@ -223,7 +223,8 @@ public class AlgShooter implements BattleshipsPlayer {
 
     public ArrayList<Integer> shipCoorFromPos(Position pos, int shiplength, boolean vertical) {
         ArrayList<Integer> shipCoor = new ArrayList<Integer>();
-        int startCorr = heatMapper.getCorrFromPos(pos);
+        int startCorr = heatMapper.getCorrFromPos(pos); //getCorrFromPos skal skrives om. den er udkommenteret
+                                                            //den virker ikke
         int nextCoor = 0;
         shipCoor.add(startCorr);
         for (int i = 1; i < shiplength; i++) {
@@ -242,7 +243,7 @@ public class AlgShooter implements BattleshipsPlayer {
     @Override
     public void incoming(Position pos) {
         globalEnemyShotCounter++;
-        int enemyShot = heatMapper.getCorrFromPos(pos);
+        int enemyShot = heatMapper.getCorrFromPos(pos);//getCorrFromPos skal skrives om. den er udkommenteret
         for (int i = 0; i < this.enemyShotRound.length; i++) {
             enemyShotRound[enemyShot] = 101 - globalEnemyShotCounter;//dette er for at se skudrækkefølgen
         }

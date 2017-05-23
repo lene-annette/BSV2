@@ -619,12 +619,14 @@ public class HeatMapBasic {
 
         return numOfTimesThereIsSpace;
     }
-
-    public int getCorrFromPos(Position pos) {
-        int output = 0;
-        output = ((9 - pos.y) * 10) + pos.x;
-        return output;
-    }
+    
+    //2017-05-23 - chr --burde ikke bruges, Coor skal kun bruges ved skibsudlæggelse
+//    public int getCorrFromPos(Position pos) {
+//        int output = 0;
+//        output = ((9 - pos.y) * 10) + pos.x;
+//        
+//        return output;
+//    }
 
     public int[] fixedSeaWithSips() {
         int[] fixedSea
