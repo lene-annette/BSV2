@@ -81,6 +81,7 @@ public class AlgShooter implements BattleshipsPlayer {
         enemyShotMatch = heatMapper.getEmptySea();
     }
 
+    
     @Override
     public void startRound(int round) {
         hunt = true;
@@ -181,6 +182,8 @@ public class AlgShooter implements BattleshipsPlayer {
     @Override
     public void placeShips(Fleet fleet, Board board) {
         //placeShip1(fleet, board);
+        //2017-05-23 -- kl. 14.26 -- chr comment
+        
         if (roundNumber == 1) {
             placeShip1(fleet, board);
         } else {
