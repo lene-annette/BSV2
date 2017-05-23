@@ -322,7 +322,7 @@ public class EnemyReact {
         for (int i = 0; i < values.length; i++) {
             for (int j = 0; j < values[i].length; j++) {
                 if (values[i][j] < 0) {
-                    sumOfValues[i] = -999; //arbitrært tal under 0
+                    sumOfValues[i] = Integer.MIN_VALUE; //arbitrært tal under 0
                 }
             }
         }
@@ -404,7 +404,7 @@ public class EnemyReact {
     }
     
     private int[][] getValuesFromSeaToNestedArray(int[] sea, int shiplength){
-        ArrayList<Integer> IndexPlusOneArray = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 5);
+//        ArrayList<Integer> IndexPlusOneArray = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 5);
         int[][] nestedArray = combinations(this.getEmptySea(), shiplength);
         int[][] output = combinations(this.getEmptySea(), shiplength);
         int tempInt = 0;
@@ -472,9 +472,9 @@ public class EnemyReact {
     
     private ArrayList<Integer> spaceForShipIndexPlusOneER(int[] sea, int shiplength) {
         ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
-        boolean output = false;
+//        boolean output = false;
         int horizontal = 1;
-        boolean hor = false;
+//        boolean hor = false;
         for (int i = 1; i < sea.length; i++) {
             if (sea[i] == 1 && sea[i - 1] == 1) {
                 horizontal++;
@@ -484,7 +484,7 @@ public class EnemyReact {
 
             if (horizontal >= shiplength) {
                 numOfTimesThereIsSpace.add(i - (shiplength - 1)       +1 ); // +1 to avoid "+0" and "-0"
-                hor = true;
+//                hor = true;
             }
             if (i % 10 == 9) {
                 i++;
@@ -493,7 +493,7 @@ public class EnemyReact {
         }
 
         int vertical = 1;
-        boolean ver = false;
+//        boolean ver = false;
         for (int i = 10; i < sea.length; i += 10) {
             if (sea[i] == 1 && sea[i - 10] == 1) {
                 vertical++;
@@ -504,7 +504,7 @@ public class EnemyReact {
 
             if (vertical >= shiplength) {
                 numOfTimesThereIsSpace.add(-(i - (10*(shiplength - 1)))      -1); //  // +1 to avoid "+0" and "-0"             
-                ver = true;
+ //               ver = true;
             }
             if (i >= 90 && i != 99) {
                 //System.out.println("90's: "+i);
