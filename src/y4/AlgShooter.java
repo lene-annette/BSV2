@@ -11,6 +11,7 @@ import battleship.interfaces.Fleet;
 import battleship.interfaces.Position;
 import battleship.interfaces.Ship;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -81,7 +82,6 @@ public class AlgShooter implements BattleshipsPlayer {
         enemyShotMatch = heatMapper.getEmptySea();
     }
 
-    
     @Override
     public void startRound(int round) {
         hunt = true;
@@ -183,79 +183,169 @@ public class AlgShooter implements BattleshipsPlayer {
     public void placeShips(Fleet fleet, Board board) {
         //placeShip1(fleet, board);
         //2017-05-23 -- kl. 14.26 -- chr comment
-        
+        placeShip1(fleet, board);
+        /*
         if (roundNumber == 1) {
             placeShip1(fleet, board);
         } else {
             placeShip2(fleet, board);
         }
+         */
     }
+
+    public void placeShip3(Fleet fleet, Board board) {
+        boolean[] allowedSpaces = new boolean[100];
+        for (int i = 0; i < allowedSpaces.length; i++) {
+            allowedSpaces[i] = true;
+        }
+
+        int[] shotMatchCopy = new int[enemyShotMatch.length];
+        System.arraycopy(enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length);
+        boolean vertical = false;
+        int[][] nestedArray = null; //til "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...
+        int[][] nestedArrayCopy = null; //til "[[0, 1, 2, 3, 4], null,...
+        int[][] valuesOfShotMatchCopy = null; //til "[[43, 2, 35, 521, 87], null, ...
+        int[][] sumOfValues = null;//til "[[688], null...
+        int smalestSumOfValuesNumber = Integer.MAX_VALUE;
+        int smalestSOVIndex = 0; //smalestSOVIndex = the index in nestedArrayCopy we are interested in.
+        int[] nestedArrayCopyMember = null; //[0, 1, 2, 3, 4] the indexes where we want to place a ship
+                
+        
+        for (int i = 0; i < fleet.getNumberOfShips(); i++) {
+            Ship s = fleet.getShip(i);
+            //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
+            nestedArray = enemyReact.combinations(enemyReact.getEmptySea(), s.size());
+            nestedArrayCopy = enemyReact.combinations(enemyReact.getEmptySea(), s.size());
+            System.out.println("nested array: " + Arrays.deepToString(nestedArray));
+            //allowedSpaces.length: 100 (index 0-99)
+            for (int j = 0; j < nestedArray.length; j++) {
+                for (int k = 0; k < nestedArray[j].length; k++) {
+                    int enemyShotMatchIndex = nestedArray[j][k];
+                    if (allowedSpaces[enemyShotMatchIndex] == false){
+                        nestedArrayCopy[j] = null;
+                    }
+                }
+            }
+            // nestedArrayCopy 5'er skib: "[[0, 1, 2, 3, 4], null,...[95, 96, 97, 98, 99],
+            System.arraycopy(nestedArrayCopy, 0, valuesOfShotMatchCopy, 0, nestedArrayCopy.length);
+            for (int j = 0; j < nestedArrayCopy.length; j++) {
+                if (nestedArrayCopy[j] != null) {
+                    for (int k = 0; k < nestedArrayCopy[j].length; k++) {
+                        int enemyShotMatchIndex = nestedArrayCopy[j][k];
+                        valuesOfShotMatchCopy[j][k] = shotMatchCopy[enemyShotMatchIndex];
+                    }
+                }
+            }
+            //valuesOfShotMatchCopy 5'er skib: "[[43, 2, 35, 521, 87], null,...[75, 210, 89, 560, 56],
+            sumOfValues = new int[valuesOfShotMatchCopy.length][];
+            for (int j = 0; j < valuesOfShotMatchCopy.length; j++) {
+                if (valuesOfShotMatchCopy[j] != null) {
+                    for (int k = 0; k < valuesOfShotMatchCopy[j].length; k++) {
+                        sumOfValues[j][0] +=  valuesOfShotMatchCopy[j][k];
+                    }
+                }
+            }
+            //sumOfValues 5'er skib: "[[688], null..."
+            smalestSumOfValuesNumber = Integer.MAX_VALUE;
+            smalestSOVIndex = 0;
+            
+            for (int j = 0;  j <  sumOfValues.length; j++) {
+                if (sumOfValues[j] != null) {
+                    if (sumOfValues[j][0] < smalestSumOfValuesNumber) {
+                        smalestSumOfValuesNumber = sumOfValues[j][0];
+                        smalestSOVIndex = j;
+                    }
+                }
+            }
+            //smalestSOVIndex = the index in nestedArrayCopy we are interested in.
+            //int[] nestedArrayCopyMember //[0, 1, 2, 3, 4] the indexes where we want to place a ship
+            nestedArrayCopyMember = nestedArrayCopy[smalestSOVIndex];
+            
+            for (int j = 0; j < nestedArrayCopyMember.length; j++) {
+                allowedSpaces[nestedArrayCopyMember[j]] = false;
+            }
+            // nu er de relevante indexer i allowedSpaces sat til false.
+            //nu skal indexerne i nestedArrayCopyMember laves om til et skib
+            if (nestedArrayCopyMember[0]+1 == nestedArrayCopyMember[1]) {
+                vertical = false;
+            }else if (nestedArrayCopyMember[0]+10 == nestedArrayCopyMember[1]) {
+                
+            }
+        }
+            
+    }
+        
     
-    public void placeShip2(Fleet fleet, Board board){
+
+    public void placeShip2(Fleet fleet, Board board) {
         //int[] shotMatchCopy = enemyShotRound;
-            boolean[] allowedSpaces = new boolean[100];
-            for (int i = 0; i < allowedSpaces.length; i++) {
-                allowedSpaces[i] = true;
-            }
-            
-            int[] shotMatchCopy = new int[enemyShotMatch.length];
-            System.arraycopy( enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length );
-            boolean vertical = false;
-            
-            ArrayList<Integer> fleetArryList = new ArrayList<Integer>();
-            fleetArryList.add(2);
-            fleetArryList.add(3);
-            fleetArryList.add(3);
-            fleetArryList.add(4);
-            fleetArryList.add(5);
-            
-            for (int i = 0; i < fleetArryList.size(); i++) {
+        boolean[] allowedSpaces = new boolean[100];
+        for (int i = 0; i < allowedSpaces.length; i++) {
+            allowedSpaces[i] = true;
+        }
 
-                int shipSize = fleetArryList.get(i);//Ship s = fleet.getShip(i);
-                int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, shipSize, true, allowedSpaces);
-                if (coordinate < 0) {
-                    // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
-                    // Så får et 3'er-skib placeringen (2,2), ligger det på (2,2),(2,3) og (2,4) og index vil være 72, 62 og 52
-                    // Lene 2017-02-22 15:25 
-                    vertical = true;
-                    coordinate = ((-1) * coordinate) - 1;
-                    //shotMatchCopy[coordinate] = -1;
+        int[] shotMatchCopy = new int[enemyShotMatch.length];
+        System.arraycopy(enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length);
+        boolean vertical = false;
 
-                    for (int j = 1; j < shipSize; j++) {
-                        int index = coordinate - j * 10;
-                        //shotMatchCopy[index] = -1;
-                    }
-                } else {
-                    // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
-                    // Så får et 3'er-skib placeringen (7,0), ligger det på (7,0),(8,0) og (9,0) og index vil være 97, 98 og 99
-                    // Lene 2017-02-22 15:25
-                    vertical = false;
-                    coordinate = coordinate - 1;
-                    //shotMatchCopy[coordinate] = -1;
-                    for (int j = 1; j < shipSize; j++) {
-                        int index = coordinate + j;
-                        //shotMatchCopy[index] = -1;
-                    }
+        ArrayList<Integer> fleetArryList = new ArrayList<Integer>();
+        fleetArryList.add(2);
+        fleetArryList.add(3);
+        fleetArryList.add(3);
+        fleetArryList.add(4);
+        fleetArryList.add(5);
+
+        for (int i = 0; i < fleetArryList.size(); i++) {
+            //System.out.println("boolean[] allowedSpaces: ");
+            //System.out.println(Arrays.toString(allowedSpaces));
+            int shipSize = fleetArryList.get(i);//Ship s = fleet.getShip(i);
+            int coordinate = enemyReact.coordinatePlusOneFromHM(shotMatchCopy, shipSize, true, allowedSpaces);
+            //System.out.println("coordinate (eg. -16): " + coordinate);
+            if (coordinate < 0) {
+                // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
+                // Så får et 3'er-skib placeringen (2,2), ligger det på (2,2),(2,3) og (2,4) og index vil være 72, 62 og 52
+                // Lene 2017-02-22 15:25 
+                vertical = true;
+                coordinate = ((-1) * coordinate) - 1;
+                //shotMatchCopy[coordinate] = -1;
+
+                for (int j = 1; j < shipSize; j++) {
+                    int index = coordinate - j * 10;
+                    //shotMatchCopy[index] = -1;
                 }
-                
-                if (vertical){
-                    for (int j = 0; j < shipSize; j++) {
-                        allowedSpaces[coordinate+(j*10)] = false;
-                    }
-                }else{
-                    for (int j = 0; j < shipSize; j++) {
-                        allowedSpaces[coordinate+j] = false;
-                    }
+            } else {
+                // Jeg har lavet beregningen ud fra reglerne om placering af skibe ifølge opgaveoplægget, samt hvordan koordinater beregnes i getPosFromIndex.
+                // Så får et 3'er-skib placeringen (7,0), ligger det på (7,0),(8,0) og (9,0) og index vil være 97, 98 og 99
+                // Lene 2017-02-22 15:25
+                vertical = false;
+                coordinate = coordinate - 1;
+                //shotMatchCopy[coordinate] = -1;
+                for (int j = 1; j < shipSize; j++) {
+                    int index = coordinate + j;
+                    //shotMatchCopy[index] = -1;
                 }
-                
-                System.out.println("index: " + coordinate + " intended shipsice: " + shipSize + " realShipsize: " + fleet.getShip(i).size()); //coordinate er nu et index nummer (0-99)
-                heatMapper.printHeatmap(1, shotMatchCopy);
-                Position shipPosition = heatMapper.getPosFromIndex(coordinate);
-                System.out.println("position: X: " + shipPosition.x + " Y: " + shipPosition.y);
-                board.placeShip(shipPosition, fleet.getShip(i), vertical);
             }
+
+            if (vertical) {
+                for (int j = 0; j < shipSize; j++) {
+                    //System.out.println("placeShip2--linej246 -- shipsize: " + shipSize);
+                    allowedSpaces[coordinate + (j * 10)] = false;
+                }
+            } else {
+                for (int j = 0; j < shipSize; j++) {
+                    //System.out.println("placeShip2--linej251 -- shipsize: " + shipSize);
+                    allowedSpaces[coordinate + j] = false;
+                }
+            }
+
+            //System.out.println("index: " + coordinate + " intended shipsice: " + shipSize + " realShipsize: " + fleet.getShip(i).size()); //coordinate er nu et index nummer (0-99)
+            heatMapper.printHeatmap(1, shotMatchCopy);
+            Position shipPosition = heatMapper.getPosFromIndex(coordinate);
+            //System.out.println("position: X: " + shipPosition.x + " Y: " + shipPosition.y);
+            board.placeShip(shipPosition, fleet.getShip(i), vertical);
+        }
     }
-    
+
     /*
     
     public void placeShip2(Fleet fleet, Board board){
@@ -297,8 +387,7 @@ public class AlgShooter implements BattleshipsPlayer {
                 board.placeShip(shipPosition, s, vertical);
             }
     }
-    */
-    
+     */
     public ArrayList<Integer> shipIndexesFromPos(Position pos, int shiplength, boolean vertical) {
         ArrayList<Integer> shipIndexes = new ArrayList<Integer>();
         int startIndex = heatMapper.getIndexFromPos(pos);
@@ -333,7 +422,7 @@ public class AlgShooter implements BattleshipsPlayer {
         // enemyShipMatch eller enemyShipRound. (hunt mode)
         // lige nu leder den kun efter "hardcodede" skibe. (return coorPlusOne eller 0 hvis intet punkt fundet)
         //enemyReact -- public int indexFromEnemyShipMatch(int[] sea, int[] enemyShipMatch, int roundNumber, ArrayList<Position> shotsFired){
-    
+
         //System.out.println("getFireCoordinates: activated");
         fleetBeforeShot = fleetConverter(enemyShips);
         long startTime = System.currentTimeMillis();
@@ -387,7 +476,7 @@ public class AlgShooter implements BattleshipsPlayer {
         //to the shots fired array.
         avblShots.remove(shot);
         shotsFired.add(shot);
-        shooterDebugOutput(startTime);
+        //shooterDebugOutput(startTime);
 
         return shot;
     }

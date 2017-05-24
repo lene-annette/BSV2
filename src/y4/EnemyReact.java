@@ -312,7 +312,7 @@ public class EnemyReact {
         int desiredCoor = 0;
         int theCoorIndex = 0;
         int theCoorValue = 0;
-        
+        //System.out.println("EnemyReact - linje333 - coordinatePlusOneFromHM - initialised");
         ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), shipsize);
         int[][] nestedArray = combinations(this.getEmptySea(), shipsize);
         int[][]values = getValuesFromSeaToNestedArray(heatmap, shipsize);
@@ -330,16 +330,23 @@ public class EnemyReact {
 //        //*********************************
           
         if (lowestValue) {
+            //System.out.println("EnemyReact - linje333 - looking for lowest values");
             theCoorValue = Integer.MAX_VALUE;
             for (int i = 0; i < sumOfValues.length; i++) {
                 if (sumOfValues[i] < theCoorValue) {//&& allowesspaces[i] == true)//&& sumOfValues[i] > -1)
                     boolean acceptableIndex = true;
+                    int acceptedIndex = 0;
                     for (int j = 0; j < shipsize; j++) {
-                        if (allowesspaces[nestedArray[i][j]] = false) {
+                        // her leder den efter ...
+                        System.out.println("EnemyReact 340 -- print allowesspaces -- nestedArray[i][j]: "+nestedArray[i][j]+" i:"+ i + " j:" + j);
+                        if (allowesspaces[nestedArray[i][j]] == false) {
+                            acceptedIndex = nestedArray[i][j];
+                            System.out.println("index: " + i + " placeInShip: " + j + " er false");
                             acceptableIndex = false;
                         }
                     }
                     if (acceptableIndex) {
+                        System.out.println("is accetable: "+"nestedArray[i][j]: "+acceptedIndex);
                         theCoorValue = sumOfValues[i];
                         theCoorIndex = i;
                     }
@@ -352,11 +359,24 @@ public class EnemyReact {
             for (int i = 0; i < sumOfValues.length; i++) {
                 if (sumOfValues[i] < theCoorValue) {//&& allowesspaces[i] == true)//&& sumOfValues[i] > -1)
                     boolean acceptableIndex = true;
-                    for (int j = 0; j < shipsize; j++) {
-                        if (allowesspaces[nestedArray[i][j]] = false) {
+                    int startCoor = opg1.get(i);
+                    if (startCoor > 0) { // Horizontal
+                        int startIndex = startCoor-1;
+                        for (int j = 0; j < shipsize; j++){
+                            if (allowesspaces[startIndex+j] = false) {
                             acceptableIndex = false;
                         }
+                        }
+                            
+                    }else{          // Vertical
+                        int startIndex = Math.abs(startCoor)-1;
+                        for (int j = 0; j < shipsize; j++){
+                            if (allowesspaces[startIndex+(j*10)] = false) {
+                            acceptableIndex = false;
+                        }
+                        }
                     }
+                    
                     if (acceptableIndex) {
                         theCoorValue = sumOfValues[i];
                         theCoorIndex = i;
@@ -444,7 +464,7 @@ public class EnemyReact {
      * @param enemyMoveMap
      * @param shiplength 
      */
-    private int[][] combinations(int[] sea, int shiplength){  //int[] enemyMoveMap,
+    public int[][] combinations(int[] sea, int shiplength){  //int[] enemyMoveMap,
         
         // opg1 is now a list of the possible indexes ( getEmptySea(), 3 );
         // opg1: 160 -- [1, 2, 3, 4, 5, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 21, 22, 23, 24, 25, 26, 27, 28, 31, 32, 33, 34, 35, 36, 37, 38, 41, 42, 43, 44, 45, 46, 47, 48, 51, 52, 53, 54, 55, 56, 57, 58, 61, 62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 78, 81, 82, 83, 84, 85, 86, 87, 88, 91, 92, 93, 94, 95, 96, 97, 98, -1, -11, -21, -31, -41, -51, -61, -71, -2, -12, -22, -32, -42, -52, -62, -72, -3, -13, -23, -33, -43, -53, -63, -73, -4, -14, -24, -34, -44, -54, -64, -74, -5, -15, -25, -35, -45, -55, -65, -75, -6, -16, -26, -36, -46, -56, -66, -76, -7, -17, -27, -37, -47, -57, -67, -77, -8, -18, -28, -38, -48, -58, -68, -78, -9, -19, -29, -39, -49, -59, -69, -79, -10, -20, -30, -40, -50, -60, -70, -80]
@@ -559,7 +579,7 @@ public class EnemyReact {
         return pos;
     }
     
-    private int[] getEmptySea() {
+    public int[] getEmptySea() {
         int[] output = new int[100];
         for (int i = 0; i < output.length; i++) {
             output[i] = 1;
