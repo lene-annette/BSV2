@@ -587,6 +587,200 @@ public class EnemyReact {
         return output;
     }
     
+    public void runPlaceShipsChr0525(){
+        
+        this.printHeatmap(1, this.reactTestSea3());
+        
+        ArrayList<Integer> myfleet = new ArrayList<Integer>();
+        myfleet.add(2);
+        myfleet.add(3);
+        myfleet.add(3);
+        myfleet.add(4);
+        myfleet.add(5);
+        
+        ArrayList<int[]> output = placeShipsChr0525(this.reactTestSea3(), myfleet);
+        
+        System.out.println("****************** result ********************");
+        System.out.println("*********************************************");
+        System.out.println("output size: " + output.size());
+        for (int i = 0; i < output.size(); i++) {
+            System.out.println(Arrays.toString(output.get(i)));
+        }
+    }
+    
+    public ArrayList<int[]> placeShipsChr0525(int[] enemyShotMatch, ArrayList<Integer> fleet){
+        ArrayList<int[]> shipIndexesToPlaceOnSea = new ArrayList<int[]>();
+        boolean[] allowedSpaces = new boolean[100];
+        for (int i = 0; i < allowedSpaces.length; i++) {
+            allowedSpaces[i] = true;
+        }
+        
+        //2017-05-15-kl.15.39 forsøg på at lave placeship funktionen igen;
+        int[][] nestedArray = null; //til "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...
+        int[][] values = null; //til "[[43, 2, 35, 521, 87], ...
+        int[][] sumOfValues = null;//til "[[688],......
+        int[] targetIndexArray = null;
+        
+        for (int i = 0; i < fleet.size(); i++) {
+            //System.out.println("");
+            
+            int ship = fleet.get(i);
+            nestedArray = combinations(getEmptySea(), ship);
+            values = combinations(getEmptySea(), ship);
+            //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
+            //System.out.println("nested array: "+ Arrays.deepToString(nestedArray));
+            
+            //loop over values og erstat indexerne med deres enemyShotMatch værdier.
+            for (int j = 0; j < nestedArray.length; j++){
+                for (int k = 0; k < nestedArray[j].length; k++) {
+                    //values = "[[43, 2, 35, 521, 87], ......
+                    values[j][k] = enemyShotMatch[nestedArray[j][k]];
+                }
+            }   
+            //System.out.println("values: " + Arrays.deepToString(values));
+            int[] eachShipSumArray = new int[1];
+            sumOfValues = new int[values.length][];
+            for (int j = 0; j < values.length; j++) {
+                    int eachShipSum = 0;
+                    for (int k = 0; k < values[j].length; k++) {
+                        //sumOfValues 5'er skib: "[[688], null..."
+                        eachShipSum += values[j][k];
+                    }
+                    eachShipSumArray[0] = eachShipSum;
+                    //System.out.print("eachShipSum: " + eachShipSum);
+                    sumOfValues[j] = eachShipSumArray;
+                    eachShipSumArray = new int[1];
+                
+            }
+            //System.out.println();
+            //til "[[688],......
+            //System.out.println("sumOfValues: " + Arrays.deepToString(sumOfValues));
+            
+            //nestedArray.length == sumOfValues.length
+            targetIndexArray = null;
+            int targetIndex = -1;
+            int targetSum = Integer.MAX_VALUE;//sumOfValues[0][0];
+            int currentSum = 0;
+                    
+            //******************************************************
+            //her findes det afgørende indexnummer i nestedArray
+            //******************************************************
+            for (int j = 0; j < nestedArray.length; j++) {
+                boolean indexIsOk = true;
+                for (int k = 0; k < nestedArray[j].length; k++) {
+                    if (allowedSpaces[nestedArray[j][k]] == false ) {
+                        //System.out.println("******************index er false!: " + nestedArray[j][k]);
+                        indexIsOk = false;
+                    }
+                }
+                if (indexIsOk == true) {
+                    currentSum = sumOfValues[j][0];
+                    //System.out.print("currentSum: " + currentSum);
+                    if (currentSum < targetSum) {
+                        targetSum = currentSum;
+                        targetIndexArray = nestedArray[j];
+                        targetIndex = j;
+                    }
+                }
+            }
+            //System.out.println();
+                    
+            //allowspaces skal testes:
+            for (int j = 0; j < targetIndexArray.length; j++) {
+                //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
+            }
+            
+            //targetIndexArray er korrekt beregnet. Nu skal allowedSpaces opdateres.
+            for (int j = 0; j < targetIndexArray.length; j++) {
+                //System.out.println("targetIndexArray[j]: "+ targetIndexArray[j] + " ");
+                allowedSpaces[targetIndexArray[j]] = false;
+                
+            }
+            for (int j = 0; j < targetIndexArray.length; j++) {
+                //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
+            }
+            
+            //System.out.println("targetSum: " + targetSum);
+            //System.out.println("lowestIndexArray: " + Arrays.toString(targetIndexArray));
+            //System.out.println("LIA: "+targetIndex);
+            shipIndexesToPlaceOnSea.add(targetIndexArray);
+        }
+        
+        return shipIndexesToPlaceOnSea;
+    }
+    
+    public void printHeatmap(int divisor, int[] sea) {
+        String RESET = "\u001B[0m";
+        String RED = "\u001B[31m";
+        int largestNumber = 0;
+        int largestNumberLength = 0;
+        int currentNumberLength = 0;
+
+        for (int i = 0; i < sea.length; i++) {
+            if (sea[i] > largestNumber) {
+                largestNumber = sea[i];
+            }
+        }
+        largestNumberLength = Integer.toString(largestNumber).length();
+
+        for (int i = 0; i < sea.length; i++) {
+            currentNumberLength = Integer.toString(sea[i]).length();
+            if (sea[i] < 0) {
+                currentNumberLength++;
+            }
+            for (int j = 0; j < largestNumberLength - currentNumberLength; j++) {
+                System.out.print(" ");
+            }
+            if (sea[i] == largestNumber) {
+                System.out.print("[" + (sea[i] / divisor) + "]");
+            } else {
+                System.out.print(" " + (sea[i] / divisor) + " ");
+            }
+            if (i % Math.sqrt(sea.length) == Math.sqrt(sea.length) - 1) {
+                System.out.println();
+            }
+        }
+    }
+
+    public void printSea(int[] sea) {
+        String RESET = "\u001B[0m";
+        String RED = "\u001B[31m";
+        int largestNumber = 0;
+        int largestNumberLength = 0;
+        int currentNumberLength = 0;
+
+        for (int i = 0; i < sea.length; i++) {
+            if (sea[i] > largestNumber) {
+                largestNumber = sea[i];
+            }
+        }
+        largestNumberLength = Integer.toString(largestNumber).length();
+        largestNumberLength++;
+
+        for (int i = 0; i < sea.length; i++) {
+            currentNumberLength = Integer.toString(sea[i]).length();
+            if (sea[i] < 0) {
+                currentNumberLength++;
+            }
+
+            for (int j = 0; j < largestNumberLength - currentNumberLength; j++) {
+                System.out.print(" ");
+            }
+
+            if (sea[i] == 1) {
+                System.out.print(" " + ".");
+            } else if (sea[i] == -1) {
+                System.out.print("  " + "+");
+            } else {
+                System.out.print(" " + sea[i]);
+            }
+
+            if (i % Math.sqrt(sea.length) == Math.sqrt(sea.length) - 1) {
+                System.out.println();
+            }
+        }
+    }
+    
     private int[] reactTestSea1() {
         int[] fixedSea
                 =  { -1,  1,  1,  1,  1,  1,  1,  1,  1, -1,
@@ -616,6 +810,38 @@ public class EnemyReact {
                       8100, 8200, 8300, 8400, 8500, 8600, 8700, 8800, 8900, 9000,
                       9100, 9200, 9300, 9400, 9500, 9600, 9700, 9800, 9900,10000};
 
+        return fixedSea;
+    }
+    
+    private int[] reactTestSea3(){
+        int[] fixedSea = {
+                 10,   74,  267,  442,  243,  498,  309,  475,  142,   66, 
+                143,  560,  185,  230,  679,  413,  475,  297,  503,  118, 
+                409,  153,  418,  249,  409,  522,  229,  446,  280,  274, 
+                237,  334,  484,  413,  326,  452,  477,  289,  279,  146, 
+                319,  433,  304,  369,  365,  787,  361,  204,  392,  405, 
+                508,  285,  197,  261,  603,  548,  346,  429,  452,  317, 
+                169,  447,  518,  191,  235,  325,  438,  419,  243,  236, 
+                213,  409,  333,  392,  540,  321,  169,  474,  155,  379, 
+                134,  374,  244,  463,  371,  510,  324,   80,  418,  139, 
+                 10,  224,  281,  144,  257,  378,  441,  186,  139,   67 
+        };
+        return fixedSea;
+    }
+    
+    private int[] reactTestSea4(){
+        int[] fixedSea = {
+            2,    2,   69,   53,    2,   81,    2,   71,    2,    2, 
+            2,   73,    2,   52,   90,    2,    2,    2,   74,    2, 
+            2,    2,   93,   54,    2,   63,   94,    2,    2,   75, 
+           83,    2,    2,   98,   64,    2,    2,   95,    2,   76, 
+           85,   91,   66,    2,    2,  100,   65,    2,    2,   79, 
+           86,   55,    2,   58,  101,    2,    2,   61,   88,   78, 
+           84,   57,   96,    2,    2,   67,   99,   60,    2,   77, 
+           82,   56,    2,   97,   62,    2,    2,   92,    2,    2, 
+            2,   80,    2,    2,    2,   89,    2,    2,   72,    2, 
+            2,    2,   68,    2,   87,    2,   70,    2,    2,   59, 
+        };
         return fixedSea;
     }
     

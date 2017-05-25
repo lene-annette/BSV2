@@ -18,8 +18,10 @@ import java.util.ArrayList;
 public class TesterThingie { 
     public static void main(String[] args) {
                 
+        
+        
         EnemyReact er = new EnemyReact();
-        er.run();
+        er.runPlaceShipsChr0525();
     }
                
     

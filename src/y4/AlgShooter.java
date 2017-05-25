@@ -181,18 +181,93 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void placeShips(Fleet fleet, Board board) {
+        
         //placeShip1(fleet, board);
-        //2017-05-23 -- kl. 14.26 -- chr comment
-        placeShip1(fleet, board);
-        /*
+        //this.heatMapper.printHeatmap(1, this.enemyShotMatch);
+        
+        
         if (roundNumber == 1) {
             placeShip1(fleet, board);
         } else {
-            placeShip2(fleet, board);
+            placeShip6(fleet, board);
         }
-         */
+         
     }
-
+    
+    public void placeShip6(Fleet fleet, Board board){
+        ArrayList<Integer> myfleet = new ArrayList<Integer>();
+        myfleet.add(2);
+        myfleet.add(3);
+        myfleet.add(3);
+        myfleet.add(4);
+        myfleet.add(5);
+        
+        ArrayList<int[]> output = enemyReact.placeShipsChr0525(enemyShotMatch, myfleet);
+        int[] shipIndexes = null;
+        int TobiasIndex = 0;
+        boolean vertical = true;
+        
+        for (int i = 0; i < output.size(); i++) {
+            Ship s = fleet.getShip(i);
+            shipIndexes = output.get(i);
+            if (shipIndexes[0]+1 == shipIndexes[1]) {
+                vertical = false;
+                TobiasIndex = shipIndexes[0];
+            }else if (shipIndexes[0]+10 == shipIndexes[1]) {
+                vertical = true;
+                TobiasIndex = shipIndexes[shipIndexes.length-1];
+            }else{
+                System.out.println("fejl i placeShip6 -- hverken lodret eller vandret !");
+            }
+            //"Tobias index skal nu laves om til x og y"
+            int x = TobiasIndex%10;
+            int y = 9-(TobiasIndex/10);
+            Position pos = new Position(x,y);
+            board.placeShip(pos, s, vertical);
+            
+        }
+        
+    }
+    
+    public void placeShip5(){
+        boolean[] allowedSpaces = new boolean[100];
+        for (int i = 0; i < allowedSpaces.length; i++) {
+            allowedSpaces[i] = true;
+        }
+        
+        int[] shotMatchCopy = new int[enemyShotMatch.length];
+        System.arraycopy(enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length);
+        boolean vertical = false;
+        int[][] nestedArray = null; //til "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...
+        int[][] nestedArrayCopy = null; //til "[[0, 1, 2, 3, 4], null,...
+        int[][] valuesOfShotMatchCopy = null; //til "[[43, 2, 35, 521, 87], null, ...
+        int[][] sumOfValues = null;//til "[[688], null...
+        int smalestSumOfValuesNumber = Integer.MAX_VALUE;
+        int smalestSOVIndex = 0; //smalestSOVIndex = the index in nestedArrayCopy we are interested in.
+        int[] nestedArrayCopyMember = null; //[0, 1, 2, 3, 4] the indexes where we want to place a ship
+          
+        //testing:
+        ArrayList<Integer> fleetChr = new ArrayList<Integer>();
+        fleetChr.add(2);
+        fleetChr.add(3);
+        fleetChr.add(3);
+        fleetChr.add(4);
+        fleetChr.add(5);
+        
+        
+        for (int i = 0; i < fleetChr.size(); i++) {
+            int ship = fleetChr.get(i);
+            //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
+            nestedArray = enemyReact.combinations(enemyReact.getEmptySea(), ship);
+            nestedArrayCopy = enemyReact.combinations(enemyReact.getEmptySea(), ship);
+            System.out.println("nested array: " + Arrays.deepToString(nestedArray));
+            //allowedSpaces.length: 100 (index 0-99)
+            
+        }
+        
+        
+    }
+    
     public void placeShip3(Fleet fleet, Board board) {
         boolean[] allowedSpaces = new boolean[100];
         for (int i = 0; i < allowedSpaces.length; i++) {
@@ -249,6 +324,7 @@ public class AlgShooter implements BattleshipsPlayer {
             smalestSumOfValuesNumber = Integer.MAX_VALUE;
             smalestSOVIndex = 0;
             
+            
             for (int j = 0;  j <  sumOfValues.length; j++) {
                 if (sumOfValues[j] != null) {
                     if (sumOfValues[j][0] < smalestSumOfValuesNumber) {
@@ -257,6 +333,7 @@ public class AlgShooter implements BattleshipsPlayer {
                     }
                 }
             }
+            System.out.println("smalestSOVIndex: "  + smalestSOVIndex);
             //smalestSOVIndex = the index in nestedArrayCopy we are interested in.
             //int[] nestedArrayCopyMember //[0, 1, 2, 3, 4] the indexes where we want to place a ship
             nestedArrayCopyMember = nestedArrayCopy[smalestSOVIndex];
@@ -269,8 +346,13 @@ public class AlgShooter implements BattleshipsPlayer {
             if (nestedArrayCopyMember[0]+1 == nestedArrayCopyMember[1]) {
                 vertical = false;
             }else if (nestedArrayCopyMember[0]+10 == nestedArrayCopyMember[1]) {
-                
+                vertical = true;
             }
+            
+            System.out.println("placeShip3: " + vertical + " "+ Arrays.toString(nestedArrayCopyMember));              
+                   
+                    
+                    
         }
             
     }
