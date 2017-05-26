@@ -715,7 +715,7 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endRound(int round, int points, int enemyPoints) {
-        heatMapper.printHeatmap(1, enemyShotRound);
+        //heatMapper.printHeatmap(1, enemyShotRound);
         
         //2017-05-18 -kl.17.02 -chr- kodeforslag:
         for (int i = 0; i < this.enemyShipRound.length; i++) {
