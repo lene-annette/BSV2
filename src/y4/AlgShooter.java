@@ -202,7 +202,7 @@ public class AlgShooter implements BattleshipsPlayer {
         myfleet.add(4);
         myfleet.add(5);
         
-        ArrayList<int[]> output = enemyReact.placeShipsChr0525(enemyShotMatch, myfleet);
+        ArrayList<int[]> output = enemyReact.placeShipsChr0525(enemyShotRound, myfleet);
         int[] shipIndexes = null;
         int TobiasIndex = 0;
         boolean vertical = true;
@@ -715,7 +715,8 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endRound(int round, int points, int enemyPoints) {
-
+        heatMapper.printHeatmap(1, enemyShotRound);
+        
         //2017-05-18 -kl.17.02 -chr- kodeforslag:
         for (int i = 0; i < this.enemyShipRound.length; i++) {
             if (enemyShipRound[i] < 1) {
