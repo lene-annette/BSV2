@@ -38,6 +38,9 @@ public class Y4 implements PlayerFactory<BattleshipsPlayer> {
 }
 
 /*
+
+//2017 - 05 - 27 kl. 19.44 problemer med upload
+
 // 2017 - 05 - 27 - Performance:
 
 1.000 skud:
