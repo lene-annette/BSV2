@@ -10,6 +10,7 @@ import battleship.interfaces.Board;
 import battleship.interfaces.Fleet;
 import battleship.interfaces.Position;
 import battleship.interfaces.Ship;
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -183,7 +184,6 @@ public class AlgShooter implements BattleshipsPlayer {
     public void placeShips(Fleet fleet, Board board) {
         
         //placeShip1(fleet, board);
-        //this.heatMapper.printHeatmap(1, this.enemyShotMatch);
         
         
         if (roundNumber == 1) {
@@ -202,10 +202,18 @@ public class AlgShooter implements BattleshipsPlayer {
         myfleet.add(4);
         myfleet.add(5);
         
-        ArrayList<int[]> output = enemyReact.placeShipsChr0525(enemyShotRound, myfleet);
+        ArrayList<int[]> output = enemyReact.placeShipsChr0525HeighestValue(enemyShotMatch, myfleet);
+        //ArrayList<int[]> output = enemyReact.placeShipsChr0525AverageValue(enemyShotMatch, myfleet);
+        
+        //placeShipsChr0525AverageValue
         int[] shipIndexes = null;
         int TobiasIndex = 0;
         boolean vertical = true;
+        
+        //enemy shot match printout
+        //System.out.println("enemyShotMatch: ");
+        //this.heatMapper.printHeatmap(1, this.enemyShotMatch);
+        //System.out.println(Arrays.toString(enemyShotMatch));
         
         for (int i = 0; i < output.size(); i++) {
             Ship s = fleet.getShip(i);
@@ -222,6 +230,10 @@ public class AlgShooter implements BattleshipsPlayer {
             //"Tobias index skal nu laves om til x og y"
             int x = TobiasIndex%10;
             int y = 9-(TobiasIndex/10);
+            
+            //ship printout
+            //System.out.println("Shiplength: " + s.size() + " X: " + x + " Y: " + y );
+            
             Position pos = new Position(x,y);
             board.placeShip(pos, s, vertical);
             
@@ -497,7 +509,9 @@ public class AlgShooter implements BattleshipsPlayer {
         }
 
     }
-
+    
+    
+    
     @Override
     public Position getFireCoordinates(Fleet enemyShips) {
         //2017-05-23 - chr - vi kan bruge nedenstående til at lede efter modstanderens skibe ud fra 
@@ -510,14 +524,36 @@ public class AlgShooter implements BattleshipsPlayer {
         long startTime = System.currentTimeMillis();
 
         if (hunt) {
-            //This is hunting mode.
-            //Shots are chosen from making a heatmap and
-            //choosing the most probable place for a ship to be located.
-            shot = heatMapper.getPosFromShotArrList(shotsFired, fleetBeforeShot);
+            
+            //this.debugOuputChristian();
+            ArrayList<Integer> likelyIndexes = new ArrayList<Integer>();
+            likelyIndexes = enemyReact.indexesFromEnemyShipMatch(
+                this.enemyShipMatch, this.roundNumber, shotsFired );    
+           
+            if (likelyIndexes.size() > 0) {
+                /*
+                2017-05-27 - kl. 16.58 -- herefter forsøges at implementere skud mod 
+                                        højfrekvente enemyShipMatch punkter
+                */
+                //indexesFromEnemyShipMatch(
+                //      int[] enemyShipMatch, int roundNumber, ArrayList<Position> shotsFired){
 
-            //The heatmap is stored for later use in target mode.
-            //Since no new heat map is generated when in target mode.
-            heatMap = heatMapper.getHeatmap();
+                shot = enemyReact.getPosFromIndex(likelyIndexes.get(0));
+                heatMap = heatMapper.getHeatmap();
+                //System.out.println("likelyIndexes: " + likelyIndexes);
+                
+            }else{
+                //This is hunting mode.
+                //Shots are chosen from making a heatmap and
+                //choosing the most probable place for a ship to be located.
+                shot = heatMapper.getPosFromShotArrList(shotsFired, fleetBeforeShot);
+
+                //The heatmap is stored for later use in target mode.
+                //Since no new heat map is generated when in target mode.
+                heatMap = heatMapper.getHeatmap();
+            }
+            
+            
 
         } else if (target && shotHit) {
             //This is target mode when last shot was a hit.
@@ -570,7 +606,10 @@ public class AlgShooter implements BattleshipsPlayer {
         //hvis det er et hit, skal feltet tilføjes enemyShipRound:
         // det er forudsat (i endRound) at det der tilføjes til enemyShipRound er en
         // negativ integer (eg -2).
-        //this.enemyShipRound[heatMapper.getCorrFromPos(pos)] = -this.enemyShipRound[heatMapper.getCorrFromPos(pos)];
+        if (hit) {
+            this.enemyShipRound[heatMapper.getIndexFromPos(shot)] = -this.enemyShipRound[heatMapper.getIndexFromPos(shot)];
+        }
+        //*************end of enemyShipRound function*************************
         fleetAfterShot = fleetConverter(enemyShips);
         isSunk = !(fleetAfterShot.size() == fleetBeforeShot.size());
         shotHit = hit;
@@ -715,7 +754,8 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endRound(int round, int points, int enemyPoints) {
-        //heatMapper.printHeatmap(1, enemyShotRound);
+        //debugOuputChristian();
+        
         
         //2017-05-18 -kl.17.02 -chr- kodeforslag:
         for (int i = 0; i < this.enemyShipRound.length; i++) {
@@ -735,7 +775,11 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void endMatch(int won, int lost, int draw) {
-
+        
+        System.out.println("linje 746: enemyShipMatch");
+        heatMapper.printHeatmap(1, enemyShipMatch);
+        System.out.println(Arrays.toString(enemyShipMatch));
+        
         AlgShooterAverage = AlgShooterAverage / rounds;
         EnemyAverage = EnemyAverage / rounds;
 
@@ -855,5 +899,12 @@ public class AlgShooter implements BattleshipsPlayer {
 
     }
 
+    public void debugOuputChristian(){
+        //2017-05-27 - kl. 17.31 - chr - debugging printout:
+        //System.out.println("Chr debug - round " + this.roundNumber);
+        ArrayList<Integer> likelyIndexes = enemyReact.indexesFromEnemyShipMatch(
+                this.enemyShipMatch, this.roundNumber, shotsFired ); 
+        System.out.println("likelyIndexes: " + likelyIndexes);
+    }
     //unrelated random comment for commit use, to be deleted :P
 }
