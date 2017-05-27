@@ -80,10 +80,16 @@ Group 4 Battleship AI: 7942 wins.
 Codename: Litra A: 1840 wins.
 THE WINNER IS: Group 4 Battleship AI
 
+100.000 Spil.
 
+********************************************X4 --Win
+AlgShooter : 52.83297
+Enemy : 53.47271
+Win% : 49.542%
 
-******************************R2
-
+Group 4 Battleship AI: 49542 wins.
+Codename: Litra D: 45991 wins.
+THE WINNER IS: Group 4 Battleship AI
 
 
 
