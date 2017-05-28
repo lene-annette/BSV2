@@ -37,53 +37,37 @@ public class EnemyReact {
     public ArrayList<Integer> indexesFromEnemyShipMatch(int[] enemyShipMatch, int roundNumber, ArrayList<Position> shotsFired) {
         //int output = -1;
         ArrayList<Integer> hardCodedIndexes = new ArrayList<Integer>();
-
+        ArrayList<Double> valueDebugger1 = new ArrayList<Double>();
+        ArrayList<Double> valueDebugger2 = new ArrayList<Double>();
+        ArrayList<Double> valueDebugger3 = new ArrayList<Double>();
+        int[] enemyShipMatchCopy = new int[enemyShipMatch.length];
+        System.arraycopy(enemyShipMatch, 0, enemyShipMatchCopy, 0, enemyShipMatch.length);
+        //find the maximum value in enemyShipMatchCopy:
+        int maxValue = Arrays.stream(enemyShipMatchCopy).max().getAsInt();
+        
         try {
-            for (int i = 0; i < enemyShipMatch.length; i++) {
-                // hvis et punkt i enemyShipMatch har samme værdi som roundCount,
-                // betyder det at modstanderen altid placere skibe der.
-                // i så fald skal vi altid huske at skyde der.
-                if (roundNumber > 2 && enemyShipMatch[i] >= roundNumber) {
-                    //count them only as hardcoded if the ships have been placed in the same spot more than twice.
-                    hardCodedIndexes.add(i);
-                }
+            
+            while ( ((double) maxValue-1) / ((double) roundNumber-1) >= 0.4) { //tæller-1 for at fjerne emptySea 1'ere. nævner-1 fordi kortet er en runde bagud.
+                                                        //>= 40.0 skulle være 0.4 (40%) men af en eller anden grund bliver resultaterne væsentligt højere
+                valueDebugger1.add(((double) maxValue-1) / ((double) roundNumber-1));
+                valueDebugger2.add(((double) maxValue-1));
+                valueDebugger3.add(((double) roundNumber-1));
+                
+                for (int i = 0; i < enemyShipMatchCopy.length; i++) {
+                    // hvis et punkt i enemyShipMatch har samme værdi som roundCount,
+                    // betyder det at modstanderen altid placere skibe der.
+                    // i så fald skal vi altid huske at skyde der.
+                    if (enemyShipMatchCopy[i] == maxValue) {
+                        //count them only as hardcoded if the ships have been placed in the same spot more than twice.
+                        hardCodedIndexes.add(i);
+                        enemyShipMatchCopy[i] = 0;
+                    }
+                }                
+                maxValue = Arrays.stream(enemyShipMatchCopy).max().getAsInt();
             }
-
-            //hvis der ikke er nogen oplagte punkter =
-            // lav en fancy algoritme her. og tilføj punkterne til hardCodedIndexes.
-            for (int i = 0; i < enemyShipMatch.length; i++) {
-                if (roundNumber > 10 && enemyShipMatch[i] >= roundNumber / 1.5) {//skibene placeres det samme sted 66+ % af tiden
-                    hardCodedIndexes.add(i);
-                }
-            }
-
-            for (int i = 0; i < enemyShipMatch.length; i++) {
-                if (roundNumber > 10 && enemyShipMatch[i] >= roundNumber / 2.5) {//skibene placeres det samme sted 40+ % af tiden
-                    hardCodedIndexes.add(i);
-                }
-            }
-
-            //remove the indexes from hardCodedIndexes if they are dublicates
-            Set<Integer> mySet = new HashSet<Integer>((hardCodedIndexes));
-            hardCodedIndexes.clear();
-            hardCodedIndexes.addAll(mySet);
-            //mainList.addAll(set);
-
-            //remove the indexes from hardCodedIndexes if they are in "shotsfired"
-            ArrayList<Integer> copyList = new ArrayList<>(hardCodedIndexes);
-            for (int i = 0; i < copyList.size(); i++) {
-                int candidateMove = copyList.get(i);
-                Position candPos = this.getPosFromIndex(candidateMove);
-                if (shotsFired.contains(candPos)) {
-                    hardCodedIndexes.remove(candidateMove);
-                }
-            }
-
-            /*
-        if (hardCodedIndexes.size() > 0) {
-            output = hardCodedIndexes.get(0);
-        }
-             */
+            //System.out.println("ValueDebugger1: " + valueDebugger1);
+            //System.out.println("ValueDebugger2: " + valueDebugger2);
+            //System.out.println("ValueDebugger3: " + valueDebugger3);
         } catch (Exception e) {
             //System.out.println("round " + roundNumber + 
             //        ": no indexesFromEnemyShipMatch possible: " + hardCodedIndexes);
@@ -1028,3 +1012,4 @@ public class EnemyReact {
     }
     
 */
+

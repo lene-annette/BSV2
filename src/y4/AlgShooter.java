@@ -28,6 +28,7 @@ public class AlgShooter implements BattleshipsPlayer {
     int[] enemyShipRound = null;
     int[] enemyShotMatch = null;
     int[] enemyShotRound = null;
+    ArrayList<Integer> likelyIndexes = null; //this is for the part of huntmode where we shoot against frequently occuring enemy ships.
     long MaxShotTimeInMatch = 0;
     int roundNumber = 0;
     int roundNumberOfFirstMaxShot = 0;
@@ -524,13 +525,25 @@ public class AlgShooter implements BattleshipsPlayer {
         long startTime = System.currentTimeMillis();
 
         if (hunt) {
+            if (shotsFired.size() == 0) {
+                
+                likelyIndexes = enemyReact.indexesFromEnemyShipMatch(
+                this.enemyShipMatch, this.roundNumber, shotsFired );   
+            }
+            
+            for (int i = 0; i < likelyIndexes.size(); i++ ) {
+                Position pos = heatMapper.getPosFromIndex(likelyIndexes.get(i));
+                if (this.shotsFired.contains(pos)) {
+                    likelyIndexes.set(i, -1);
+                }
+            }
+            //remove -1's from likelyIndexes
+            likelyIndexes.removeIf(item -> item.equals(-1));
             
             //this.debugOuputChristian();
-            ArrayList<Integer> likelyIndexes = new ArrayList<Integer>();
-            likelyIndexes = enemyReact.indexesFromEnemyShipMatch(
-                this.enemyShipMatch, this.roundNumber, shotsFired );    
+             
            
-            if (likelyIndexes.size() > 0) {
+            if (likelyIndexes.size() > 0 && this.roundNumber >= 6) {
                 /*
                 2017-05-27 - kl. 16.58 -- herefter forsøges at implementere skud mod 
                                         højfrekvente enemyShipMatch punkter
@@ -540,6 +553,7 @@ public class AlgShooter implements BattleshipsPlayer {
 
                 shot = enemyReact.getPosFromIndex(likelyIndexes.get(0));
                 heatMap = heatMapper.getHeatmap();
+                likelyIndexes.remove(0);
                 //System.out.println("likelyIndexes: " + likelyIndexes);
                 
             }else{
@@ -902,9 +916,11 @@ public class AlgShooter implements BattleshipsPlayer {
     public void debugOuputChristian(){
         //2017-05-27 - kl. 17.31 - chr - debugging printout:
         //System.out.println("Chr debug - round " + this.roundNumber);
-        ArrayList<Integer> likelyIndexes = enemyReact.indexesFromEnemyShipMatch(
-                this.enemyShipMatch, this.roundNumber, shotsFired ); 
+        heatMapper.printHeatmap(1, this.enemyShipMatch);
+        System.out.println("roundnumber " + this.roundNumber);
+        
         System.out.println("likelyIndexes: " + likelyIndexes);
     }
     //unrelated random comment for commit use, to be deleted :P
 }
+
