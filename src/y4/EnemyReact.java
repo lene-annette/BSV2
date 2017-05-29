@@ -19,17 +19,6 @@ denne klasse er til funktioner der reagere på den information vi får fra spill
  */
 public class EnemyReact {
 
-//    HeatMapBasic hm = new HeatMapBasic();
-    public void run() {
-
-//        System.out.println("EnemyReact");
-//        int[] fleet = {5,4,3,3,2};
-//        int[] mysea = hm.getEmptySea();//reactTestSea1();
-//        hm.printSea(mysea);
-//        int[] myHeatMap = efficientHeatMap(mysea, fleet);
-//        hm.printHeatmap(1, myHeatMap);
-    }
-
     //denne er til den algoritme der skal korrigere skudalgoritmen 
     // ud fra hvordan modstanderen placere skibe.
     //if the algoritm doesnt find any interesting place to shoot:
@@ -65,12 +54,7 @@ public class EnemyReact {
                 }                
                 maxValue = Arrays.stream(enemyShipMatchCopy).max().getAsInt();
             }
-            //System.out.println("ValueDebugger1: " + valueDebugger1);
-            //System.out.println("ValueDebugger2: " + valueDebugger2);
-            //System.out.println("ValueDebugger3: " + valueDebugger3);
         } catch (Exception e) {
-            //System.out.println("round " + roundNumber + 
-            //        ": no indexesFromEnemyShipMatch possible: " + hardCodedIndexes);
             hardCodedIndexes = new ArrayList<Integer>();
         };
         
@@ -132,15 +116,8 @@ public class EnemyReact {
         return outputCounterSea;
     }
 
-    /*
-    int[] fleet = {5,4,3,3,2};
-    int[] mysea = reactTestSea1();
-    mysea = efficientDistributeShips(mysea, fleet);
-    hm.printSea(mysea);        
-     */
     public int[] efficientDistributeShips(int[] sea, int[] fleet) {
-        int[] emptysea = sea;//hm.getEmptySea();
-        //ArrayList<Integer> fleet = hm.getVirginFleet();
+        int[] emptysea = sea;
 
         Random r = new Random();
         int myRandom = 0;
@@ -175,34 +152,7 @@ public class EnemyReact {
         }
         return emptysea;
     }
-
-    //attemptAtEvenlyDistributedHeatmap
-    //returns a sea with a fleet that hopefully has an even density distribution
-    /*
-    public int[] attemptAtRandomSeaDistribution(){
-        int[] randomSeaNumber;
-        ArrayList<Integer> fleet = hm.getVirginFleet();
-        int[] seaSpaces_ThisShip;
-        ArrayList<Integer> seaSpacesToBeFilled = new ArrayList<Integer>();
-        
-        int myCoor = 0;
-        int myShip = 0;
-        for(int i = 0; i < fleet.size(); i++){
-            randomSeaNumber = ramdomArrayOneToHundred();
-            myShip = fleet.get(i);
-            myCoor = coordinatePlusOneFromHM(randomSeaNumber, myShip, true);
-            seaSpaces_ThisShip = this.CorrListFromCorrAndShiplength(myCoor, myShip);
-            
-            
-        }
-    }
-     */
- /*
-    int[] randomSeaNumber = ramdomArrayOneToHundred();
-    int myCoor = coordinatePlusOneFromHM(randomSeaNumber, 4, true);
-    hm.printHeatmap(1, randomSeaNumber);
-    System.out.println(myCoor);
-     */
+    
     public int[] ramdomArrayOneToHundred() {
         int[] output = new int[100];
         int temp = 1;
@@ -227,185 +177,6 @@ public class EnemyReact {
         return output;
     }
 
-    //**********************************************************
-    // 2017-05-22 kl. 6.35 - chr - Nedenfor er metoden til at
-    //                      en skibsplacering fra et heatmap:
-    //  public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
-    //************************************************************
-    /*
-    
-    public void run(){      
-        
-        ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 5);
-        System.out.println(opg1);
-        
-        int[][] nestedArray = combinations(this.getEmptySea(), 5);
-        System.out.println(Arrays.deepToString(nestedArray));
-        
-        System.out.println();
-        System.out.println("values:");
-        int[][]values = getValuesFromSeaToNestedArray(this.reactTestSea2(), 5);  
-        System.out.println(Arrays.deepToString(values));
-        
-        int[] sumOfValues = sumOfValues(values);
-        System.out.println("Sum of values: " + Arrays.toString(sumOfValues));
-        
-        
-        //*******************
-        HeatMapBasic hm = new HeatMapBasic();
-        int[] testHM = hm.generateVirginHeatmap();
-        hm.printHeatmap(1, testHM);
-        //************************
-        
-        System.out.println();
-        int myIntCoor = coordinatePlusOneFromHM(testHM, 2, true);
-        System.out.println("myIntCoor: " + myIntCoor);
-    }
-     */
-    //public int[] sumOfValues(int[][] nestedArray){
-    //get sum of values put into a spaceForShipIndexPlusOneER -- array.
-    //values:
-    //[[100, 200, 300, 400, 500], [200, 300, 400, 500, 600], [300, 400, 500, 600, 700], [400, 500, 600, 700, 800], [500, 600, 700, 800, 900], [600, 700, 800, 900, 1000], [1100, 1200, 1300, 1400, 1500], [1200, 1300, 1400, 1500, 1600], [1300, 1400, 1500, 1600, 1700], [1400, 1500, 1600, 1700, 1800], [1500, 1600, 1700, 1800, 1900], [1600, 1700, 1800, 1900, 2000], [2100, 2200, 2300, 2400, 2500], [2200, 2300, 2400, 2500, 2600], [2300, 2400, 2500, 2600, 2700], [2400, 2500, 2600, 2700, 2800], [2500, 2600, 2700, 2800, 2900], [2600, 2700, 2800, 2900, 3000], [3100, 3200, 3300, 3400, 3500], [3200, 3300, 3400, 3500, 3600], [3300, 3400, 3500, 3600, 3700], [3400, 3500, 3600, 3700, 3800], [3500, 3600, 3700, 3800, 3900], [3600, 3700, 3800, 3900, 4000], [4100, 4200, 4300, 4400, 4500], [4200, 4300, 4400, 4500, 4600], [4300, 4400, 4500, 4600, 4700], [4400, 4500, 4600, 4700, 4800], [4500, 4600, 4700, 4800, 4900], [4600, 4700, 4800, 4900, 5000], [5100, 5200, 5300, 5400, 5500], [5200, 5300, 5400, 5500, 5600], [5300, 5400, 5500, 5600, 5700], [5400, 5500, 5600, 5700, 5800], [5500, 5600, 5700, 5800, 5900], [5600, 5700, 5800, 5900, 6000], [6100, 6200, 6300, 6400, 6500], [6200, 6300, 6400, 6500, 6600], [6300, 6400, 6500, 6600, 6700], [6400, 6500, 6600, 6700, 6800], [6500, 6600, 6700, 6800, 6900], [6600, 6700, 6800, 6900, 7000], [7100, 7200, 7300, 7400, 7500], [7200, 7300, 7400, 7500, 7600], [7300, 7400, 7500, 7600, 7700], [7400, 7500, 7600, 7700, 7800], [7500, 7600, 7700, 7800, 7900], [7600, 7700, 7800, 7900, 8000], [8100, 8200, 8300, 8400, 8500], [8200, 8300, 8400, 8500, 8600], [8300, 8400, 8500, 8600, 8700], [8400, 8500, 8600, 8700, 8800], [8500, 8600, 8700, 8800, 8900], [8600, 8700, 8800, 8900, 9000], [9100, 9200, 9300, 9400, 9500], [9200, 9300, 9400, 9500, 9600], [9300, 9400, 9500, 9600, 9700], [9400, 9500, 9600, 9700, 9800], [9500, 9600, 9700, 9800, 9900], [9600, 9700, 9800, 9900, 10000], [100, 1100, 2100, 3100, 4100], [1100, 2100, 3100, 4100, 5100], [2100, 3100, 4100, 5100, 6100], [3100, 4100, 5100, 6100, 7100], [4100, 5100, 6100, 7100, 8100], [5100, 6100, 7100, 8100, 9100], [200, 1200, 2200, 3200, 4200], [1200, 2200, 3200, 4200, 5200], [2200, 3200, 4200, 5200, 6200], [3200, 4200, 5200, 6200, 7200], [4200, 5200, 6200, 7200, 8200], [5200, 6200, 7200, 8200, 9200], [300, 1300, 2300, 3300, 4300], [1300, 2300, 3300, 4300, 5300], [2300, 3300, 4300, 5300, 6300], [3300, 4300, 5300, 6300, 7300], [4300, 5300, 6300, 7300, 8300], [5300, 6300, 7300, 8300, 9300], [400, 1400, 2400, 3400, 4400], [1400, 2400, 3400, 4400, 5400], [2400, 3400, 4400, 5400, 6400], [3400, 4400, 5400, 6400, 7400], [4400, 5400, 6400, 7400, 8400], [5400, 6400, 7400, 8400, 9400], [500, 1500, 2500, 3500, 4500], [1500, 2500, 3500, 4500, 5500], [2500, 3500, 4500, 5500, 6500], [3500, 4500, 5500, 6500, 7500], [4500, 5500, 6500, 7500, 8500], [5500, 6500, 7500, 8500, 9500], [600, 1600, 2600, 3600, 4600], [1600, 2600, 3600, 4600, 5600], [2600, 3600, 4600, 5600, 6600], [3600, 4600, 5600, 6600, 7600], [4600, 5600, 6600, 7600, 8600], [5600, 6600, 7600, 8600, 9600], [700, 1700, 2700, 3700, 4700], [1700, 2700, 3700, 4700, 5700], [2700, 3700, 4700, 5700, 6700], [3700, 4700, 5700, 6700, 7700], [4700, 5700, 6700, 7700, 8700], [5700, 6700, 7700, 8700, 9700], [800, 1800, 2800, 3800, 4800], [1800, 2800, 3800, 4800, 5800], [2800, 3800, 4800, 5800, 6800], [3800, 4800, 5800, 6800, 7800], [4800, 5800, 6800, 7800, 8800], [5800, 6800, 7800, 8800, 9800], [900, 1900, 2900, 3900, 4900], [1900, 2900, 3900, 4900, 5900], [2900, 3900, 4900, 5900, 6900], [3900, 4900, 5900, 6900, 7900], [4900, 5900, 6900, 7900, 8900], [5900, 6900, 7900, 8900, 9900], [1000, 2000, 3000, 4000, 5000], [2000, 3000, 4000, 5000, 6000], [3000, 4000, 5000, 6000, 7000], [4000, 5000, 6000, 7000, 8000], [5000, 6000, 7000, 8000, 9000], [6000, 7000, 8000, 9000, 10000]]
-    //Sum of values: [1500, 2000, 2500, 3000, 3500, 4000, 6500, 7000, 7500, 8000, 8500, 9000, 11500, 12000, 12500, 13000, 13500, 14000, 16500, 17000, 17500, 18000, 18500, 19000, 21500, 22000, 22500, 23000, 23500, 24000, 26500, 27000, 27500, 28000, 28500, 29000, 31500, 32000, 32500, 33000, 33500, 34000, 36500, 37000, 37500, 38000, 38500, 39000, 41500, 42000, 42500, 43000, 43500, 44000, 46500, 47000, 47500, 48000, 48500, 49000, 10500, 15500, 20500, 25500, 30500, 35500, 11000, 16000, 21000, 26000, 31000, 36000, 11500, 16500, 21500, 26500, 31500, 36500, 12000, 17000, 22000, 27000, 32000, 37000, 12500, 17500, 22500, 27500, 32500, 37500, 13000, 18000, 23000, 28000, 33000, 38000, 13500, 18500, 23500, 28500, 33500, 38500, 14000, 19000, 24000, 29000, 34000, 39000, 14500, 19500, 24500, 29500, 34500, 39500, 15000, 20000, 25000, 30000, 35000, 40000]
-    //int[][] getValuesFromSeaToNestedArray((this.reactTestSea2(), 5)
-    //[[100, 200, 300, 400, 500], [200, 300, 400, 500, 600], [300, 400, 500, 600, 700], [400, 500, 600, 700, 800], [500, 600, 700, 800, 900], [600, 700, 800, 900, 1000], [1100, 1200, 1300, 1400, 1500], [1200, 1300, 1400, 1500, 1600], [1300, 1400, 1500, 1600, 1700], [1400, 1500, 1600, 1700, 1800], [1500, 1600, 1700, 1800, 1900], [1600, 1700, 1800, 1900, 2000], [2100, 2200, 2300, 2400, 2500], [2200, 2300, 2400, 2500, 2600], [2300, 2400, 2500, 2600, 2700], [2400, 2500, 2600, 2700, 2800], [2500, 2600, 2700, 2800, 2900], [2600, 2700, 2800, 2900, 3000], [3100, 3200, 3300, 3400, 3500], [3200, 3300, 3400, 3500, 3600], [3300, 3400, 3500, 3600, 3700], [3400, 3500, 3600, 3700, 3800], [3500, 3600, 3700, 3800, 3900], [3600, 3700, 3800, 3900, 4000], [4100, 4200, 4300, 4400, 4500], [4200, 4300, 4400, 4500, 4600], [4300, 4400, 4500, 4600, 4700], [4400, 4500, 4600, 4700, 4800], [4500, 4600, 4700, 4800, 4900], [4600, 4700, 4800, 4900, 5000], [5100, 5200, 5300, 5400, 5500], [5200, 5300, 5400, 5500, 5600], [5300, 5400, 5500, 5600, 5700], [5400, 5500, 5600, 5700, 5800], [5500, 5600, 5700, 5800, 5900], [5600, 5700, 5800, 5900, 6000], [6100, 6200, 6300, 6400, 6500], [6200, 6300, 6400, 6500, 6600], [6300, 6400, 6500, 6600, 6700], [6400, 6500, 6600, 6700, 6800], [6500, 6600, 6700, 6800, 6900], [6600, 6700, 6800, 6900, 7000], [7100, 7200, 7300, 7400, 7500], [7200, 7300, 7400, 7500, 7600], [7300, 7400, 7500, 7600, 7700], [7400, 7500, 7600, 7700, 7800], [7500, 7600, 7700, 7800, 7900], [7600, 7700, 7800, 7900, 8000], [8100, 8200, 8300, 8400, 8500], [8200, 8300, 8400, 8500, 8600], [8300, 8400, 8500, 8600, 8700], [8400, 8500, 8600, 8700, 8800], [8500, 8600, 8700, 8800, 8900], [8600, 8700, 8800, 8900, 9000], [9100, 9200, 9300, 9400, 9500], [9200, 9300, 9400, 9500, 9600], [9300, 9400, 9500, 9600, 9700], [9400, 9500, 9600, 9700, 9800], [9500, 9600, 9700, 9800, 9900], [9600, 9700, 9800, 9900, 10000], [100, 1100, 2100, 3100, 4100], [1100, 2100, 3100, 4100, 5100], [2100, 3100, 4100, 5100, 6100], [3100, 4100, 5100, 6100, 7100], [4100, 5100, 6100, 7100, 8100], [5100, 6100, 7100, 8100, 9100], [200, 1200, 2200, 3200, 4200], [1200, 2200, 3200, 4200, 5200], [2200, 3200, 4200, 5200, 6200], [3200, 4200, 5200, 6200, 7200], [4200, 5200, 6200, 7200, 8200], [5200, 6200, 7200, 8200, 9200], [300, 1300, 2300, 3300, 4300], [1300, 2300, 3300, 4300, 5300], [2300, 3300, 4300, 5300, 6300], [3300, 4300, 5300, 6300, 7300], [4300, 5300, 6300, 7300, 8300], [5300, 6300, 7300, 8300, 9300], [400, 1400, 2400, 3400, 4400], [1400, 2400, 3400, 4400, 5400], [2400, 3400, 4400, 5400, 6400], [3400, 4400, 5400, 6400, 7400], [4400, 5400, 6400, 7400, 8400], [5400, 6400, 7400, 8400, 9400], [500, 1500, 2500, 3500, 4500], [1500, 2500, 3500, 4500, 5500], [2500, 3500, 4500, 5500, 6500], [3500, 4500, 5500, 6500, 7500], [4500, 5500, 6500, 7500, 8500], [5500, 6500, 7500, 8500, 9500], [600, 1600, 2600, 3600, 4600], [1600, 2600, 3600, 4600, 5600], [2600, 3600, 4600, 5600, 6600], [3600, 4600, 5600, 6600, 7600], [4600, 5600, 6600, 7600, 8600], [5600, 6600, 7600, 8600, 9600], [700, 1700, 2700, 3700, 4700], [1700, 2700, 3700, 4700, 5700], [2700, 3700, 4700, 5700, 6700], [3700, 4700, 5700, 6700, 7700], [4700, 5700, 6700, 7700, 8700], [5700, 6700, 7700, 8700, 9700], [800, 1800, 2800, 3800, 4800], [1800, 2800, 3800, 4800, 5800], [2800, 3800, 4800, 5800, 6800], [3800, 4800, 5800, 6800, 7800], [4800, 5800, 6800, 7800, 8800], [5800, 6800, 7800, 8800, 9800], [900, 1900, 2900, 3900, 4900], [1900, 2900, 3900, 4900, 5900], [2900, 3900, 4900, 5900, 6900], [3900, 4900, 5900, 6900, 7900], [4900, 5900, 6900, 7900, 8900], [5900, 6900, 7900, 8900, 9900], [1000, 2000, 3000, 4000, 5000], [2000, 3000, 4000, 5000, 6000], [3000, 4000, 5000, 6000, 7000], [4000, 5000, 6000, 7000, 8000], [5000, 6000, 7000, 8000, 9000], [6000, 7000, 8000, 9000, 10000]]
-    //int[][] nestedArray = combinations(this.getEmptySea(), 5);
-    //[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5], [2, 3, 4, 5, 6], [3, 4, 5, 6, 7], [4, 5, 6, 7, 8], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14],.....
-    // ....., [94, 95, 96, 97, 98], [95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50], [20, 30, 40, 50, 60], [30, 40, 50, 60, 70],....
-    //ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 5);
-    // opg1 is now a list of the possible indexes ( getEmptySea(), 5 );
-    // opg1: 160 -- [1, 2, 3, 4, 5, 6, 11, 12, 13, 14, 15, 16, 21, 22, 23, 24, 25, 26, 31, 32, 33, 34, 35, 36, 41, 42, 43, 44, 45, 46, 51, 52, 53, 54, 55, 56, 61, 62, 63, 64, 65, 66, 71, 72, 73, 74, 75, 76, 81, 82, 83, 84, 85, 86, 91, 92, 93, 94, 95, 96, -1, -11, -21, -31, -41, -51, -2, -12, -22, -32, -42, -52, -3, -13, -23, -33, -43, -53, -4, -14, -24, -34, -44, -54, -5, -15, -25, -35, -45, -55, -6, -16, -26, -36, -46, -56, -7, -17, -27, -37, -47, -57, -8, -18, -28, -38, -48, -58, -9, -19, -29, -39, -49, -59, -10, -20, -30, -40, -50, -60]
-    /*
-     int myIntCoor = coordinatePlusOne(testHM, 2, true);
-    322  460  560  626  637  645  660  619  480  305 
-    443  594  743  804  782  774  778  704  630  490 
-    559  680  783  862  818  888  837  783  744  611 
-    642  748  863  920  888  948  867  843  778  624 
-    688  746  920  964  950 [995] 897  861  786  642 
-    672  724  913  958  967  977  920  882  795  643 
-    660  728  868  922  944  967  904  852  754  616 
-    579  690  812  860  899  919  895  802  721  572 
-    461  577  667  743  759  796  770  698  638  473 
-    299  470  570  638  656  661  653  593  493  335 
-
-    myIntCoor: -81
-     */
-    //takes a heatmap and a shipsize and a boolean "lowest"
-    // return the coordinatePlusOne for the shipplacement with lowest aveage values
-    // if an index is < 0: then a ship wont be placed on it, and its coordinates wont come out.
-    public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue, boolean[] allowesspaces) {
-        int desiredCoor = 0;
-        int theCoorIndex = 0;
-        int theCoorValue = 0;
-        //System.out.println("EnemyReact - linje333 - coordinatePlusOneFromHM - initialised");
-        ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), shipsize);
-        int[][] nestedArray = combinations(this.getEmptySea(), shipsize);
-        int[][] values = getValuesFromSeaToNestedArray(heatmap, shipsize);
-        int[] sumOfValues = sumOfValues(values);
-
-//        //adon to make sure a ship wont be placed on -1.
-//        //*******************************
-//        for (int i = 0; i < values.length; i++) {
-//            for (int j = 0; j < values[i].length; j++) {
-//                if (values[i][j] < 0) {
-//                    sumOfValues[i] = Integer.MIN_VALUE; //arbitrært tal under 0
-//                }
-//            }
-//        }
-//        //*********************************
-        if (lowestValue) {
-            //System.out.println("EnemyReact - linje333 - looking for lowest values");
-            theCoorValue = Integer.MAX_VALUE;
-            for (int i = 0; i < sumOfValues.length; i++) {
-                if (sumOfValues[i] < theCoorValue) {//&& allowesspaces[i] == true)//&& sumOfValues[i] > -1)
-                    boolean acceptableIndex = true;
-                    int acceptedIndex = 0;
-                    for (int j = 0; j < shipsize; j++) {
-                        // her leder den efter ...
-                        System.out.println("EnemyReact 340 -- print allowesspaces -- nestedArray[i][j]: " + nestedArray[i][j] + " i:" + i + " j:" + j);
-                        if (allowesspaces[nestedArray[i][j]] == false) {
-                            acceptedIndex = nestedArray[i][j];
-                            System.out.println("index: " + i + " placeInShip: " + j + " er false");
-                            acceptableIndex = false;
-                        }
-                    }
-                    if (acceptableIndex) {
-                        System.out.println("is accetable: " + "nestedArray[i][j]: " + acceptedIndex);
-                        theCoorValue = sumOfValues[i];
-                        theCoorIndex = i;
-                    }
-
-                }
-            }
-        } else {
-            theCoorValue = 0;
-            for (int i = 0; i < sumOfValues.length; i++) {
-                if (sumOfValues[i] < theCoorValue) {//&& allowesspaces[i] == true)//&& sumOfValues[i] > -1)
-                    boolean acceptableIndex = true;
-                    int startCoor = opg1.get(i);
-                    if (startCoor > 0) { // Horizontal
-                        int startIndex = startCoor - 1;
-                        for (int j = 0; j < shipsize; j++) {
-                            if (allowesspaces[startIndex + j] = false) {
-                                acceptableIndex = false;
-                            }
-                        }
-
-                    } else {          // Vertical
-                        int startIndex = Math.abs(startCoor) - 1;
-                        for (int j = 0; j < shipsize; j++) {
-                            if (allowesspaces[startIndex + (j * 10)] = false) {
-                                acceptableIndex = false;
-                            }
-                        }
-                    }
-
-                    if (acceptableIndex) {
-                        theCoorValue = sumOfValues[i];
-                        theCoorIndex = i;
-                    }
-
-                }
-            }
-        }
-        desiredCoor = opg1.get(theCoorIndex);
-        return desiredCoor;
-
-    }
-
-    /*
-    public int coordinatePlusOneFromHM(int[] heatmap, int shipsize, boolean lowestValue){
-        int desiredCoor = 0;
-        int theCoorIndex = 0;
-        int theCoorValue = 0;
-        
-        ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), shipsize);
-        int[][]values = getValuesFromSeaToNestedArray(heatmap, shipsize);
-        int[] sumOfValues = sumOfValues(values);
-        
-        if (lowestValue) {
-            theCoorValue = Integer.MAX_VALUE;
-            for (int i = 0; i < sumOfValues.length; i++) {
-                if (sumOfValues[i] < theCoorValue) {
-                    theCoorValue = sumOfValues[i];
-                    theCoorIndex = i;
-                    
-                }
-            }
-        }else{
-            theCoorValue = 0;
-            for (int i = 0; i < sumOfValues.length; i++) {
-                if (sumOfValues[i] > theCoorValue) {
-                    theCoorValue = sumOfValues[i];
-                    theCoorIndex = i;
-                }
-            }
-        }
-        desiredCoor = opg1.get(theCoorIndex);
-        return desiredCoor;
-        
-    }
-     */
     private int[] sumOfValues(int[][] nestedArray) {
         ArrayList<Integer> opg1 = this.spaceForShipIndexPlusOneER(this.getEmptySea(), nestedArray[0].length);
         int[] output = new int[opg1.size()];
@@ -423,7 +194,6 @@ public class EnemyReact {
     }
 
     private int[][] getValuesFromSeaToNestedArray(int[] sea, int shiplength) {
-//        ArrayList<Integer> IndexPlusOneArray = this.spaceForShipIndexPlusOneER(this.getEmptySea(), 5);
         int[][] nestedArray = combinations(this.getEmptySea(), shiplength);
         int[][] output = combinations(this.getEmptySea(), shiplength);
         int tempInt = 0;
@@ -454,7 +224,6 @@ public class EnemyReact {
         int[] opg2 = new int[opg1.size()];
         int[][] opg3 = new int[opg1.size()][];
         int[] temp = new int[shiplength];
-        //CorrListFromCorrAndShiplength(int CorrPlusOne, int shiplength){
         for (int i = 0; i < opg1.size(); i++) {
             temp = CorrListFromCorrAndShiplength(opg1.get(i), shiplength);
             opg3[i] = temp;
@@ -477,7 +246,7 @@ public class EnemyReact {
         } else if (CorrPlusOne < 0) {
             firstCoordinate = Math.abs(CorrPlusOne) - 1;
             for (int i = 0; i < shiplength; i++) {
-                output[i] = firstCoordinate + (i * 10);//output.add(firstCoordinate+(i*10));
+                output[i] = firstCoordinate + (i * 10);
             }
         } else {
             System.out.println("EnemyReact: Fejl i CorrListFromCorrAndShiplength: CorrPlusOne == 0 !!!! (skal være > 0 eller < 0).");
@@ -488,9 +257,7 @@ public class EnemyReact {
 
     private ArrayList<Integer> spaceForShipIndexPlusOneER(int[] sea, int shiplength) {
         ArrayList<Integer> numOfTimesThereIsSpace = new ArrayList<Integer>();
-//        boolean output = false;
         int horizontal = 1;
-//        boolean hor = false;
         for (int i = 1; i < sea.length; i++) {
             if (sea[i] == 1 && sea[i - 1] == 1) {
                 horizontal++;
@@ -499,8 +266,7 @@ public class EnemyReact {
             }
 
             if (horizontal >= shiplength) {
-                numOfTimesThereIsSpace.add(i - (shiplength - 1) + 1); // +1 to avoid "+0" and "-0"
-//                hor = true;
+                numOfTimesThereIsSpace.add(i - (shiplength - 1) + 1); 
             }
             if (i % 10 == 9) {
                 i++;
@@ -509,21 +275,17 @@ public class EnemyReact {
         }
 
         int vertical = 1;
-//        boolean ver = false;
         for (int i = 10; i < sea.length; i += 10) {
             if (sea[i] == 1 && sea[i - 10] == 1) {
                 vertical++;
-                //System.out.println(i);
             } else if (sea[i] != 1) {
                 vertical = 1;
             }
 
             if (vertical >= shiplength) {
-                numOfTimesThereIsSpace.add(-(i - (10 * (shiplength - 1))) - 1); //  // +1 to avoid "+0" and "-0"             
-                //               ver = true;
+                numOfTimesThereIsSpace.add(-(i - (10 * (shiplength - 1))) - 1); 
             }
             if (i >= 90 && i != 99) {
-                //System.out.println("90's: "+i);
                 int temp = i - 90;
                 i = 1 + temp;
             }
@@ -531,14 +293,12 @@ public class EnemyReact {
             if (i / 10 == 0) {
                 vertical = 1;
             }
-            //System.out.println(i);
         }
 
         return numOfTimesThereIsSpace;
     }
 
     public Position getPosFromCoor(int Coordinate) {
-        //int Xcoordinate = 0;
         int candidateMove = Coordinate;
         int Xcoordinate = 0;
         int Ycoordinate = 0;
@@ -585,27 +345,6 @@ public class EnemyReact {
         this.printHeatmap(1, reactTestSea5());
         System.out.println("ArrayList: ");
         System.out.println(likelyIndexes);
-
-        // test place ship
-        /*
-        this.printHeatmap(1, this.reactTestSea3());
-        
-        ArrayList<Integer> myfleet = new ArrayList<Integer>();
-        myfleet.add(2);
-        myfleet.add(3);
-        myfleet.add(3);
-        myfleet.add(4);
-        myfleet.add(5);
-        
-        ArrayList<int[]> output = placeShipsChr0525HeighestValue(this.reactTestSea3(), myfleet);
-        
-        System.out.println("****************** result ********************");
-        System.out.println("*********************************************");
-        System.out.println("output size: " + output.size());
-        for (int i = 0; i < output.size(); i++) {
-            System.out.println(Arrays.toString(output.get(i)));
-        }
-         */
     }
 
     public ArrayList<int[]> placeShipsChr0525HeighestValue(int[] enemyShotMatch, ArrayList<Integer> fleet) {
@@ -624,12 +363,11 @@ public class EnemyReact {
         int[] targetIndexArray = null;
 
         for (int i = 0; i < fleet.size(); i++) {
-            //System.out.println("");
             int ship = fleet.get(i);
             //2017-05-29 - Lene + Chr - placer 2'er skib langs kanten
             if (ship == 2) {
                 for (int j = 0; j < allowedSpaces.length; j++) {
-                     if(j%10 > 0 && j%10 < 9 && j/10 > 0 && j/10 < 9){ //index ligger ikke langs venstre kant.
+                     if(j%10 > 0 && j%10 < 9 && j/10 > 0 && j/10 < 9){
                     allowedSpaces[j] = false;
                     }
                     
@@ -640,9 +378,7 @@ public class EnemyReact {
             
             nestedArray = combinations(getEmptySea(), ship);
             values = combinations(getEmptySea(), ship);
-            //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
-            //System.out.println("nested array: "+ Arrays.deepToString(nestedArray));
-
+            
             //loop over values og erstat indexerne med deres enemyShotMatch værdier.
             for (int j = 0; j < nestedArray.length; j++) {
                 for (int k = 0; k < nestedArray[j].length; k++) {
@@ -650,7 +386,6 @@ public class EnemyReact {
                     values[j][k] = enemyShotMatch[nestedArray[j][k]];
                 }
             }
-            //System.out.println("values: " + Arrays.deepToString(values));
             int[] eachShipSumArray = new int[1];
             sumOfValues = new int[values.length][];
             heighestValueArr = new int[values.length][];
@@ -665,7 +400,6 @@ public class EnemyReact {
                     }
                 }
                 eachShipSumArray[0] = eachShipSum;
-                //System.out.print("eachShipSum: " + eachShipSum);
                 sumOfValues[j] = eachShipSumArray;
 
                 eachShipSumArray[0] = heighestValueInt;
@@ -673,10 +407,6 @@ public class EnemyReact {
                 eachShipSumArray = new int[1];
 
             }
-            //System.out.println();
-            //til "[[688],......
-            //System.out.println("sumOfValues: " + Arrays.deepToString(sumOfValues));
-
             //nestedArray.length == sumOfValues.length
             targetIndexArray = null;
             int targetIndex = -1;
@@ -703,7 +433,6 @@ public class EnemyReact {
                     //currentSum = sumOfValues[j][0];
                     currentSum = heighestValueArr[j][0];
 
-                    //System.out.print("currentSum: " + currentSum);
                     if (currentSum < targetSum) {
                         targetSum = currentSum;
                         targetIndexArray = nestedArray[j];
@@ -711,12 +440,8 @@ public class EnemyReact {
                     }
                 }
             }
-            //System.out.println();
 
             //allowspaces skal testes:
-            for (int j = 0; j < targetIndexArray.length; j++) {
-                //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
-            }
 
             //targetIndexArray er korrekt beregnet. Nu skal allowedSpaces opdateres.
             for (int j = 0; j < targetIndexArray.length; j++) {
@@ -728,14 +453,11 @@ public class EnemyReact {
                 //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
             }
 
-            //System.out.println("targetSum: " + targetSum);
-            //System.out.println("lowestIndexArray: " + Arrays.toString(targetIndexArray));
-            //System.out.println("LIA: "+targetIndex);
             shipIndexesToPlaceOnSea.add(targetIndexArray);
             
             if (ship == 2) {
                 for (int j = 0; j < allowedSpaces.length; j++) {
-                     if(j%10 > 0 && j%10 < 9 && j/10 > 0 && j/10 < 9){ //index ligger ikke langs venstre kant.
+                     if(j%10 > 0 && j%10 < 9 && j/10 > 0 && j/10 < 9){ 
                     allowedSpaces[j] = true;
                     }
                 }
@@ -790,11 +512,6 @@ public class EnemyReact {
                 eachShipSumArray = new int[1];
 
             }
-            //System.out.println();
-            //til "[[688],......
-            //System.out.println("sumOfValues: " + Arrays.deepToString(sumOfValues));
-
-            //nestedArray.length == sumOfValues.length
             targetIndexArray = null;
             int targetIndex = -1;
             int targetSum = Integer.MAX_VALUE;//sumOfValues[0][0];
@@ -807,13 +524,11 @@ public class EnemyReact {
                 boolean indexIsOk = true;
                 for (int k = 0; k < nestedArray[j].length; k++) {
                     if (allowedSpaces[nestedArray[j][k]] == false) {
-                        //System.out.println("******************index er false!: " + nestedArray[j][k]);
                         indexIsOk = false;
                     }
                 }
                 if (indexIsOk == true) {
                     currentSum = sumOfValues[j][0];
-                    //System.out.print("currentSum: " + currentSum);
                     if (currentSum < targetSum) {
                         targetSum = currentSum;
                         targetIndexArray = nestedArray[j];
@@ -821,26 +536,16 @@ public class EnemyReact {
                     }
                 }
             }
-            //System.out.println();
 
-            //allowspaces skal testes:
-            for (int j = 0; j < targetIndexArray.length; j++) {
-                //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
-            }
+           
 
             //targetIndexArray er korrekt beregnet. Nu skal allowedSpaces opdateres.
             for (int j = 0; j < targetIndexArray.length; j++) {
-                //System.out.println("targetIndexArray[j]: "+ targetIndexArray[j] + " ");
+                
                 allowedSpaces[targetIndexArray[j]] = false;
 
             }
-            for (int j = 0; j < targetIndexArray.length; j++) {
-                //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
-            }
-
-            //System.out.println("targetSum: " + targetSum);
-            //System.out.println("lowestIndexArray: " + Arrays.toString(targetIndexArray));
-            //System.out.println("LIA: "+targetIndex);
+            
             shipIndexesToPlaceOnSea.add(targetIndexArray);
         }
 
@@ -1000,35 +705,3 @@ public class EnemyReact {
     }
 
 }
-
-
-/*
-    // 2017 - 05-17 - kl. 10.36 - daarlig kode.
-
-    private int[][] combinations(int[] enemyMoveMap, int shiplength){ //int[] enemyMoveMap, 
-        int numberOfCombinations = ((10-shiplength+1)*10) + ((10-shiplength+1)*10);
-        int[][] output = new int[numberOfCombinations][];
-        int[] shipCoor = new int[shiplength];
-        
-        int shipsPrLine = 10-shiplength+1;
-        //add ships in rows to output
-        for (int i = 0; i < 10; i++) {//each row in the enemyMoveMap.
-            for (int j = 0; j < shipsPrLine; j++) { //each possible ship location on an empty sea
-                for (int k = 0; k < shipCoor.length; k++) { //each point int the ship
-                    if (enemyMoveMap[(10*i) + (j+k)] > 0) {//(10*i) + (j+k) is each index in enemyMoveMap
-                        shipCoor[k] = (10*i) + (j+k);
-                    }
-                }
-                //add each shipCoor to output.
-                output[(10*i)+j] = shipCoor;
-                
-            }
-        }
-        
-        //add ships in column to output
-
-        return output;
-        //System.out.println(numberOfCombinations);
-    }
-    
-*/
