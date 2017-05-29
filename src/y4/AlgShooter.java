@@ -923,4 +923,3 @@ public class AlgShooter implements BattleshipsPlayer {
     }
     //unrelated random comment for commit use, to be deleted :P
 }
-
