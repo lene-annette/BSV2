@@ -625,8 +625,19 @@ public class EnemyReact {
 
         for (int i = 0; i < fleet.size(); i++) {
             //System.out.println("");
-
             int ship = fleet.get(i);
+            //2017-05-29 - Lene + Chr - placer 2'er skib langs kanten
+            if (ship == 2) {
+                for (int j = 0; j < allowedSpaces.length; j++) {
+                     if(j%10 > 0 && j%10 < 9 && j/10 > 0 && j/10 < 9){ //index ligger ikke langs venstre kant.
+                    allowedSpaces[j] = false;
+                    }
+                    
+                }
+            }
+            
+            
+            
             nestedArray = combinations(getEmptySea(), ship);
             values = combinations(getEmptySea(), ship);
             //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
@@ -721,6 +732,15 @@ public class EnemyReact {
             //System.out.println("lowestIndexArray: " + Arrays.toString(targetIndexArray));
             //System.out.println("LIA: "+targetIndex);
             shipIndexesToPlaceOnSea.add(targetIndexArray);
+            
+            if (ship == 2) {
+                for (int j = 0; j < allowedSpaces.length; j++) {
+                     if(j%10 > 0 && j%10 < 9 && j/10 > 0 && j/10 < 9){ //index ligger ikke langs venstre kant.
+                    allowedSpaces[j] = true;
+                    }
+                }
+            }
+            
         }
 
         return shipIndexesToPlaceOnSea;
