@@ -521,10 +521,30 @@ public class AlgShooter implements BattleshipsPlayer {
                 this.enemyShipMatch[i]++;
             }
         }
+        
+        
+        //************************************************
+        int minNumber = 100;
         for (int i = 0; i < this.enemyShotRound.length; i++) {
-            this.enemyShotMatch[i] += enemyShotRound[i];
+            //this.enemyShotMatch[i] += enemyShotRound[i];
+            if (enemyShotRound[i] > 1 && enemyShotRound[i] < minNumber){
+                minNumber = enemyShotRound[i];
+            }
+        }
+        
+        for (int i = 0; i < this.enemyShotRound.length; i++) {
+            if (enemyShotRound[i] >= minNumber) {
+                this.enemyShotMatch[i] += enemyShotRound[i];
+            }
+            else{
+                this.enemyShotMatch[i] += minNumber-1;
+            }
+            
+            
         }
 
+        //**************************************************
+        
         AlgShooterAverage += 100.0 - points;
         EnemyAverage += 100.0 - enemyPoints;
         stat[100 - points]++;
