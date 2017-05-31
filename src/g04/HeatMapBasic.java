@@ -1,5 +1,5 @@
 
-package y4;
+package g04;
 
 import battleship.interfaces.Position;
 import java.util.ArrayList;

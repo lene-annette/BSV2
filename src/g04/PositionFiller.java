@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package y4;
+package g04;
 
 import battleship.interfaces.Position;
 import java.util.ArrayList;

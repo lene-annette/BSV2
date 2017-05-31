@@ -1,7 +1,7 @@
 /*
 *
  */
-package y4;
+package g04;
 
 import battleship.interfaces.BattleshipsPlayer;
 import battleship.interfaces.Board;

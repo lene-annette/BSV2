@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package y4;
+package g04;
 
 import battleship.interfaces.BattleshipsPlayer;
 import tournament.player.PlayerFactory;
@@ -11,9 +11,9 @@ import tournament.game.*;
 
 /**
  *
- * @author lene_
+ * @author Christian, Gert, Lene
  */
-public class Y4 implements PlayerFactory<BattleshipsPlayer> {
+public class G04 implements PlayerFactory<BattleshipsPlayer> {
 
     @Override
     public BattleshipsPlayer getNewInstance() {
@@ -22,7 +22,7 @@ public class Y4 implements PlayerFactory<BattleshipsPlayer> {
 
     @Override
     public String getID() {
-        return "Y4";
+        return "G04";
     }
 
     @Override
