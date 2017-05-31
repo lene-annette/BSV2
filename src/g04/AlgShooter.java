@@ -8,7 +8,6 @@ import battleship.interfaces.Board;
 import battleship.interfaces.Fleet;
 import battleship.interfaces.Position;
 import battleship.interfaces.Ship;
-import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -282,13 +281,7 @@ public class AlgShooter implements BattleshipsPlayer {
             likelyIndexes.removeIf(item -> item.equals(-1));
            
             if (likelyIndexes.size() > 0 && this.roundNumber >= 6) {
-                /*
-                2017-05-27 - kl. 16.58 -- herefter forsøges at implementere skud mod 
-                                        højfrekvente enemyShipMatch punkter
-                */
-
                 shot = enemyReact.getPosFromIndex(likelyIndexes.get(0));
-                heatMap = heatMapper.getHeatmap();
                 likelyIndexes.remove(0);
                 
             }else{

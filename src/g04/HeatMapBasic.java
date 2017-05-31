@@ -17,16 +17,6 @@ public class HeatMapBasic {
     private int[] heatmap;
     EnemyReact enemyReactor = new EnemyReact();
 
-    public void run() {
-        System.out.println("HeatMapBasic -- run");
-
-        ArrayList<Integer> arrList = new ArrayList<Integer>();
-        arrList = this.spaceForShipIndexPlusOne(this.antiHeatTemplatePS(), 4);
-        System.out.println(arrList);
-        this.printSea(this.antiHeatTemplatePS());
-
-    }
-
     public Position getPosFromStack(int[] heatmap, ArrayList<Position> stack) {
 
         ArrayList<Integer> CoordinateStack = new ArrayList<Integer>();

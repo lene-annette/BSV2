@@ -332,19 +332,6 @@ public class EnemyReact {
         return output;
     }
 
-    public void runPlaceShipsChr0525() {
-        ArrayList<Position> emptypos = new ArrayList<Position>();
-        //test shoot at static target
-        ArrayList<Integer> likelyIndexes = indexesFromEnemyShipMatch(
-                this.reactTestSea5(),
-                10000,
-                emptypos
-        );
-        this.printHeatmap(1, reactTestSea5());
-        System.out.println("ArrayList: ");
-        System.out.println(likelyIndexes);
-    }
-
     public ArrayList<int[]> placeShipsChr0525HeighestValue(int[] enemyShotMatch, ArrayList<Integer> fleet) {
         ArrayList<int[]> shipIndexesToPlaceOnSea = new ArrayList<int[]>();
         boolean[] allowedSpaces = new boolean[100];

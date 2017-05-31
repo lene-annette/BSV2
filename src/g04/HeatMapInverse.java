@@ -99,11 +99,7 @@ import java.util.ArrayList;
 public class HeatMapInverse {
 
     HeatMapBasic hm = new HeatMapBasic();
-    
-        
-    public void run() {
-        System.out.println("HeatMapInverse -- run");    
-    }
+
     
     private int[] inverseHeatMapWithShotNumebers(){
         int[] InverseMap = hm.getEmptySea();
