@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author lene_
+ * @author Christian, Gert, Lene
  */
 public class PositionFiller {
     
