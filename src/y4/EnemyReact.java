@@ -15,7 +15,7 @@ denne klasse er til funktioner der reagere på den information vi får fra spill
  */
 /**
  *
- * @author Christian
+ * @author Christian, Gert, Lene
  */
 public class EnemyReact {
 
@@ -63,9 +63,7 @@ public class EnemyReact {
     }
 
     public Position getPosFromIndex(int index) {
-        //int Xcoordinate = 0;
         int Xcoordinate = index % 10;
-        //int Ycoordinate = 0;
         int Ycoordinate = 9 - (index / 10);
 
         Position pos = new Position(Xcoordinate, Ycoordinate);
@@ -407,7 +405,6 @@ public class EnemyReact {
                 eachShipSumArray = new int[1];
 
             }
-            //nestedArray.length == sumOfValues.length
             targetIndexArray = null;
             int targetIndex = -1;
             int targetSum = Integer.MAX_VALUE;//sumOfValues[0][0];
@@ -420,7 +417,6 @@ public class EnemyReact {
                 boolean indexIsOk = true;
                 for (int k = 0; k < nestedArray[j].length; k++) {
                     if (allowedSpaces[nestedArray[j][k]] == false) {
-                        //System.out.println("******************index er false!: " + nestedArray[j][k]);
                         indexIsOk = false;
                     }
                 }
@@ -445,14 +441,9 @@ public class EnemyReact {
 
             //targetIndexArray er korrekt beregnet. Nu skal allowedSpaces opdateres.
             for (int j = 0; j < targetIndexArray.length; j++) {
-                //System.out.println("targetIndexArray[j]: "+ targetIndexArray[j] + " ");
                 allowedSpaces[targetIndexArray[j]] = false;
 
             }
-            for (int j = 0; j < targetIndexArray.length; j++) {
-                //System.out.println("index: " +targetIndexArray[j] + " allowedSpaces: " + allowedSpaces[targetIndexArray[j]]);
-            }
-
             shipIndexesToPlaceOnSea.add(targetIndexArray);
             
             if (ship == 2) {
@@ -488,7 +479,6 @@ public class EnemyReact {
             nestedArray = combinations(getEmptySea(), ship);
             values = combinations(getEmptySea(), ship);
             //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
-            //System.out.println("nested array: "+ Arrays.deepToString(nestedArray));
 
             //loop over values og erstat indexerne med deres enemyShotMatch værdier.
             for (int j = 0; j < nestedArray.length; j++) {
@@ -497,7 +487,6 @@ public class EnemyReact {
                     values[j][k] = enemyShotMatch[nestedArray[j][k]];
                 }
             }
-            //System.out.println("values: " + Arrays.deepToString(values));
             int[] eachShipSumArray = new int[1];
             sumOfValues = new int[values.length][];
             for (int j = 0; j < values.length; j++) {
@@ -507,7 +496,6 @@ public class EnemyReact {
                     eachShipSum += values[j][k];
                 }
                 eachShipSumArray[0] = eachShipSum;
-                //System.out.print("eachShipSum: " + eachShipSum);
                 sumOfValues[j] = eachShipSumArray;
                 eachShipSumArray = new int[1];
 

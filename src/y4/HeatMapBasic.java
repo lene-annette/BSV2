@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package y4;
 
 import battleship.interfaces.Position;
@@ -13,7 +9,7 @@ import java.util.Random;
 
 /**
  *
- * @author Christian
+ * @author Christian, Gert, Lene
  */
 public class HeatMapBasic {
 
@@ -21,42 +17,6 @@ public class HeatMapBasic {
     private int[] heatmap;
     EnemyReact enemyReactor = new EnemyReact();
 
-    //private HeatMapInverse hmi = new HeatMapInverse();
-    /*
-    
-        int[] sea = new int[100];//this.fixedSeaWithSips();
-        for (int i = 0; i < sea.length; i++) {
-            sea[i] = 1;
-        }
-        
-        this.printSea(sea);
-        System.out.println();
-        
-        ArrayList<Integer> fleet = new ArrayList<Integer>();
-        fleet.add(5);
-        fleet.add(4);
-        fleet.add(3);
-        fleet.add(3);
-        fleet.add(2);
-        
-        //sea[33] = -2;
-        //sea[34] = -2;
-        //sea[35] = -2;
-        
-        int[] heat = simpleHeatMap(sea, fleet);     
-        this.printHeatmap(10, heat);
-        System.out.println(this.getIntFromHeatMap(heat, fleet));
-     */
-
- /*
-        //2017-05-17 kl. 14.30 - chr - Succe test af: getPosFromStack.
-        ArrayList<Position> stack = this.getPosArrListTEST();
-        int[] heat = this.generateVirginHeatmap();
-        Position pos = this.getPosFromStack(heat, stack);
-        this.printHeatmap(10, heat);
-        System.out.println(this.getArrListCorrFromArrListPos(stack));
-        System.out.println(this.getCoordinateFromPos(pos));
-     */
     public void run() {
         System.out.println("HeatMapBasic -- run");
 
@@ -66,7 +26,6 @@ public class HeatMapBasic {
         this.printSea(this.antiHeatTemplatePS());
 
     }
-    //public Position getPosFromStack(int[] heatmap, ArrayList<Position> stack){
 
     public Position getPosFromStack(int[] heatmap, ArrayList<Position> stack) {
 
@@ -88,10 +47,7 @@ public class HeatMapBasic {
 
     public Position getPosFromShotArrList(ArrayList<Position> previousShots, ArrayList<Integer> fleet) {
 
-        //int size = previousShots.size();
         int[] sea = generateSeaFromPositions(previousShots);
-//        heatmap = simpleHeatMap(sea, fleet);
-//        this.printHeatmap(10, heatmap);
         heatmap = enemyReactor.efficientHeatMap(sea, fleet);
         
         Position pos = getPositionFromHeatMap(heatmap);
@@ -131,9 +87,7 @@ public class HeatMapBasic {
     }
 
     public Position getPosFromIndex(int index) {
-        //int Xcoordinate = 0;
         int Xcoordinate = index % 10;
-        //int Ycoordinate = 0;
         int Ycoordinate = 9 - (index / 10);
 
         Position pos = new Position(Xcoordinate, Ycoordinate);
@@ -180,7 +134,6 @@ public class HeatMapBasic {
     
     
     public int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet) {
-//        System.out.println("simpleHeatMap: activated");        
 
         int MaxIterations = 10000;
         final int MIfinal = MaxIterations;
@@ -213,10 +166,9 @@ public class HeatMapBasic {
                 }
             }
             
-            if (simpleHeatMapNetTime > maxIterationTime || MaxIterations < 0) {//simpleHeatMapNetTime > 50 * hasShownTime && hasShownTime < 100
+            if (simpleHeatMapNetTime > maxIterationTime || MaxIterations < 0) {
                 criticalIterationNumber = MaxIterations;
                 endLoop = true;
-                //System.out.println("simpleHeatMap: Iteration: " + criticalIterationNumber+ ", timeSpentInIterations: " + simpleHeatMapNetTime);
             }
             MaxIterations--;
         }
@@ -251,7 +203,7 @@ public class HeatMapBasic {
                 if (vertical) {
 
                     int x = rnd.nextInt(10);
-                    int y = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeY-(s-1));
+                    int y = rnd.nextInt(10 - (s - 1));
 
                     for (int j = 0; j < s; j++) {
                         int indexLtoRBtoT = x + (y * 10) + (j * 10);
@@ -263,14 +215,14 @@ public class HeatMapBasic {
                             fieldIsOk = false;
                         }
                     }
-                    if (fieldIsOk) { // && potentialSpace.size() == s
+                    if (fieldIsOk) { 
                         usedSpaces.addAll(potentialSpace);
                         goodSpace = true;
                     }
                     potentialSpace.clear();
 
                 } else {
-                    int x = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeX-(s-1));
+                    int x = rnd.nextInt(10 - (s - 1));
                     int y = rnd.nextInt(10);
 
                     for (int j = 0; j < s; j++) {
@@ -284,7 +236,7 @@ public class HeatMapBasic {
 
                         }
                     }
-                    if (fieldIsOk) {  // && potentialSpace.size() == s
+                    if (fieldIsOk) {
                         usedSpaces.addAll(potentialSpace);
                         goodSpace = true;
                     }
@@ -298,81 +250,6 @@ public class HeatMapBasic {
         }
         return newsea;
 
-        /*
-        if(vertical)
-            {
-                int x = rnd.nextInt(sizeX);
-                int y = rnd.nextInt(sizeY-(s.size()-1));
-                pos = new Position(x, y);
-            }
-            else
-            {
-                int x = rnd.nextInt(sizeX-(s.size()-1));
-                int y = rnd.nextInt(sizeY);
-                pos = new Position(x, y);
-            }
-         */
- /*
-        
-                boolean vertical;
-                boolean goodSpace = false;
-
-                while (!goodSpace) {
-                    vertical = rnd.nextBoolean();
-
-                    if (vertical) {
-
-                        int x = rnd.nextInt(10);
-                        int y = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeY-(s-1));
-
-                        for (int j = 0; j < s; j++) {
-                            int indexLtoRBtoT = x + (y * 10) + (j * 10);
-                            potentialSpace.add(indexLtoRBtoT);
-                        }
-                        boolean fieldIsOk = true;
-                        for (int j = 0; j < potentialSpace.size(); j++) {
-                            if (usedSpaces.contains(potentialSpace.get(j)) || newsea[potentialSpace.get(j)] < 1) {
-                                fieldIsOk = false;
-                            }
-                        }
-                        if (fieldIsOk) { // && potentialSpace.size() == s
-                            usedSpaces.addAll(potentialSpace);
-                            goodSpace = true;
-                        }
-                        potentialSpace.clear();
-
-                    } else {
-                        int x = rnd.nextInt(10 - (s - 1));//rnd.nextInt(sizeX-(s-1));
-                        int y = rnd.nextInt(10);
-
-                        for (int j = 0; j < s; j++) {
-                            int indexLtoRBtoT = x + (y * 10) + j;
-                            potentialSpace.add(indexLtoRBtoT);
-                        }
-                        boolean fieldIsOk = true;
-                        for (int j = 0; j < potentialSpace.size(); j++) {
-                            if (usedSpaces.contains(potentialSpace.get(j)) || newsea[potentialSpace.get(j)] < 1) {
-                                fieldIsOk = false;
-
-                            }
-                        }
-                        if (fieldIsOk) {  // && potentialSpace.size() == s
-                            usedSpaces.addAll(potentialSpace);
-                            goodSpace = true;
-                        }
-                        potentialSpace.clear();
-                    }
-                }
-                //board.placeShip(pos, s, vertical);
-            }
-        }
-
-        for (int i = 0; i < usedSpaces.size(); i++) {
-            newsea[usedSpaces.get(i)] = 2;
-        }
-        return newsea;
-    }
-         */
     }
 
     public void printHeatmap(int divisor, int[] sea) {
@@ -469,7 +346,7 @@ public class HeatMapBasic {
     }
 
     public int[] generateVirginHeatmap() {
-        int[] sea = new int[100];//this.fixedSeaWithSips();
+        int[] sea = new int[100];
         for (int i = 0; i < sea.length; i++) {
             sea[i] = 1;
         }
@@ -485,7 +362,7 @@ public class HeatMapBasic {
     }
 
     public int[] generateVirginPlacement() {
-        int[] sea = new int[100];//this.fixedSeaWithSips();
+        int[] sea = new int[100];
         for (int i = 0; i < sea.length; i++) {
             sea[i] = 1;
         }
@@ -544,7 +421,6 @@ public class HeatMapBasic {
         for (int i = 10; i < sea.length; i += 10) {
             if (sea[i] == 1 && sea[i - 10] == 1) {
                 vertical++;
-                //System.out.println(i);
             } else if (sea[i] != 1) {
                 vertical = 1;
             }
@@ -554,7 +430,6 @@ public class HeatMapBasic {
                 ver = true;
             }
             if (i >= 90 && i != 99) {
-                //System.out.println("90's: "+i);
                 int temp = i - 90;
                 i = 1 + temp;
             }
@@ -562,7 +437,6 @@ public class HeatMapBasic {
             if (i / 10 == 0) {
                 vertical = 1;
             }
-            //System.out.println(i);
         }
 
         return numOfTimesThereIsSpace;
@@ -605,7 +479,6 @@ public class HeatMapBasic {
                 ver = true;
             }
             if (i >= 90 && i != 99) {
-                //System.out.println("90's: "+i);
                 int temp = i - 90;
                 i = 1 + temp;
             }
@@ -613,19 +486,10 @@ public class HeatMapBasic {
             if (i / 10 == 0) {
                 vertical = 1;
             }
-            //System.out.println(i);
         }
 
         return numOfTimesThereIsSpace;
     }
-    
-    //2017-05-23 - chr --burde ikke bruges, Coor skal kun bruges ved skibsudlæggelse
-//    public int getCorrFromPos(Position pos) {
-//        int output = 0;
-//        output = ((9 - pos.y) * 10) + pos.x;
-//        
-//        return output;
-//    }
 
     public int[] fixedSeaWithSips() {
         int[] fixedSea
@@ -660,59 +524,3 @@ public class HeatMapBasic {
     }
 
 }
-
-
-
-/*
-    // 2017 - 05-21 - kl. 13.56 -- Chr - simple Heat Map sikekrhedskopi
-
-    public int[] simpleHeatMap(int[] sea, ArrayList<Integer> fleet) {
-//        System.out.println("simpleHeatMap: activated");
-
-        int[] arrFleet = new int[fleet.size()];
-        for (int i = 0; i < fleet.size(); i++) {
-            arrFleet[i] = fleet.get(i);
-        }
-        arrFleet = sortArrIntDescend(arrFleet);
-
-//        System.out.println("arrFleet: " + Arrays.toString(arrFleet));
-//        this.printSea(sea);
-
-//        for (int i = 0; i < arrFleet.length; i++) {
-//            int countShipSpace = this.countShipSpace(sea, arrFleet[i]);
-//            System.out.println("simpleHeatMap: ShipSize: " + arrFleet[i] + ", NumOfSpaces: " + countShipSpace);
-//        }
-
-        int iterations = 100000;
-        int[] newsea = new int[10 * 10];
-
-        int[] tempsea = null;
-
-        long simpleHeatMapStartTime = System.currentTimeMillis();
-        long simpleHeatMapFinishTime = 0;
-        long simpleHeatMapNetTime = 0;
-        int hasShownTime = 1;
-
-        for (int i = 0; i < iterations; i++) {
-            tempsea = distributeShips(sea, arrFleet);
-            simpleHeatMapFinishTime = System.currentTimeMillis();
-            simpleHeatMapNetTime = simpleHeatMapFinishTime - simpleHeatMapStartTime;
-
-            for (int j = 0; j < tempsea.length; j++) {
-                if (tempsea[j] > 1) {
-                    newsea[j] += 1;
-                }
-            }
-            
-            if (simpleHeatMapNetTime > 90) {//simpleHeatMapNetTime > 50 * hasShownTime && hasShownTime < 100
-                hasShownTime++;
-                break;
-                //System.out.println("simpleHeatMap: Iteration: " + i + ", timeSpentInIterations: " + simpleHeatMapNetTime);
-            }
-        }
-
-        return newsea;
-
-    }
-
-*/

@@ -32,8 +32,8 @@ public class AlgShooter implements BattleshipsPlayer {
     int roundNumberOfFirstMaxShot = 0;
     int shotNumberOfFirstMaxShot = 0;
 
-    private final static Random rnd = new Random();
-    private final static PositionFiller pf = new PositionFiller();
+    private final static Random RND = new Random();
+    private final static PositionFiller PF = new PositionFiller();
     private int sizeX;
     private int sizeY;
     private int sunkenShipSize;
@@ -41,7 +41,6 @@ public class AlgShooter implements BattleshipsPlayer {
     private double AlgShooterAverage;
     private double EnemyAverage;
     private double rounds;
-    private Board myBoard;
     private boolean hunt;
     private boolean target;
     private boolean shotHit;
@@ -94,7 +93,7 @@ public class AlgShooter implements BattleshipsPlayer {
         shot = new Position(0, 0);
         neighbor = new Position(0, 0);
         shotHit = false;
-        avblShots = pf.fillPositionArray();
+        avblShots = PF.fillPositionArray();
         fleetBeforeShot = new ArrayList<Integer>();
         fleetAfterShot = new ArrayList<Integer>();
 
@@ -109,7 +108,6 @@ public class AlgShooter implements BattleshipsPlayer {
     }
 
     public void placeShip1(Fleet fleet, Board board) {
-        myBoard = board;
         sizeX = board.sizeX();
         sizeY = board.sizeY();
 
@@ -118,15 +116,15 @@ public class AlgShooter implements BattleshipsPlayer {
 
         for (int i = 0; i < fleet.getNumberOfShips(); ++i) {
             Ship s = fleet.getShip(i);
-            boolean vertical = rnd.nextBoolean();
+            boolean vertical = RND.nextBoolean();
             boolean goodSpace = false;
             Position pos = new Position(0, 0);
 
             while (goodSpace == false) {
                 if (vertical) {
 
-                    int x = rnd.nextInt(sizeX);
-                    int y = rnd.nextInt(sizeY - (s.size() - 1));
+                    int x = RND.nextInt(sizeX);
+                    int y = RND.nextInt(sizeY - (s.size() - 1));
                     pos = new Position(x, y);
 
                     for (int j = 0; j < s.size(); j++) {
@@ -146,8 +144,8 @@ public class AlgShooter implements BattleshipsPlayer {
                     potentialSpace.clear();
 
                 } else {
-                    int x = rnd.nextInt(sizeX - (s.size() - 1));
-                    int y = rnd.nextInt(sizeY);
+                    int x = RND.nextInt(sizeX - (s.size() - 1));
+                    int y = RND.nextInt(sizeY);
                     pos = new Position(x, y);
 
                     for (int j = 0; j < s.size(); j++) {
@@ -179,9 +177,6 @@ public class AlgShooter implements BattleshipsPlayer {
 
     @Override
     public void placeShips(Fleet fleet, Board board) {
-        
-        
-        
         
         if (roundNumber == 1) {
             placeShip1(fleet, board);
@@ -230,40 +225,6 @@ public class AlgShooter implements BattleshipsPlayer {
         
     }
     
-    public void placeShip5(){
-        boolean[] allowedSpaces = new boolean[100];
-        for (int i = 0; i < allowedSpaces.length; i++) {
-            allowedSpaces[i] = true;
-        }
-        
-        int[] shotMatchCopy = new int[enemyShotMatch.length];
-        System.arraycopy(enemyShotMatch, 0, shotMatchCopy, 0, enemyShotMatch.length);
-        boolean vertical = false;
-        int[][] nestedArray = null; //til "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...
-        int[][] nestedArrayCopy = null; //til "[[0, 1, 2, 3, 4], null,...
-        int[][] valuesOfShotMatchCopy = null; //til "[[43, 2, 35, 521, 87], null, ...
-        int[][] sumOfValues = null;//til "[[688], null...
-        int smalestSumOfValuesNumber = Integer.MAX_VALUE;
-        int smalestSOVIndex = 0; //smalestSOVIndex = the index in nestedArrayCopy we are interested in.
-        int[] nestedArrayCopyMember = null; //[0, 1, 2, 3, 4] the indexes where we want to place a ship
-          
-        //testing:
-        ArrayList<Integer> fleetChr = new ArrayList<Integer>();
-        fleetChr.add(2);
-        fleetChr.add(3);
-        fleetChr.add(3);
-        fleetChr.add(4);
-        fleetChr.add(5);
-        
-        
-        for (int i = 0; i < fleetChr.size(); i++) {
-            int ship = fleetChr.get(i);
-            //nested array: 5'er skib: "[[0, 1, 2, 3, 4], [1, 2, 3, 4, 5],...[95, 96, 97, 98, 99], [0, 10, 20, 30, 40], [10, 20, 30, 40, 50],..." 
-            nestedArray = enemyReact.combinations(enemyReact.getEmptySea(), ship);
-            nestedArrayCopy = enemyReact.combinations(enemyReact.getEmptySea(), ship);
-            System.out.println("nested array: " + Arrays.deepToString(nestedArray));
-        } 
-    }
     
     public ArrayList<Integer> shipIndexesFromPos(Position pos, int shiplength, boolean vertical) {
         ArrayList<Integer> shipIndexes = new ArrayList<Integer>();
@@ -305,7 +266,7 @@ public class AlgShooter implements BattleshipsPlayer {
         long startTime = System.currentTimeMillis();
 
         if (hunt) {
-            if (shotsFired.size() == 0) {
+            if (shotsFired.isEmpty()) {
                 
                 likelyIndexes = enemyReact.indexesFromEnemyShipMatch(
                 this.enemyShipMatch, this.roundNumber, shotsFired );   
@@ -593,56 +554,4 @@ public class AlgShooter implements BattleshipsPlayer {
 
     }
 
-    public void shooterDebugOutput(long startTime) {
-
-        long finishTime = System.currentTimeMillis();
-        if ((finishTime - startTime) > this.MaxShotTimeInMatch) {
-            MaxShotTimeInMatch = (finishTime - startTime);
-            this.roundNumberOfFirstMaxShot = this.roundNumber;
-            this.shotNumberOfFirstMaxShot = this.shotsFired.size();
-        }
-
-        System.out.println("Runde nummer: " + this.roundNumber
-                + "  skudnummer i runden: " + shotsFired.size());
-        System.out.println("Skudberegningen tog: " + (finishTime - startTime)
-                + " ms. Længste I Matchen: " + MaxShotTimeInMatch
-                + " I runde: " + roundNumberOfFirstMaxShot
-                + ", skud nummer: " + shotNumberOfFirstMaxShot);
-        System.out.println("Shot fired at : " + shot.toString());
-        System.out.print("Hunting : " + hunt + " - Target : " + target);
-        System.out.println(" - Hitcounter : " + hitCount + " - HitListTemp (size) : " + hitListTemp.size());
-        System.out.println("Last shot a hit : " + shotHit + " - Ship sunk last round : " + isSunk);
-
-        if (!stack.isEmpty()) {
-            System.out.print("Stack remaining: ");
-            for (int i = 0; i < stack.size(); i++) {
-                System.out.print(stack.get(i).toString() + " ");
-            }
-            System.out.println("");
-        }
-
-        if (!endFields.isEmpty()) {
-            System.out.print("End points remaining : ");
-            for (int i = 0; i < endFields.size(); i++) {
-                System.out.print(endFields.get(i).toString() + " ");
-            }
-            System.out.println("");
-        }
-
-        int numberOfShotsAvbl = avblShots.size();
-        int numberOfShotsFired = shotsFired.size();
-        System.out.println("avblShots (size) : " + numberOfShotsAvbl + " - shotsFired (size) : " + numberOfShotsFired);
-        System.out.println("Is " + shot.toString() + " in avblShots : " + avblShots.contains(shot));
-        System.out.println("Last position in shotsFired : " + shotsFired.get(numberOfShotsFired - 1));
-        System.out.println();
-
-    }
-
-    public void debugOuputChristian(){
-        //2017-05-27 - kl. 17.31 - chr - debugging printout:
-        heatMapper.printHeatmap(1, this.enemyShipMatch);
-        System.out.println("roundnumber " + this.roundNumber);
-        
-        System.out.println("likelyIndexes: " + likelyIndexes);
-    }
 }

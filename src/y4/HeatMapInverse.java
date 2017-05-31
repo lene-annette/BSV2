@@ -1,33 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package y4;
 
 import java.util.ArrayList;
 
 /**
  *
- * @author Christian
+ * @author Christian, Gert, Lene
  */
 
-/*
-    //div kode til "21"-maps
-
-            //int[] sea = inverseHeatTemplateWithShotNums(21);
-            //System.out.println("hello: ");
-            //hm.printSea(sea);
-            //    System.out.println("");
-            
-        
-        //10 runs -- (ingen adskillelse mellem de første ramte og de sidst ramte)
-        //int[] Inverse = inverseHeatMap();
-        //hm.printHeatmap(1, Inverse);
-*/
 
 /*
-// type 1 --21 skud
+ type 1 --21 skud
   +  .  .  .  .  +  .  .  .  .
   .  .  .  .  +  .  .  .  +  .
   .  .  .  +  .  .  .  +  .  .
@@ -41,7 +24,7 @@ import java.util.ArrayList;
 */
 
 /*
-// type 2 -- 21 skud // ca 1 ud af ti
+ type 2 -- 21 skud // ca 1 ud af ti
   +  .  .  .  .  +  .  .  .  .
   .  .  .  .  +  .  .  .  +  .
   .  .  +  .  .  .  +  .  .  .
@@ -55,7 +38,7 @@ import java.util.ArrayList;
 */
 
 /*
-// 10 runs: (ingen adskillelse mellem de første ramte og de sidst ramte)
+ 10 runs: (ingen adskillelse mellem de første ramte og de sidst ramte)
 
  2  1  1  1 [6][6] 1  1  1  3 
  1 [6] 1  1 [6][6] 1  1 [6] 1 
@@ -70,7 +53,7 @@ import java.util.ArrayList;
 */
 
 /*
-    //type 1: -- 21 shots -- with shotNumbers ("+" == -1) 
+    type 1: -- 21 shots -- with shotNumbers ("+" == -1) 
   .  .  .  .  . -6  .  .  .  .
   .  .  .  . -10  .  .  . -3  .
   .  .  . -16  .  .  . -8  .  .
@@ -84,7 +67,7 @@ import java.util.ArrayList;
 */
 
 /*
-   // Type 2: -- 21 shots --  with shotNumbers
+    Type 2: -- 21 shots --  with shotNumbers
   .  .  .  .  . -4  .  .  .  .
   .  .  .  . -13  .  .  . -2  .
   .  . -9  .  .  . -16  .  .  .
@@ -109,23 +92,17 @@ import java.util.ArrayList;
     .    .   43   74    .    .   78   44    .    .
     .   13    .    .   55   57    .    .   12    .
     5    .    .    .   25   27    .    .    .    5
-        //int[] sea = this.inverseHeatMapWithShotNumebers();
-        //hm.printSea(sea);
+        int[] sea = this.inverseHeatMapWithShotNumebers();
+        hm.printSea(sea);
 */
 
 public class HeatMapInverse {
 
     HeatMapBasic hm = new HeatMapBasic();
-    //int[] antiHeatPositions = new int[100];
-    //ArrayList<int[]> shotSeaArr = new ArrayList<int[]>();
     
         
     public void run() {
-        System.out.println("HeatMapInverse -- run");
-               
-        
-        
-           
+        System.out.println("HeatMapInverse -- run");    
     }
     
     private int[] inverseHeatMapWithShotNumebers(){
@@ -145,7 +122,7 @@ public class HeatMapInverse {
     
     private int[] inverseHeatMap(){
         int[] InverseMap = hm.getEmptySea();
-        int[] shootingPatern = null; //inverseHeatTemplate();
+        int[] shootingPatern = null; 
         
         for (int i = 0; i < 10; i++) {
             shootingPatern = inverseHeatTemplate();
@@ -173,14 +150,10 @@ public class HeatMapInverse {
 
             heat = hm.simpleHeatMap(sea, hm.getVirginFleet());
             nextPointToShoot = hm.getIntFromHeatMap(heat);
-            //System.out.println("counter: " + counter + " space: " + this.spaceForFive(sea));
-            //hm.printSea(sea);
-            //System.out.println("");
             
             System.arraycopy(sea, 0, oldsea, 0, sea.length);
-            sea[nextPointToShoot] = -shotNumMax;//sea[nextPointToShoot] = -1
+            sea[nextPointToShoot] = -shotNumMax;
             shotNumMax = shotNumMax -1;
-            
         }
         return oldsea;
     }
@@ -200,14 +173,9 @@ public class HeatMapInverse {
 
             heat = hm.simpleHeatMap(sea, hm.getVirginFleet());
             nextPointToShoot = hm.getIntFromHeatMap(heat);
-            //System.out.println("counter: " + counter + " space: " + this.spaceForFive(sea));
-            //hm.printSea(sea);
-            //System.out.println("");
             
             System.arraycopy(sea, 0, oldsea, 0, sea.length);
-            sea[nextPointToShoot] = -1;//sea[nextPointToShoot] = -1
-            
-            
+            sea[nextPointToShoot] = -1; 
         }
         return oldsea;
     }
@@ -239,7 +207,6 @@ public class HeatMapInverse {
         for (int i = 10; i < sea.length; i += 10) {
             if (sea[i] == 1 && sea[i - 10] == 1) {
                 vertical++;
-                //System.out.println(i);
             } else if (sea[i] != 1) {
                 vertical = 1;
             }
@@ -249,7 +216,6 @@ public class HeatMapInverse {
                 ver = true;
             }
             if (i >= 90 && i != 99) {
-                //System.out.println("90's: "+i);
                 int temp = i - 90;
                 i = 1 + temp;
             }
@@ -257,13 +223,12 @@ public class HeatMapInverse {
             if (i/10 == 0 ) {
                 vertical = 1;
             }
-            //System.out.println(i);
         }
 
         return numOfTimesThereIsSpace;
     }
 
-    private int[] testSea1() { //false
+    private int[] testSea1() { 
         int[] fixedSea
                 = {-1, -1, -1, -1, -3, -3, -1, -1, -1, -1,
                     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -279,7 +244,7 @@ public class HeatMapInverse {
         return fixedSea;
     }
 
-    private int[] testSea2() { //true
+    private int[] testSea2() { 
         int[] fixedSea
                 = {-1, -1, -1, -1, -3, -3, -1, -1, -1, -1,
                     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -295,7 +260,7 @@ public class HeatMapInverse {
         return fixedSea;
     }
 
-    private int[] testSea3() { //false
+    private int[] testSea3() { 
         int[] fixedSea
                 = {-1, -1, -1, -1, -3, -3, -1, -1, -1, -1,
                     1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
@@ -311,7 +276,7 @@ public class HeatMapInverse {
         return fixedSea;
     }
 
-    private int[] testSea4() { //true
+    private int[] testSea4() { 
         int[] fixedSea
                 = {-1, -1, -1, -1, -3, -3, -1, -1, 1, -1,
                     -1, -1, -1, -1, -1, -1, -1, -1, 1, -1,
@@ -404,26 +369,3 @@ public class HeatMapInverse {
   .  +  .  .  .  +  .  .  .  .
   .  .  .  .  +  .  .  .  .  .
 */
-
-/*
-       //2017-05-17 kl. 23 -- chr -- test af SpaceForFive
-        System.out.println("test 1");
-       int[] sea = this.testSea1();
-        System.out.println(this.spaceForFive(sea));
-        
-        System.out.println("test 2");
-        sea = this.testSea2();
-        System.out.println(this.spaceForFive(sea));
-        
-        System.out.println("test 3");
-        sea = this.testSea3();
-        System.out.println(this.spaceForFive(sea));
-        
-        System.out.println("test 4");
-        sea = this.testSea4();
-        System.out.println(this.spaceForFive(sea));
-        
-        System.out.println("test 5");
-        sea = this.testSea5();
-        System.out.println(this.spaceForFive(sea));
- */
